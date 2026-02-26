@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Agent Platform — Dashboard</title>
+    <meta name="description"
+        content="Create and manage AI voice agents with dedicated phone numbers. Powered by OpenAI Realtime API and Twilio.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #08090e;
+            --surface: rgba(16, 19, 33, 0.85);
+            --surface-hover: rgba(22, 26, 48, 0.9);
+            --border: rgba(99, 102, 241, 0.10);
+            --border-hover: rgba(99, 102, 241, 0.22);
+            --primary: #818cf8;
+            --primary-glow: rgba(129, 140, 248, 0.12);
+            --secondary: #c084fc;
+            --accent: #34d399;
+            --accent-glow: rgba(52, 211, 153, 0.1);
+            --gold: #fbbf24;
+            --text: #e8ecf4;
+            --text-secondary: #94a3b8;
+            --text-muted: #4b5563;
+            --danger: #f87171;
+            --radius: 16px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ── Ambient ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 800px 500px at 15% 20%, rgba(129, 140, 248, 0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 600px 400px at 85% 60%, rgba(192, 132, 252, 0.04) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 400px at 50% 90%, rgba(52, 211, 153, 0.03) 0%, transparent 70%);
+            animation: bgDrift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgDrift {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            100% {
+                transform: scale(1.05) translate(-20px, 15px);
+            }
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(8, 9, 14, 0.8);
+            border-bottom: 1px solid var(--border);
+            padding: 0 40px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-decoration: none;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(129, 140, 248, 0.3);
+        }
+
+        /* ── Hero ── */
+        .hero {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 130px 20px 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(129, 140, 248, 0.08);
+            border: 1px solid rgba(129, 140, 248, 0.2);
+            color: var(--primary);
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin-bottom: 22px;
+        }
+
+        .hero-badge .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 4.5vw, 3rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 540px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(129, 140, 248, 0.35);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* ── Stats Row ── */
+        .stats {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--border-hover);
+        }
+
+        .stat-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* ── Section ── */
+        .section {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .section-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* ── Agent Cards ── */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .agent-card {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 24px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+        }
+
+        .agent-card .agent-status {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .agent-card .agent-status.active {
+            color: var(--accent);
+        }
+
+        .agent-card .agent-status .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .agent-card .agent-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-glow), rgba(192, 132, 252, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 14px;
+        }
+
+        .agent-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .agent-card .agent-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .agent-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .agent-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .agent-phone {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .agent-phone.no-phone {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.82rem;
+        }
+
+        .agent-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .agent-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .agent-btn-call {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(52, 211, 153, 0.15);
+        }
+
+        .agent-btn-call:hover {
+            background: rgba(52, 211, 153, 0.2);
+        }
+
+        .agent-btn-delete {
+            background: rgba(248, 113, 113, 0.08);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.12);
+            max-width: 80px;
+        }
+
+        .agent-btn-delete:hover {
+            background: rgba(248, 113, 113, 0.15);
+        }
+
+        .agent-card.default-agent {
+            border-color: rgba(251, 191, 36, 0.15);
+        }
+
+        .agent-card.default-agent .agent-icon {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(212, 168, 83, 0.1));
+        }
+
+        .default-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--gold);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* ── Create Card (placeholder) ── */
+        .create-card {
+            background: rgba(129, 140, 248, 0.03);
+            border: 2px dashed rgba(129, 140, 248, 0.12);
+            border-radius: 18px;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            min-height: 240px;
+        }
+
+        .create-card:hover {
+            border-color: rgba(129, 140, 248, 0.3);
+            background: rgba(129, 140, 248, 0.06);
+            transform: translateY(-4px);
+        }
+
+        .create-card .plus {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-glow), rgba(192, 132, 252, 0.08));
+            border: 1px solid rgba(129, 140, 248, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 14px;
+            transition: all 0.3s;
+        }
+
+        .create-card:hover .plus {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            box-shadow: 0 0 24px rgba(129, 140, 248, 0.25);
+        }
+
+        .create-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .create-card p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Properties Section (preserved) ── */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .property-card {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+        }
+
+        .property-img {
+            height: 160px;
+            background: linear-gradient(135deg, #1a1f35, #0f1525);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .property-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 60%, rgba(8, 9, 14, 0.9));
+        }
+
+        .property-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            background: rgba(129, 140, 248, 0.9);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 6px;
+        }
+
+        .property-body {
+            padding: 18px 20px 22px;
+        }
+
+        .property-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .property-location {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .property-specs {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 14px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .property-specs span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .property-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ── Reservations ── */
+        .reservations-container {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            min-height: 260px;
+        }
+
+        .res-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .res-header h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .res-live {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.68rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .res-live .dot {
+            width: 7px;
+            height: 7px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .res-list {
+            padding: 10px 14px;
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .res-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 10px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .res-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .res-item+.res-item {
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .res-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .res-icon.viewing {
+            background: rgba(129, 140, 248, 0.1);
+        }
+
+        .res-icon.reservation {
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .res-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .res-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .res-detail {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .res-time {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .res-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .res-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .res-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        /* ── Footer ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 28px 40px;
+            text-align: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Animate ── */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            nav {
+                padding: 0 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 110px 16px 50px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 30px 14px 40px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">AI Voice Agent</div>
+        <ul class="nav-links">
+            <li><a href="#agents">Agents</a></li>
+            <li><a href="#properties">Properties</a></li>
+            <li><a href="#reservations">Reservations</a></li>
+        </ul>
+        <a href="/wizard.html" class="nav-cta">✨ Create Agent</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-badge"><span class="pulse"></span> Platform Active</div>
+        <h1>Your Own<br><span class="gradient">AI Voice Agents</span></h1>
+        <p>Create customized AI voice assistants with unique phone numbers. Each agent answers calls with its own
+            personality, voice, and capabilities.</p>
+        <div class="hero-actions">
+            <a href="/wizard.html" class="btn-primary">✨ Create New Agent</a>
+            <a href="#agents" class="btn-secondary">📋 View Agents</a>
+        </div>
+    </section>
+
+    <section class="stats" id="stats">
+        <div class="stat-card animate">
+            <div class="stat-number" id="statAgents">0</div>
+            <div class="stat-label">Active Agents</div>
+        </div>
+        <div class="stat-card animate" style="animation-delay:0.1s">
+            <div class="stat-number" id="statPhones">0</div>
+            <div class="stat-label">Phone Numbers</div>
+        </div>
+        <div class="stat-card animate" style="animation-delay:0.2s">
+            <div class="stat-number" id="statReservations">0</div>
+            <div class="stat-label">Reservations</div>
+        </div>
+    </section>
+
+    <section class="section" id="agents">
+        <div class="section-header">
+            <h2>🤖 Your Agents</h2>
+            <a href="/wizard.html" class="btn-primary" style="padding:10px 20px;font-size:0.82rem;">+ New Agent</a>
+        </div>
+        <div class="agents-grid" id="agentsGrid">
+            <!-- JS fills -->
+        </div>
+    </section>
+
+    <section class="section" id="properties">
+        <div class="section-header">
+            <h2>🏠 Demo Properties</h2>
+        </div>
+        <div class="properties-grid" id="propertiesGrid"></div>
+    </section>
+
+    <section class="section" id="reservations">
+        <div class="section-header">
+            <h2>📋 Live Reservations</h2>
+        </div>
+        <div class="reservations-container">
+            <div class="res-header">
+                <h3>Recent Activity</h3>
+                <div class="res-live"><span class="dot"></span> Live</div>
+            </div>
+            <div class="res-list" id="resList">
+                <div class="res-empty">No reservations yet. Call an agent to create one.</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 AI Voice Agent Platform — Powered by OpenAI Realtime API & Twilio</p>
+    </footer>
+
+    <script>
+        // ─── Format Phone ──
+        function formatPhone(phone) {
+            if (!phone) return '';
+            const d = phone.replace(/\D/g, '');
+            if (d.length === 11 && d.startsWith('1')) {
+                return `+1 (${d.slice(1, 4)}) ${d.slice(4, 7)}-${d.slice(7)}`;
+            }
+            return phone;
+        }
+
+        // ─── Load Agents ──
+        async function loadAgents() {
+            try {
+                const res = await fetch('/api/agents');
+                const agents = await res.json();
+                const grid = document.getElementById('agentsGrid');
+
+                const withPhones = agents.filter(a => a.phoneNumber).length;
+                document.getElementById('statAgents').textContent = agents.length;
+                document.getElementById('statPhones').textContent = withPhones;
+
+                let html = agents.map((a, i) => {
+                    const isDefault = a.id === 'agent_default';
+                    return `
+                    <div class="agent-card ${isDefault ? 'default-agent' : ''} animate" style="animation-delay:${i * 0.08}s">
+                        <div class="agent-status active"><span class="dot"></span> Active</div>
+                        <div class="agent-icon">${isDefault ? '⭐' : '🤖'}</div>
+                        <h3>${a.name}${isDefault ? '<span class="default-tag">Test Agent</span>' : ''}</h3>
+                        <div class="agent-desc">${a.description || 'No description'}</div>
+                        <div class="agent-meta">
+                            <span>🎙️ ${a.voice || 'coral'}</span>
+                            <span>🌐 ${a.language || 'en-US'}</span>
+                            <span>🔧 ${(a.tools || []).length} tools</span>
+                        </div>
+                        <div class="agent-phone ${a.phoneNumber ? '' : 'no-phone'}">
+                            ${a.phoneNumber ? '📱 ' + formatPhone(a.phoneNumber) : 'No phone number assigned'}
+                        </div>
+                        <div class="agent-actions">
+                            ${a.phoneNumber ? `<a href="tel:${a.phoneNumber}" class="agent-btn agent-btn-call">📞 Call</a>` : '<span></span>'}
+                            ${!isDefault ? `<button class="agent-btn agent-btn-delete" onclick="deleteAgent('${a.id}')">Delete</button>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+
+                // Add create card
+                html += `
+                <a href="/wizard.html" class="create-card animate" style="animation-delay:${agents.length * 0.08}s">
+                    <div class="plus">+</div>
+                    <h3>Create New Agent</h3>
+                    <p>Set up a new AI voice agent with its own phone number</p>
+                </a>`;
+
+                grid.innerHTML = html;
+            } catch (e) { console.error(e); }
+        }
+
+        // ─── Delete Agent ──
+        async function deleteAgent(id) {
+            if (!confirm('Are you sure you want to delete this agent? Its phone number will be released.')) return;
+            try {
+                const res = await fetch(`/api/agents/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) {
+                    loadAgents();
+                } else {
+                    alert('Error: ' + (data.error || 'Could not delete'));
+                }
+            } catch (e) { alert('Error: ' + e.message); }
+        }
+
+        // ─── Load Properties ──
+        async function loadProperties() {
+            try {
+                const res = await fetch('/api/properties');
+                const data = await res.json();
+                const grid = document.getElementById('propertiesGrid');
+                const emojis = ['🏢', '🏠', '🏡', '🏘️', '🏰', '🌇'];
+                grid.innerHTML = data.map((p, i) => `
+                    <div class="property-card animate" style="animation-delay:${i * 0.08}s">
+                        <div class="property-img">
+                            ${emojis[i % emojis.length]}
+                            <span class="property-tag">${p.type === 'sale' ? 'FOR SALE' : 'FOR RENT'}</span>
+                        </div>
+                        <div class="property-body">
+                            <div class="property-title">${p.title}</div>
+                            <div class="property-location">📍 ${p.location}</div>
+                            <div class="property-specs">
+                                <span>🛏️ ${p.rooms}</span>
+                                <span>📐 ${p.area} sq ft</span>
+                                <span>🏢 ${p.floor || '-'}</span>
+                            </div>
+                            <div class="property-price">${p.type === 'sale' ? '$' + p.price.toLocaleString('en-US') : '$' + p.price.toLocaleString('en-US') + '/mo'}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // ─── Load Reservations ──
+        async function loadReservations() {
+            try {
+                const res = await fetch('/api/reservations');
+                const data = await res.json();
+                document.getElementById('statReservations').textContent = data.length;
+                const list = document.getElementById('resList');
+                if (data.length === 0) {
+                    list.innerHTML = '<div class="res-empty">No reservations yet. Call an agent to create one.</div>';
+                    return;
+                }
+                list.innerHTML = data.slice().reverse().map(r => {
+                    const isViewing = r.type === 'viewing';
+                    const date = new Date(r.created_at);
+                    const timeStr = date.toLocaleString('en-US', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+                    return `
+                    <div class="res-item">
+                        <div class="res-icon ${isViewing ? 'viewing' : 'reservation'}">${isViewing ? '👁️' : '📝'}</div>
+                        <div class="res-info">
+                            <div class="res-name">${r.customer_name}</div>
+                            <div class="res-detail">${r.property_title} — ${r.date} ${r.time || ''}</div>
+                        </div>
+                        <div class="res-time">${timeStr}</div>
+                    </div>`;
+                }).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // ─── Init ──
+        loadAgents();
+        loadProperties();
+        loadReservations();
+        setInterval(loadReservations, 5000);
+        setInterval(loadAgents, 10000);
+    </script>
+</body>
+
+</html>

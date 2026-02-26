@@ -1,0 +1,21 @@
+{
+  "name": "call",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "openai": "^6.21.0",
+    "twilio": "^5.12.2",
+    "websocket": "^1.0.35",
+    "ws": "^8.19.0"
+  }
+}
