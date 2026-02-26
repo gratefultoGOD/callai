@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Voice Agent Platform — Dashboard</title>
+    <title>VoiceAgent — AI Voice Agent Platform</title>
     <meta name="description"
         content="Create and manage AI voice agents with dedicated phone numbers. Powered by OpenAI Realtime API and Twilio.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         *,
         *::before,
@@ -21,22 +21,73 @@
         }
 
         :root {
-            --bg: #08090e;
-            --surface: rgba(16, 19, 33, 0.85);
-            --surface-hover: rgba(22, 26, 48, 0.9);
-            --border: rgba(99, 102, 241, 0.10);
-            --border-hover: rgba(99, 102, 241, 0.22);
-            --primary: #818cf8;
-            --primary-glow: rgba(129, 140, 248, 0.12);
-            --secondary: #c084fc;
-            --accent: #34d399;
-            --accent-glow: rgba(52, 211, 153, 0.1);
-            --gold: #fbbf24;
-            --text: #e8ecf4;
-            --text-secondary: #94a3b8;
-            --text-muted: #4b5563;
-            --danger: #f87171;
-            --radius: 16px;
+            --transition-theme: 0.35s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #09090b;
+            --bg-surface: #111114;
+            --bg-card: #16161a;
+            --bg-card-hover: #1c1c21;
+            --bg-elevated: #1e1e24;
+            --bg-input: #16161a;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --border-focus: #7c3aed;
+            --text: #fafafa;
+            --text-sub: #a1a1aa;
+            --text-muted: #52525b;
+            --violet: #8b5cf6;
+            --violet-hover: #7c3aed;
+            --violet-dim: rgba(139, 92, 246, 0.10);
+            --violet-glow: rgba(139, 92, 246, 0.06);
+            --teal: #2dd4bf;
+            --teal-dim: rgba(45, 212, 191, 0.10);
+            --teal-border: rgba(45, 212, 191, 0.25);
+            --rose: #fb7185;
+            --rose-dim: rgba(251, 113, 133, 0.08);
+            --rose-border: rgba(251, 113, 133, 0.18);
+            --amber: #fbbf24;
+            --amber-dim: rgba(251, 191, 36, 0.08);
+            --amber-border: rgba(251, 191, 36, 0.18);
+            --sky: #38bdf8;
+            --sky-dim: rgba(56, 189, 248, 0.08);
+            --nav-bg: rgba(9, 9, 11, 0.88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #fafafa;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f9f9fb;
+            --bg-elevated: #f4f4f5;
+            --bg-input: #f4f4f5;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --border-focus: #7c3aed;
+            --text: #18181b;
+            --text-sub: #71717a;
+            --text-muted: #a1a1aa;
+            --violet: #7c3aed;
+            --violet-hover: #6d28d9;
+            --violet-dim: rgba(124, 58, 237, 0.07);
+            --violet-glow: rgba(124, 58, 237, 0.04);
+            --teal: #0d9488;
+            --teal-dim: rgba(13, 148, 136, 0.06);
+            --teal-border: rgba(13, 148, 136, 0.25);
+            --rose: #e11d48;
+            --rose-dim: rgba(225, 29, 72, 0.05);
+            --rose-border: rgba(225, 29, 72, 0.15);
+            --amber: #d97706;
+            --amber-dim: rgba(217, 119, 6, 0.06);
+            --amber-border: rgba(217, 119, 6, 0.18);
+            --sky: #0284c7;
+            --sky-dim: rgba(2, 132, 199, 0.06);
+            --nav-bg: rgba(255, 255, 255, 0.88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
         html {
@@ -44,603 +95,639 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-body);
             color: var(--text);
             line-height: 1.6;
-            overflow-x: hidden;
             min-height: 100vh;
+            transition: background var(--transition-theme), color var(--transition-theme);
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Ambient ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background:
-                radial-gradient(ellipse 800px 500px at 15% 20%, rgba(129, 140, 248, 0.05) 0%, transparent 70%),
-                radial-gradient(ellipse 600px 400px at 85% 60%, rgba(192, 132, 252, 0.04) 0%, transparent 70%),
-                radial-gradient(ellipse 500px 400px at 50% 90%, rgba(52, 211, 153, 0.03) 0%, transparent 70%);
-            animation: bgDrift 20s ease-in-out infinite alternate;
-        }
-
-        @keyframes bgDrift {
-            0% {
-                transform: scale(1) translate(0, 0);
-            }
-
-            100% {
-                transform: scale(1.05) translate(-20px, 15px);
-            }
-        }
-
-        /* ── Nav ── */
+        /* ══════════════ NAV ══════════════ */
         nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 100;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            background: rgba(8, 9, 14, 0.8);
+            backdrop-filter: blur(16px) saturate(1.4);
+            -webkit-backdrop-filter: blur(16px) saturate(1.4);
+            background: var(--nav-bg);
             border-bottom: 1px solid var(--border);
             padding: 0 40px;
-            height: 64px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            transition: background var(--transition-theme), border-color var(--transition-theme);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
         }
 
         .logo {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--violet);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-mark svg {
+            color: #fff;
+        }
+
+        .logo-text {
+            font-size: 1.05rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text);
+            letter-spacing: -0.02em;
         }
 
         .nav-links {
             display: flex;
-            gap: 24px;
+            gap: 2px;
             list-style: none;
         }
 
         .nav-links a {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             font-weight: 500;
-            transition: color 0.2s;
+            padding: 7px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--text);
+            background: var(--violet-dim);
         }
 
-        .nav-cta {
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-hover);
+            color: var(--violet);
+            background: var(--violet-dim);
+        }
+
+        .btn-cta {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            gap: 7px;
+            background: var(--violet);
             color: #fff;
             border: none;
-            padding: 9px 22px;
+            padding: 9px 20px;
             border-radius: 10px;
             font-weight: 600;
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             cursor: pointer;
-            transition: all 0.25s;
             text-decoration: none;
+            transition: all 0.2s;
         }
 
-        .nav-cta:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(129, 140, 248, 0.3);
+        .btn-cta:hover {
+            background: var(--violet-hover);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
         }
 
-        /* ── Hero ── */
+        /* ══════════════ HERO ══════════════ */
         .hero {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 130px 20px 60px;
-            max-width: 800px;
+            max-width: 1140px;
             margin: 0 auto;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(129, 140, 248, 0.08);
-            border: 1px solid rgba(129, 140, 248, 0.2);
-            color: var(--primary);
-            font-size: 0.72rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 6px 16px;
-            border-radius: 50px;
-            margin-bottom: 22px;
-        }
-
-        .hero-badge .pulse {
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
-            }
-
-            50% {
-                box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
-            }
+            padding: 110px 40px 20px;
         }
 
         .hero h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(2rem, 4.5vw, 3rem);
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
             font-weight: 800;
+            letter-spacing: -0.035em;
             line-height: 1.15;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
 
-        .hero h1 .gradient {
-            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .hero .accent-word {
+            color: var(--violet);
         }
 
         .hero p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            max-width: 540px;
-            margin: 0 auto 32px;
+            color: var(--text-sub);
+            font-size: 1.05rem;
+            max-width: 520px;
+            line-height: 1.7;
         }
 
-        .hero-actions {
-            display: flex;
-            gap: 14px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(129, 140, 248, 0.35);
-        }
-
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 14px 32px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        /* ── Stats Row ── */
-        .stats {
-            position: relative;
-            z-index: 1;
-            max-width: 700px;
+        /* ══════════════ STATS ══════════════ */
+        .stats-row {
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 0 20px 60px;
+            padding: 36px 40px 0;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
         }
 
         .stat-card {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: center;
-            transition: transform 0.3s, border-color 0.3s;
+            border-radius: 14px;
+            padding: 24px 26px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: all var(--transition-theme);
+            box-shadow: var(--shadow-card);
         }
 
-        .stat-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--border-hover);
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.violet {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .stat-icon.teal {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .stat-icon.sky {
+            background: var(--sky-dim);
+            color: var(--sky);
+        }
+
+        .stat-info {}
+
+        .stat-label {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
 
         .stat-number {
-            font-family: 'Outfit', sans-serif;
             font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text);
+            letter-spacing: -0.03em;
+            line-height: 1.2;
         }
 
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        /* ── Section ── */
+        /* ══════════════ SECTION ══════════════ */
         .section {
-            position: relative;
-            z-index: 1;
-            max-width: 1000px;
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 40px 20px 60px;
+            padding: 48px 40px 0;
         }
 
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
-        .section-header h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.5rem;
+        .section-title {
+            font-size: 1.2rem;
             font-weight: 700;
-        }
-
-        /* ── Agent Cards ── */
-        .agents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .agent-card {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 24px;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .agent-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--border-hover);
-        }
-
-        .agent-card .agent-status {
-            position: absolute;
-            top: 16px;
-            right: 16px;
+            letter-spacing: -0.02em;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.68rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            gap: 10px;
         }
 
-        .agent-card .agent-status.active {
-            color: var(--accent);
-        }
-
-        .agent-card .agent-status .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: currentColor;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .agent-card .agent-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary-glow), rgba(192, 132, 252, 0.1));
+        .section-title-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 14px;
         }
 
-        .agent-card h3 {
-            font-size: 1.05rem;
+        .section-title-icon.violet {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .section-title-icon.sky {
+            background: var(--sky-dim);
+            color: var(--sky);
+        }
+
+        .section-title-icon.teal {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .btn-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--violet);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 9px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            background: var(--violet-hover);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.25);
+        }
+
+        /* ══════════════ AGENT CARDS ══════════════ */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 18px;
+        }
+
+        .agent-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            transition: all 0.25s;
+            box-shadow: var(--shadow-card);
+        }
+
+        .agent-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .agent-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .agent-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .agent-avatar.violet {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .agent-avatar.amber {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .agent-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .agent-name {
+            font-size: 0.98rem;
             font-weight: 700;
-            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .agent-card .agent-desc {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .tag-active {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .tag-default {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .agent-desc {
+            font-size: 0.82rem;
+            color: var(--text-sub);
+            margin-top: 3px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        .agent-meta {
+        .agent-details {
             display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-            font-size: 0.72rem;
+            gap: 18px;
+            padding: 14px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin: 16px 0;
+        }
+
+        .agent-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
             color: var(--text-muted);
         }
 
-        .agent-meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        .agent-detail-item svg {
+            flex-shrink: 0;
         }
 
         .agent-phone {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
             font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 16px;
+            color: var(--teal);
+            margin-bottom: 18px;
         }
 
-        .agent-phone.no-phone {
+        .agent-phone.empty {
             color: var(--text-muted);
-            font-weight: 500;
+            font-weight: 400;
             font-size: 0.82rem;
         }
 
         .agent-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .agent-btn {
+        .action-btn {
             flex: 1;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: none;
-            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid;
+            font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            background: transparent;
+            text-decoration: none;
         }
 
-        .agent-btn-call {
-            background: rgba(52, 211, 153, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(52, 211, 153, 0.15);
+        .action-call {
+            color: var(--teal);
+            border-color: var(--teal-border);
+            background: var(--teal-dim);
         }
 
-        .agent-btn-call:hover {
-            background: rgba(52, 211, 153, 0.2);
+        .action-call:hover {
+            background: rgba(45, 212, 191, 0.16);
         }
 
-        .agent-btn-delete {
-            background: rgba(248, 113, 113, 0.08);
-            color: var(--danger);
-            border: 1px solid rgba(248, 113, 113, 0.12);
-            max-width: 80px;
+        .action-delete {
+            color: var(--rose);
+            border-color: var(--rose-border);
+            background: var(--rose-dim);
+            max-width: 100px;
         }
 
-        .agent-btn-delete:hover {
-            background: rgba(248, 113, 113, 0.15);
+        .action-delete:hover {
+            background: rgba(251, 113, 133, 0.14);
         }
 
-        .agent-card.default-agent {
-            border-color: rgba(251, 191, 36, 0.15);
-        }
-
-        .agent-card.default-agent .agent-icon {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(212, 168, 83, 0.1));
-        }
-
-        .default-tag {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            background: rgba(251, 191, 36, 0.1);
-            color: var(--gold);
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
-
-        /* ── Create Card (placeholder) ── */
+        /* ══════════════ CREATE CARD ══════════════ */
         .create-card {
-            background: rgba(129, 140, 248, 0.03);
-            border: 2px dashed rgba(129, 140, 248, 0.12);
-            border-radius: 18px;
-            padding: 40px 24px;
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 40px 28px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.25s;
             text-decoration: none;
-            min-height: 240px;
+            min-height: 260px;
         }
 
         .create-card:hover {
-            border-color: rgba(129, 140, 248, 0.3);
-            background: rgba(129, 140, 248, 0.06);
-            transform: translateY(-4px);
+            border-color: var(--violet);
+            background: var(--violet-glow);
+            transform: translateY(-2px);
         }
 
-        .create-card .plus {
+        .create-icon {
             width: 56px;
             height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-glow), rgba(192, 132, 252, 0.08));
-            border: 1px solid rgba(129, 140, 248, 0.15);
+            border-radius: 16px;
+            background: var(--violet-dim);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
-            color: var(--primary);
+            color: var(--violet);
             margin-bottom: 14px;
-            transition: all 0.3s;
+            transition: all 0.25s;
         }
 
-        .create-card:hover .plus {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        .create-card:hover .create-icon {
+            background: var(--violet);
             color: #fff;
-            box-shadow: 0 0 24px rgba(129, 140, 248, 0.25);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
         }
 
         .create-card h3 {
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--text);
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .create-card p {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
 
-        /* ── Properties Section (preserved) ── */
+        /* ══════════════ PROPERTIES ══════════════ */
         .properties-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 18px;
         }
 
         .property-card {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 18px;
+            border-radius: 16px;
             overflow: hidden;
-            transition: transform 0.3s, border-color 0.3s;
+            transition: all 0.25s;
+            box-shadow: var(--shadow-card);
         }
 
         .property-card:hover {
-            transform: translateY(-4px);
             border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
         }
 
-        .property-img {
-            height: 160px;
-            background: linear-gradient(135deg, #1a1f35, #0f1525);
+        .property-visual {
+            height: 150px;
+            background: var(--bg-elevated);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.6rem;
             position: relative;
             overflow: hidden;
         }
 
-        .property-img::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(transparent 60%, rgba(8, 9, 14, 0.9));
+        .property-visual .property-svg-icon {
+            color: var(--text-muted);
+            opacity: 0.3;
         }
 
-        .property-tag {
+        .property-type-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 2;
-            background: rgba(129, 140, 248, 0.9);
-            color: #fff;
-            font-size: 0.65rem;
+            top: 12px;
+            right: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.68rem;
             font-weight: 700;
             text-transform: uppercase;
-            padding: 3px 9px;
-            border-radius: 6px;
+            letter-spacing: 0.04em;
+        }
+
+        .badge-sale {
+            background: var(--violet);
+            color: #fff;
+        }
+
+        .badge-rent {
+            background: var(--teal);
+            color: #fff;
         }
 
         .property-body {
-            padding: 18px 20px 22px;
+            padding: 20px 22px 22px;
         }
 
         .property-title {
             font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
 
         .property-location {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .property-specs {
             display: flex;
-            gap: 14px;
+            gap: 16px;
             margin-bottom: 14px;
-            font-size: 0.72rem;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.76rem;
+            color: var(--text-sub);
+        }
+
+        .spec-item svg {
             color: var(--text-muted);
         }
 
-        .property-specs span {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-
         .property-price {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--violet);
+            letter-spacing: -0.02em;
         }
 
-        /* ── Reservations ── */
+        /* ══════════════ RESERVATIONS ══════════════ */
         .reservations-container {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 18px;
+            border-radius: 16px;
             overflow: hidden;
-            min-height: 260px;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition-theme);
         }
 
         .res-header {
@@ -652,67 +739,82 @@
         }
 
         .res-header h3 {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             font-weight: 700;
         }
 
-        .res-live {
-            display: flex;
+        .live-badge {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.68rem;
-            color: var(--accent);
+            font-size: 0.72rem;
             font-weight: 600;
+            color: var(--teal);
         }
 
-        .res-live .dot {
+        .live-dot {
             width: 7px;
             height: 7px;
-            background: var(--accent);
+            background: var(--teal);
             border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.85);
+            }
         }
 
         .res-list {
-            padding: 10px 14px;
-            max-height: 360px;
+            padding: 8px 14px;
+            max-height: 380px;
             overflow-y: auto;
         }
 
         .res-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 10px;
+            gap: 14px;
+            padding: 14px 10px;
             border-radius: 10px;
-            transition: background 0.2s;
+            transition: background 0.15s;
         }
 
         .res-item:hover {
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--bg-elevated);
         }
 
         .res-item+.res-item {
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid var(--border);
         }
 
         .res-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 9px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
             flex-shrink: 0;
         }
 
         .res-icon.viewing {
-            background: rgba(129, 140, 248, 0.1);
+            background: var(--violet-dim);
+            color: var(--violet);
         }
 
         .res-icon.reservation {
-            background: rgba(52, 211, 153, 0.1);
+            background: var(--teal-dim);
+            color: var(--teal);
         }
 
         .res-info {
@@ -721,26 +823,26 @@
         }
 
         .res-name {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 600;
         }
 
         .res-detail {
-            font-size: 0.7rem;
+            font-size: 0.74rem;
             color: var(--text-muted);
         }
 
         .res-time {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             white-space: nowrap;
         }
 
         .res-empty {
             text-align: center;
-            padding: 50px 20px;
+            padding: 52px 20px;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.88rem;
         }
 
         .res-list::-webkit-scrollbar {
@@ -748,42 +850,24 @@
         }
 
         .res-list::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--border-hover);
             border-radius: 2px;
         }
 
-        /* ── Footer ── */
+        /* ══════════════ FOOTER ══════════════ */
         footer {
-            position: relative;
-            z-index: 1;
             border-top: 1px solid var(--border);
-            padding: 28px 40px;
+            padding: 32px 40px;
             text-align: center;
-            font-size: 0.72rem;
+            font-size: 0.76rem;
             color: var(--text-muted);
+            margin-top: 64px;
         }
 
-        /* ── Animate ── */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate {
-            animation: fadeInUp 0.5s ease-out forwards;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 640px) {
+        /* ══════════════ RESPONSIVE ══════════════ */
+        @media (max-width: 768px) {
             nav {
-                padding: 0 16px;
+                padding: 0 20px;
             }
 
             .nav-links {
@@ -791,15 +875,21 @@
             }
 
             .hero {
-                padding: 110px 16px 50px;
+                padding: 90px 20px 16px;
             }
 
-            .stats {
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .stats-row {
                 grid-template-columns: 1fr;
+                padding: 28px 20px 0;
+                gap: 10px;
             }
 
             .section {
-                padding: 30px 14px 40px;
+                padding: 36px 20px 0;
             }
 
             .section-header {
@@ -807,72 +897,111 @@
                 gap: 12px;
                 align-items: flex-start;
             }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
     <nav>
-        <div class="logo">AI Voice Agent</div>
-        <ul class="nav-links">
-            <li><a href="#agents">Agents</a></li>
-            <li><a href="#properties">Properties</a></li>
-            <li><a href="#reservations">Reservations</a></li>
-        </ul>
-        <a href="/wizard.html" class="nav-cta">✨ Create Agent</a>
+        <div class="nav-left">
+            <a href="/" class="logo">
+                <div class="logo-mark">
+                    <i data-lucide="audio-waveform" style="width:18px;height:18px"></i>
+                </div>
+                <span class="logo-text">VoiceAgent</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#agents"><i data-lucide="bot" style="width:15px;height:15px"></i> Agents</a></li>
+                <li><a href="#properties"><i data-lucide="building-2" style="width:15px;height:15px"></i> Properties</a>
+                </li>
+                <li><a href="#reservations"><i data-lucide="calendar-check" style="width:15px;height:15px"></i>
+                        Reservations</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
+                <i data-lucide="moon" style="width:18px;height:18px" id="themeIcon"></i>
+            </button>
+            <a href="/wizard.html" class="btn-cta">
+                <i data-lucide="plus" style="width:16px;height:16px"></i> Create Agent
+            </a>
+        </div>
     </nav>
 
     <section class="hero">
-        <div class="hero-badge"><span class="pulse"></span> Platform Active</div>
-        <h1>Your Own<br><span class="gradient">AI Voice Agents</span></h1>
-        <p>Create customized AI voice assistants with unique phone numbers. Each agent answers calls with its own
-            personality, voice, and capabilities.</p>
-        <div class="hero-actions">
-            <a href="/wizard.html" class="btn-primary">✨ Create New Agent</a>
-            <a href="#agents" class="btn-secondary">📋 View Agents</a>
-        </div>
+        <h1>Your <span class="accent-word">AI Voice Agents</span>,<br>all in one place.</h1>
+        <p>Create customized voice assistants with unique phone numbers. Each agent answers calls with its own
+            personality, voice, and skills.</p>
     </section>
 
-    <section class="stats" id="stats">
-        <div class="stat-card animate">
-            <div class="stat-number" id="statAgents">0</div>
-            <div class="stat-label">Active Agents</div>
+    <section class="stats-row" id="stats">
+        <div class="stat-card">
+            <div class="stat-icon violet"><i data-lucide="bot" style="width:22px;height:22px"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Active Agents</div>
+                <div class="stat-number" id="statAgents">0</div>
+            </div>
         </div>
-        <div class="stat-card animate" style="animation-delay:0.1s">
-            <div class="stat-number" id="statPhones">0</div>
-            <div class="stat-label">Phone Numbers</div>
+        <div class="stat-card">
+            <div class="stat-icon teal"><i data-lucide="phone" style="width:22px;height:22px"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Phone Numbers</div>
+                <div class="stat-number" id="statPhones">0</div>
+            </div>
         </div>
-        <div class="stat-card animate" style="animation-delay:0.2s">
-            <div class="stat-number" id="statReservations">0</div>
-            <div class="stat-label">Reservations</div>
+        <div class="stat-card">
+            <div class="stat-icon sky"><i data-lucide="calendar-check" style="width:22px;height:22px"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Reservations</div>
+                <div class="stat-number" id="statReservations">0</div>
+            </div>
         </div>
     </section>
 
     <section class="section" id="agents">
         <div class="section-header">
-            <h2>🤖 Your Agents</h2>
-            <a href="/wizard.html" class="btn-primary" style="padding:10px 20px;font-size:0.82rem;">+ New Agent</a>
+            <h2 class="section-title">
+                <span class="section-title-icon violet"><i data-lucide="bot" style="width:17px;height:17px"></i></span>
+                Your Agents
+            </h2>
+            <a href="/wizard.html" class="btn-sm">
+                <i data-lucide="plus" style="width:14px;height:14px"></i> New Agent
+            </a>
         </div>
-        <div class="agents-grid" id="agentsGrid">
-            <!-- JS fills -->
-        </div>
+        <div class="agents-grid" id="agentsGrid"></div>
     </section>
 
     <section class="section" id="properties">
         <div class="section-header">
-            <h2>🏠 Demo Properties</h2>
+            <h2 class="section-title">
+                <span class="section-title-icon sky"><i data-lucide="building-2"
+                        style="width:17px;height:17px"></i></span>
+                Demo Properties
+            </h2>
         </div>
         <div class="properties-grid" id="propertiesGrid"></div>
     </section>
 
     <section class="section" id="reservations">
         <div class="section-header">
-            <h2>📋 Live Reservations</h2>
+            <h2 class="section-title">
+                <span class="section-title-icon teal"><i data-lucide="calendar-check"
+                        style="width:17px;height:17px"></i></span>
+                Live Reservations
+            </h2>
         </div>
         <div class="reservations-container">
             <div class="res-header">
                 <h3>Recent Activity</h3>
-                <div class="res-live"><span class="dot"></span> Live</div>
+                <span class="live-badge"><span class="live-dot"></span> Live</span>
             </div>
             <div class="res-list" id="resList">
                 <div class="res-empty">No reservations yet. Call an agent to create one.</div>
@@ -881,116 +1010,147 @@
     </section>
 
     <footer>
-        <p>© 2026 AI Voice Agent Platform — Powered by OpenAI Realtime API & Twilio</p>
+        <p>&copy; 2026 VoiceAgent — Powered by OpenAI Realtime API &amp; Twilio</p>
     </footer>
 
     <script>
-        // ─── Format Phone ──
+        // ── Theme ──
+        function getStoredTheme() { return localStorage.getItem('theme') || 'dark'; }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            // Re-render icons after theme swap
+            requestAnimationFrame(() => {
+                const el = document.getElementById('themeIcon');
+                if (el) el.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+                lucide.createIcons();
+            });
+        }
+
+        function toggleTheme() {
+            applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        }
+
+        applyTheme(getStoredTheme());
+
+        // ── Helpers ──
         function formatPhone(phone) {
             if (!phone) return '';
             const d = phone.replace(/\D/g, '');
-            if (d.length === 11 && d.startsWith('1')) {
+            if (d.length === 11 && d.startsWith('1'))
                 return `+1 (${d.slice(1, 4)}) ${d.slice(4, 7)}-${d.slice(7)}`;
-            }
             return phone;
         }
 
-        // ─── Load Agents ──
+        // ── Load Agents ──
         async function loadAgents() {
             try {
                 const res = await fetch('/api/agents');
                 const agents = await res.json();
                 const grid = document.getElementById('agentsGrid');
-
                 const withPhones = agents.filter(a => a.phoneNumber).length;
                 document.getElementById('statAgents').textContent = agents.length;
                 document.getElementById('statPhones').textContent = withPhones;
 
-                let html = agents.map((a, i) => {
+                let html = agents.map(a => {
                     const isDefault = a.id === 'agent_default';
                     return `
-                    <div class="agent-card ${isDefault ? 'default-agent' : ''} animate" style="animation-delay:${i * 0.08}s">
-                        <div class="agent-status active"><span class="dot"></span> Active</div>
-                        <div class="agent-icon">${isDefault ? '⭐' : '🤖'}</div>
-                        <h3>${a.name}${isDefault ? '<span class="default-tag">Test Agent</span>' : ''}</h3>
-                        <div class="agent-desc">${a.description || 'No description'}</div>
-                        <div class="agent-meta">
-                            <span>🎙️ ${a.voice || 'coral'}</span>
-                            <span>🌐 ${a.language || 'en-US'}</span>
-                            <span>🔧 ${(a.tools || []).length} tools</span>
+                    <div class="agent-card">
+                        <div class="agent-card-header">
+                            <div class="agent-avatar ${isDefault ? 'amber' : 'violet'}">
+                                <i data-lucide="${isDefault ? 'star' : 'bot'}" style="width:22px;height:22px"></i>
+                            </div>
+                            <div class="agent-info">
+                                <div class="agent-name">
+                                    ${a.name}
+                                    ${isDefault ? '<span class="tag tag-default">Default</span>' : ''}
+                                    <span class="tag tag-active"><span class="live-dot" style="width:5px;height:5px"></span> Active</span>
+                                </div>
+                                <div class="agent-desc">${a.description || 'No description'}</div>
+                            </div>
                         </div>
-                        <div class="agent-phone ${a.phoneNumber ? '' : 'no-phone'}">
-                            ${a.phoneNumber ? '📱 ' + formatPhone(a.phoneNumber) : 'No phone number assigned'}
+                        <div class="agent-details">
+                            <div class="agent-detail-item">
+                                <i data-lucide="mic" style="width:14px;height:14px"></i> ${a.voice || 'coral'}
+                            </div>
+                            <div class="agent-detail-item">
+                                <i data-lucide="globe" style="width:14px;height:14px"></i> ${a.language || 'en-US'}
+                            </div>
+                            <div class="agent-detail-item">
+                                <i data-lucide="wrench" style="width:14px;height:14px"></i> ${(a.tools || []).length} tools
+                            </div>
+                        </div>
+                        <div class="agent-phone ${a.phoneNumber ? '' : 'empty'}">
+                            <i data-lucide="${a.phoneNumber ? 'smartphone' : 'phone-off'}" style="width:16px;height:16px"></i>
+                            ${a.phoneNumber ? formatPhone(a.phoneNumber) : 'No phone number assigned'}
                         </div>
                         <div class="agent-actions">
-                            ${a.phoneNumber ? `<a href="tel:${a.phoneNumber}" class="agent-btn agent-btn-call">📞 Call</a>` : '<span></span>'}
-                            ${!isDefault ? `<button class="agent-btn agent-btn-delete" onclick="deleteAgent('${a.id}')">Delete</button>` : ''}
+                            ${a.phoneNumber ? `<a href="tel:${a.phoneNumber}" class="action-btn action-call"><i data-lucide="phone-call" style="width:15px;height:15px"></i> Call</a>` : '<span style="flex:1"></span>'}
+                            ${!isDefault ? `<button class="action-btn action-delete" onclick="deleteAgent('${a.id}')"><i data-lucide="trash-2" style="width:14px;height:14px"></i> Delete</button>` : ''}
                         </div>
                     </div>`;
                 }).join('');
 
-                // Add create card
                 html += `
-                <a href="/wizard.html" class="create-card animate" style="animation-delay:${agents.length * 0.08}s">
-                    <div class="plus">+</div>
+                <a href="/wizard.html" class="create-card">
+                    <div class="create-icon"><i data-lucide="plus" style="width:26px;height:26px"></i></div>
                     <h3>Create New Agent</h3>
                     <p>Set up a new AI voice agent with its own phone number</p>
                 </a>`;
 
                 grid.innerHTML = html;
+                lucide.createIcons();
             } catch (e) { console.error(e); }
         }
 
-        // ─── Delete Agent ──
+        // ── Delete Agent ──
         async function deleteAgent(id) {
             if (!confirm('Are you sure you want to delete this agent? Its phone number will be released.')) return;
             try {
                 const res = await fetch(`/api/agents/${id}`, { method: 'DELETE' });
                 const data = await res.json();
-                if (data.success) {
-                    loadAgents();
-                } else {
-                    alert('Error: ' + (data.error || 'Could not delete'));
-                }
+                data.success ? loadAgents() : alert('Error: ' + (data.error || 'Could not delete'));
             } catch (e) { alert('Error: ' + e.message); }
         }
 
-        // ─── Load Properties ──
+        // ── Load Properties ──
         async function loadProperties() {
             try {
                 const res = await fetch('/api/properties');
                 const data = await res.json();
-                const grid = document.getElementById('propertiesGrid');
-                const emojis = ['🏢', '🏠', '🏡', '🏘️', '🏰', '🌇'];
-                grid.innerHTML = data.map((p, i) => `
-                    <div class="property-card animate" style="animation-delay:${i * 0.08}s">
-                        <div class="property-img">
-                            ${emojis[i % emojis.length]}
-                            <span class="property-tag">${p.type === 'sale' ? 'FOR SALE' : 'FOR RENT'}</span>
+                document.getElementById('propertiesGrid').innerHTML = data.map(p => `
+                    <div class="property-card">
+                        <div class="property-visual">
+                            <i data-lucide="building" style="width:48px;height:48px" class="property-svg-icon"></i>
+                            <span class="property-type-badge ${p.type === 'sale' ? 'badge-sale' : 'badge-rent'}">${p.type === 'sale' ? 'For Sale' : 'For Rent'}</span>
                         </div>
                         <div class="property-body">
                             <div class="property-title">${p.title}</div>
-                            <div class="property-location">📍 ${p.location}</div>
+                            <div class="property-location">
+                                <i data-lucide="map-pin" style="width:13px;height:13px"></i> ${p.location}
+                            </div>
                             <div class="property-specs">
-                                <span>🛏️ ${p.rooms}</span>
-                                <span>📐 ${p.area} sq ft</span>
-                                <span>🏢 ${p.floor || '-'}</span>
+                                <span class="spec-item"><i data-lucide="bed-double" style="width:14px;height:14px"></i> ${p.rooms}</span>
+                                <span class="spec-item"><i data-lucide="ruler" style="width:14px;height:14px"></i> ${p.area} sq ft</span>
+                                <span class="spec-item"><i data-lucide="layers" style="width:14px;height:14px"></i> ${p.floor || '—'}</span>
                             </div>
                             <div class="property-price">${p.type === 'sale' ? '$' + p.price.toLocaleString('en-US') : '$' + p.price.toLocaleString('en-US') + '/mo'}</div>
                         </div>
                     </div>
                 `).join('');
+                lucide.createIcons();
             } catch (e) { console.error(e); }
         }
 
-        // ─── Load Reservations ──
+        // ── Load Reservations ──
         async function loadReservations() {
             try {
                 const res = await fetch('/api/reservations');
                 const data = await res.json();
                 document.getElementById('statReservations').textContent = data.length;
                 const list = document.getElementById('resList');
-                if (data.length === 0) {
+                if (!data.length) {
                     list.innerHTML = '<div class="res-empty">No reservations yet. Call an agent to create one.</div>';
                     return;
                 }
@@ -1000,7 +1160,9 @@
                     const timeStr = date.toLocaleString('en-US', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
                     return `
                     <div class="res-item">
-                        <div class="res-icon ${isViewing ? 'viewing' : 'reservation'}">${isViewing ? '👁️' : '📝'}</div>
+                        <div class="res-icon ${isViewing ? 'viewing' : 'reservation'}">
+                            <i data-lucide="${isViewing ? 'eye' : 'clipboard-check'}" style="width:17px;height:17px"></i>
+                        </div>
                         <div class="res-info">
                             <div class="res-name">${r.customer_name}</div>
                             <div class="res-detail">${r.property_title} — ${r.date} ${r.time || ''}</div>
@@ -1008,10 +1170,11 @@
                         <div class="res-time">${timeStr}</div>
                     </div>`;
                 }).join('');
+                lucide.createIcons();
             } catch (e) { console.error(e); }
         }
 
-        // ─── Init ──
+        // ── Init ──
         loadAgents();
         loadProperties();
         loadReservations();

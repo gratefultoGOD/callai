@@ -1,172 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create AI Voice Agent — Wizard</title>
-    <meta name="description"
-        content="Create your own AI voice agent with a dedicated phone number. Step-by-step setup wizard.">
+    <meta name="description" content="Create your own AI voice agent with a dedicated phone number.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         *,
         *::before,
         *::after {
             box-sizing: border-box;
             margin: 0;
-            padding: 0;
+            padding: 0
         }
 
         :root {
-            --bg: #08090e;
-            --surface: rgba(16, 19, 33, 0.85);
-            --surface-hover: rgba(22, 26, 48, 0.9);
-            --border: rgba(99, 102, 241, 0.10);
-            --border-active: rgba(129, 140, 248, 0.35);
-            --primary: #818cf8;
-            --primary-glow: rgba(129, 140, 248, 0.15);
-            --secondary: #c084fc;
-            --accent: #34d399;
-            --accent-glow: rgba(52, 211, 153, 0.12);
-            --gold: #fbbf24;
-            --text: #e8ecf4;
-            --text-secondary: #94a3b8;
-            --text-muted: #4b5563;
-            --danger: #f87171;
-            --danger-glow: rgba(248, 113, 113, 0.1);
-            --radius: 14px;
-            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-theme: 0.35s ease
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #09090b;
+            --bg-surface: #111114;
+            --bg-card: #16161a;
+            --bg-card-hover: #1c1c21;
+            --bg-elevated: #1e1e24;
+            --bg-input: #16161a;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --border-focus: #7c3aed;
+            --text: #fafafa;
+            --text-sub: #a1a1aa;
+            --text-muted: #52525b;
+            --violet: #8b5cf6;
+            --violet-hover: #7c3aed;
+            --violet-dim: rgba(139, 92, 246, 0.10);
+            --teal: #2dd4bf;
+            --teal-dim: rgba(45, 212, 191, 0.10);
+            --teal-border: rgba(45, 212, 191, 0.25);
+            --rose: #fb7185;
+            --rose-dim: rgba(251, 113, 133, 0.08);
+            --rose-border: rgba(251, 113, 133, 0.18);
+            --amber: #fbbf24;
+            --amber-dim: rgba(251, 191, 36, 0.08);
+            --sky: #38bdf8;
+            --sky-dim: rgba(56, 189, 248, 0.08);
+            --nav-bg: rgba(9, 9, 11, 0.88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #fafafa;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f9f9fb;
+            --bg-elevated: #f4f4f5;
+            --bg-input: #f4f4f5;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --border-focus: #7c3aed;
+            --text: #18181b;
+            --text-sub: #71717a;
+            --text-muted: #a1a1aa;
+            --violet: #7c3aed;
+            --violet-hover: #6d28d9;
+            --violet-dim: rgba(124, 58, 237, 0.07);
+            --teal: #0d9488;
+            --teal-dim: rgba(13, 148, 136, 0.06);
+            --teal-border: rgba(13, 148, 136, 0.25);
+            --rose: #e11d48;
+            --rose-dim: rgba(225, 29, 72, 0.05);
+            --rose-border: rgba(225, 29, 72, 0.15);
+            --amber: #d97706;
+            --amber-dim: rgba(217, 119, 6, 0.06);
+            --sky: #0284c7;
+            --sky-dim: rgba(2, 132, 199, 0.06);
+            --nav-bg: rgba(255, 255, 255, 0.88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
         }
 
         html {
-            scroll-behavior: smooth;
+            scroll-behavior: smooth
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-body);
             color: var(--text);
-            line-height: 1.65;
-            overflow-x: hidden;
+            line-height: 1.6;
             min-height: 100vh;
+            transition: background var(--transition-theme), color var(--transition-theme);
+            -webkit-font-smoothing: antialiased
         }
 
-        /* ── Ambient BG ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background:
-                radial-gradient(ellipse 700px 500px at 20% 25%, rgba(129, 140, 248, 0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 500px 400px at 80% 65%, rgba(192, 132, 252, 0.05) 0%, transparent 70%),
-                radial-gradient(ellipse 600px 400px at 50% 95%, rgba(52, 211, 153, 0.04) 0%, transparent 70%);
-            animation: ambientDrift 25s ease-in-out infinite alternate;
-        }
-
-        @keyframes ambientDrift {
-            0% {
-                transform: scale(1) translate(0, 0);
-            }
-
-            100% {
-                transform: scale(1.05) translate(-15px, 12px);
-            }
-        }
-
-        /* ── Top Bar ── */
         .topbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 100;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            background: rgba(8, 9, 14, 0.8);
+            backdrop-filter: blur(16px) saturate(1.4);
+            background: var(--nav-bg);
             border-bottom: 1px solid var(--border);
             height: 60px;
             padding: 0 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-        }
-
-        .topbar-brand {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            transition: background var(--transition-theme), border-color var(--transition-theme)
         }
 
         .topbar-back {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--text-secondary);
+            gap: 7px;
+            color: var(--text-sub);
             text-decoration: none;
-            font-size: 0.82rem;
+            font-size: .84rem;
             font-weight: 500;
-            transition: color var(--transition);
+            transition: color .2s
         }
 
         .topbar-back:hover {
-            color: var(--text);
+            color: var(--text)
         }
 
-        .topbar-back svg {
-            width: 16px;
-            height: 16px;
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text)
         }
 
-        /* ── Main Container ── */
+        .logo-mark {
+            width: 28px;
+            height: 28px;
+            background: var(--violet);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .logo-mark svg {
+            color: #fff
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .theme-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-hover);
+            color: var(--violet);
+            background: var(--violet-dim)
+        }
+
         .wizard-container {
-            position: relative;
-            z-index: 1;
-            max-width: 720px;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 100px 20px 60px;
+            padding: 100px 24px 60px
         }
 
-        /* ── Progress Bar ── */
+        /* Progress */
         .progress-wrap {
-            margin-bottom: 48px;
+            margin-bottom: 40px
         }
 
         .progress-steps {
             display: flex;
             justify-content: space-between;
             position: relative;
-            margin-bottom: 12px;
+            margin-bottom: 4px
         }
 
         .progress-steps::before {
             content: '';
             position: absolute;
             top: 16px;
-            left: 24px;
-            right: 24px;
+            left: 28px;
+            right: 28px;
             height: 2px;
-            background: rgba(255, 255, 255, 0.06);
-            z-index: 0;
+            background: var(--border);
+            z-index: 0
         }
 
         .progress-bar-fill {
             position: absolute;
             top: 16px;
-            left: 24px;
+            left: 28px;
             height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: var(--violet);
             z-index: 1;
-            transition: width 0.5s ease;
-            border-radius: 1px;
-            box-shadow: 0 0 12px rgba(129, 140, 248, 0.3);
+            transition: width .4s ease;
+            border-radius: 1px
         }
 
         .step-indicator {
@@ -176,141 +225,146 @@
             gap: 8px;
             position: relative;
             z-index: 2;
-            cursor: default;
+            cursor: default
         }
 
         .step-dot {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.04);
-            border: 2px solid rgba(255, 255, 255, 0.08);
+            background: var(--bg-card);
+            border: 2px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: .72rem;
             font-weight: 700;
             color: var(--text-muted);
-            transition: all 0.4s ease;
+            transition: all .3s
         }
 
         .step-indicator.active .step-dot {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-color: transparent;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(129, 140, 248, 0.4);
+            background: var(--violet);
+            border-color: var(--violet);
+            color: #fff
         }
 
         .step-indicator.complete .step-dot {
-            background: var(--accent);
-            border-color: transparent;
-            color: #fff;
-            box-shadow: 0 0 16px rgba(52, 211, 153, 0.3);
+            background: var(--teal);
+            border-color: var(--teal);
+            color: #fff
         }
 
         .step-label {
-            font-size: 0.68rem;
+            font-size: .68rem;
             font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            transition: color var(--transition);
+            letter-spacing: .05em;
+            transition: color .2s
         }
 
         .step-indicator.active .step-label {
-            color: var(--primary);
+            color: var(--violet)
         }
 
         .step-indicator.complete .step-label {
-            color: var(--accent);
+            color: var(--teal)
         }
 
-        /* ── Step Card ── */
+        /* Step Card */
         .step-card {
-            background: var(--surface);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px 36px 36px;
-            animation: cardSlideIn 0.5s ease forwards;
+            border-radius: 16px;
+            padding: 36px 32px 32px;
             display: none;
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition-theme), border-color var(--transition-theme)
         }
 
         .step-card.visible {
             display: block;
+            animation: cardFade .3s ease
         }
 
-        @keyframes cardSlideIn {
+        @keyframes cardFade {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px)
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0)
             }
         }
 
         .step-card h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.55rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 800;
             margin-bottom: 6px;
-            background: linear-gradient(135deg, var(--text), var(--text-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: -.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .step-card h2 .step-h-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
         }
 
         .step-card .step-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.88rem;
-            margin-bottom: 32px;
+            color: var(--text-sub);
+            font-size: .88rem;
+            margin-bottom: 28px
         }
 
-        /* ── Form Elements ── */
+        /* Form */
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 22px
         }
 
         .form-group label {
             display: block;
-            font-size: 0.78rem;
+            font-size: .8rem;
             font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 7px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            color: var(--text-sub);
+            margin-bottom: 7px
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 13px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
             border-radius: 10px;
             color: var(--text);
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            transition: all var(--transition);
-            outline: none;
+            font-size: .88rem;
+            transition: border-color .2s, box-shadow .2s;
+            outline: none
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
-            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--violet);
+            box-shadow: 0 0 0 3px var(--violet-dim)
         }
 
         .form-group textarea {
             min-height: 120px;
             resize: vertical;
-            line-height: 1.6;
+            line-height: 1.5
         }
 
         .form-group select {
@@ -319,199 +373,193 @@
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
             background-position: right 12px center;
             background-repeat: no-repeat;
-            background-size: 20px;
-            padding-right: 40px;
+            background-size: 18px;
+            padding-right: 38px
         }
 
         .form-group select option {
-            background: #1a1d2e;
-            color: var(--text);
+            background: var(--bg-card);
+            color: var(--text)
         }
 
         .form-hint {
-            font-size: 0.72rem;
+            font-size: .74rem;
             color: var(--text-muted);
-            margin-top: 5px;
+            margin-top: 5px
         }
 
         .char-count {
-            font-size: 0.7rem;
+            font-size: .72rem;
             color: var(--text-muted);
             text-align: right;
-            margin-top: 4px;
+            margin-top: 4px
         }
 
-        /* ── Voice Cards ── */
+        /* Voice Cards */
         .voice-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+            gap: 10px
         }
 
         .voice-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--bg-input);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 16px 14px;
+            padding: 16px 12px;
             cursor: pointer;
             text-align: center;
-            transition: all var(--transition);
+            transition: all .2s
         }
 
         .voice-card:hover {
-            border-color: rgba(129, 140, 248, 0.2);
-            background: rgba(129, 140, 248, 0.04);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover)
         }
 
         .voice-card.selected {
-            border-color: var(--primary);
-            background: var(--primary-glow);
-            box-shadow: 0 0 20px rgba(129, 140, 248, 0.15);
+            border-color: var(--violet);
+            background: var(--violet-dim);
+            box-shadow: 0 0 0 1px var(--violet)
         }
 
         .voice-card .voice-icon {
-            font-size: 1.8rem;
-            margin-bottom: 6px;
+            width: 36px;
+            height: 36px;
+            margin: 0 auto 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center
         }
 
         .voice-card .voice-name {
-            font-size: 0.82rem;
-            font-weight: 600;
+            font-size: .84rem;
+            font-weight: 700
         }
 
         .voice-card .voice-desc {
-            font-size: 0.68rem;
+            font-size: .7rem;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-top: 2px
         }
 
-        /* ── Tool Toggle ── */
-        .tool-toggle-wrap {
-            margin-bottom: 20px;
-        }
-
+        /* Toggle */
         .toggle-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 14px 16px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--bg-input);
+            border: 1px solid var(--border);
             margin-bottom: 8px;
-            transition: all var(--transition);
+            transition: border-color .2s
         }
 
         .toggle-row:hover {
-            border-color: rgba(129, 140, 248, 0.15);
+            border-color: var(--border-hover)
         }
 
         .toggle-label {
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: .85rem;
+            font-weight: 500
         }
 
         .toggle-desc {
-            font-size: 0.7rem;
-            color: var(--text-muted);
+            font-size: .72rem;
+            color: var(--text-muted)
         }
 
         .toggle-switch {
             position: relative;
-            width: 44px;
+            width: 42px;
             height: 24px;
-            flex-shrink: 0;
+            flex-shrink: 0
         }
 
         .toggle-switch input {
             opacity: 0;
             width: 0;
-            height: 0;
+            height: 0
         }
 
         .toggle-slider {
             position: absolute;
             inset: 0;
             cursor: pointer;
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--border-hover);
             border-radius: 50px;
-            transition: all var(--transition);
+            transition: all .2s
         }
 
         .toggle-slider::before {
             content: '';
             position: absolute;
-            width: 18px;
-            height: 18px;
+            width: 17px;
+            height: 17px;
             border-radius: 50%;
-            background: #64748b;
-            left: 3px;
-            bottom: 3px;
-            transition: all var(--transition);
+            background: #fff;
+            left: 3.5px;
+            bottom: 3.5px;
+            transition: all .2s
         }
 
         .toggle-switch input:checked+.toggle-slider {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--violet)
         }
 
         .toggle-switch input:checked+.toggle-slider::before {
-            transform: translateX(20px);
-            background: #fff;
+            transform: translateX(18px)
         }
 
-        /* ── Phone Number Section ── */
-        .phone-search-area {
-            margin-bottom: 24px;
-        }
-
+        /* Phone */
         .phone-search-row {
             display: flex;
             gap: 10px;
-            margin-bottom: 16px;
+            margin-bottom: 16px
         }
 
         .phone-search-row input {
-            flex: 1;
+            flex: 1
         }
 
         .btn-search {
-            padding: 13px 24px;
+            padding: 12px 22px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--violet);
             color: #fff;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: .84rem;
             cursor: pointer;
             white-space: nowrap;
-            transition: all var(--transition);
+            transition: background .2s
         }
 
         .btn-search:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(129, 140, 248, 0.25);
+            background: var(--violet-hover)
         }
 
         .btn-search:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+            opacity: .5;
+            cursor: not-allowed
         }
 
         .phone-results {
             display: grid;
             gap: 8px;
-            max-height: 320px;
-            overflow-y: auto;
+            max-height: 300px;
+            overflow-y: auto
         }
 
         .phone-results::-webkit-scrollbar {
-            width: 4px;
+            width: 4px
         }
 
         .phone-results::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
+            background: var(--border-hover);
+            border-radius: 2px
         }
 
         .phone-item {
@@ -520,453 +568,466 @@
             justify-content: space-between;
             padding: 14px 16px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--bg-input);
+            border: 1px solid var(--border);
             cursor: pointer;
-            transition: all var(--transition);
+            transition: all .15s
         }
 
         .phone-item:hover {
-            border-color: rgba(129, 140, 248, 0.2);
-            background: rgba(129, 140, 248, 0.04);
+            border-color: var(--border-hover)
         }
 
         .phone-item.selected {
-            border-color: var(--accent);
-            background: var(--accent-glow);
+            border-color: var(--teal);
+            background: var(--teal-dim)
         }
 
         .phone-number {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700
         }
 
         .phone-location {
-            font-size: 0.72rem;
-            color: var(--text-secondary);
+            font-size: .74rem;
+            color: var(--text-sub)
         }
 
         .phone-check {
-            font-size: 1.2rem;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: opacity .15s;
+            color: var(--teal)
         }
 
         .phone-item.selected .phone-check {
-            opacity: 1;
+            opacity: 1
         }
 
         .phone-status-msg {
             text-align: center;
-            padding: 40px 20px;
+            padding: 40px 16px;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: .85rem
         }
 
         .phone-status-msg.error {
-            color: var(--danger);
+            color: var(--rose)
         }
 
-        /* ── Review Panel ── */
+        /* Review */
         .review-section {
-            margin-bottom: 20px;
+            margin-bottom: 16px
         }
 
         .review-label {
-            font-size: 0.7rem;
+            font-size: .72rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: .06em;
             color: var(--text-muted);
-            margin-bottom: 6px;
+            margin-bottom: 5px
         }
 
         .review-value {
-            padding: 12px 16px;
+            padding: 12px 14px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            font-size: 0.88rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            font-size: .88rem;
             white-space: pre-wrap;
-            word-break: break-word;
+            word-break: break-word
         }
 
         .review-highlight {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--teal)
         }
 
         .review-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 12px
         }
 
-        /* ── Buttons ── */
+        /* Buttons */
         .actions {
             display: flex;
             justify-content: space-between;
-            margin-top: 32px;
-            gap: 12px;
+            margin-top: 28px;
+            gap: 12px
         }
 
         .btn-back {
-            padding: 13px 28px;
+            padding: 10px 22px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-secondary);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border);
             font-weight: 600;
-            font-size: 0.88rem;
+            font-size: .86rem;
             cursor: pointer;
-            transition: all var(--transition);
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: 6px
         }
 
         .btn-back:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            color: var(--text);
+            border-color: var(--border-hover);
+            color: var(--text)
         }
 
         .btn-next {
-            padding: 13px 32px;
+            padding: 10px 26px;
             border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--violet);
             color: #fff;
             border: none;
             font-weight: 700;
-            font-size: 0.88rem;
+            font-size: .86rem;
             cursor: pointer;
-            transition: all var(--transition);
+            transition: all .2s;
             margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px
         }
 
         .btn-next:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(129, 140, 248, 0.3);
+            background: var(--violet-hover);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, .25)
         }
 
         .btn-next:disabled {
-            opacity: 0.4;
+            opacity: .4;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+            box-shadow: none
         }
 
         .btn-launch {
-            padding: 14px 40px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent), #059669);
+            padding: 12px 32px;
+            border-radius: 10px;
+            background: var(--teal);
             color: #fff;
             border: none;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: .9rem;
             cursor: pointer;
-            transition: all var(--transition);
+            transition: all .2s;
             margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 7px
         }
 
         .btn-launch:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(52, 211, 153, 0.35);
+            filter: brightness(1.1);
+            box-shadow: 0 4px 20px rgba(45, 212, 191, .3)
         }
 
         .btn-launch:disabled {
-            opacity: 0.4;
+            opacity: .4;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+            box-shadow: none
         }
 
-        /* ── Success Screen ── */
+        /* Success */
         .success-screen {
             display: none;
             text-align: center;
-            padding: 60px 20px;
+            padding: 64px 24px
         }
 
         .success-screen.visible {
-            display: block;
+            display: block
         }
 
         .success-icon {
-            width: 80px;
-            height: 80px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            margin: 0 auto 24px;
-            background: linear-gradient(135deg, var(--accent), #059669);
+            margin: 0 auto 20px;
+            background: var(--teal);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.4rem;
-            animation: successPop 0.5s ease;
-            box-shadow: 0 0 40px rgba(52, 211, 153, 0.3);
+            color: #fff;
+            animation: sPop .4s ease
         }
 
-        @keyframes successPop {
+        @keyframes sPop {
             0% {
-                transform: scale(0);
+                transform: scale(0)
             }
 
-            50% {
-                transform: scale(1.15);
+            60% {
+                transform: scale(1.1)
             }
 
             100% {
-                transform: scale(1);
+                transform: scale(1)
             }
         }
 
         .success-screen h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            margin-bottom: 10px;
+            margin-bottom: 10px
         }
 
         .success-screen .success-number {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            color: var(--accent);
+            color: var(--teal);
             margin: 20px 0;
-            padding: 16px 28px;
-            border-radius: 14px;
-            background: var(--accent-glow);
-            border: 1px solid rgba(52, 211, 153, 0.2);
-            display: inline-block;
+            padding: 14px 24px;
+            border-radius: 12px;
+            background: var(--teal-dim);
+            border: 1px solid var(--teal-border);
+            display: inline-block
         }
 
         .success-screen p {
-            color: var(--text-secondary);
+            color: var(--text-sub);
             max-width: 460px;
-            margin: 0 auto 24px;
-            font-size: 0.9rem;
+            margin: 0 auto 20px;
+            font-size: .92rem
         }
 
         .btn-dashboard {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 14px 32px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            gap: 7px;
+            padding: 10px 24px;
+            border-radius: 10px;
+            background: var(--violet);
             color: #fff;
             border: none;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: .88rem;
             cursor: pointer;
             text-decoration: none;
-            transition: all var(--transition);
+            transition: all .2s
         }
 
         .btn-dashboard:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(129, 140, 248, 0.3);
+            background: var(--violet-hover)
         }
 
-        /* ── Loading Overlay ── */
+        /* Loading */
         .loading-overlay {
             display: none;
             position: fixed;
             inset: 0;
             z-index: 1000;
-            background: rgba(8, 9, 14, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(6px);
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px
         }
 
         .loading-overlay.visible {
-            display: flex;
+            display: flex
         }
 
         .spinner {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.08);
-            border-top-color: var(--primary);
-            animation: spin 0.8s linear infinite;
+            border: 3px solid var(--border);
+            border-top-color: var(--violet);
+            animation: spin .7s linear infinite
         }
 
         @keyframes spin {
             to {
-                transform: rotate(360deg);
+                transform: rotate(360deg)
             }
         }
 
         .loading-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+            font-size: .9rem;
+            color: var(--text-sub)
         }
 
-        /* ── Twilio Warning ── */
+        /* Twilio Warning */
         .twilio-warning {
-            padding: 16px 20px;
+            padding: 14px 16px;
             border-radius: 10px;
-            background: var(--danger-glow);
-            border: 1px solid rgba(248, 113, 113, 0.15);
-            color: var(--danger);
-            font-size: 0.82rem;
+            background: var(--rose-dim);
+            border: 1px solid var(--rose-border);
+            color: var(--rose);
+            font-size: .82rem;
             font-weight: 500;
             margin-bottom: 20px;
             display: none;
+            line-height: 1.5
         }
 
         .twilio-warning a {
-            color: var(--danger);
-            text-decoration: underline;
+            color: var(--rose);
+            text-decoration: underline
         }
 
-        /* ── Template Cards ── */
+        /* Templates */
         .template-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 20px
         }
 
         .template-card {
             padding: 16px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--bg-input);
+            border: 1px solid var(--border);
             cursor: pointer;
-            transition: all var(--transition);
+            transition: all .2s
         }
 
         .template-card:hover {
-            border-color: rgba(129, 140, 248, 0.2);
-            background: rgba(129, 140, 248, 0.04);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover)
         }
 
         .template-card .t-icon {
-            font-size: 1.6rem;
-            margin-bottom: 8px;
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px
+        }
+
+        .template-card .t-icon.support {
+            background: var(--sky-dim);
+            color: var(--sky)
+        }
+
+        .template-card .t-icon.sales {
+            background: var(--violet-dim);
+            color: var(--violet)
+        }
+
+        .template-card .t-icon.booking {
+            background: var(--teal-dim);
+            color: var(--teal)
+        }
+
+        .template-card .t-icon.info {
+            background: var(--amber-dim);
+            color: var(--amber)
         }
 
         .template-card .t-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 3px;
+            font-size: .86rem;
+            font-weight: 700;
+            margin-bottom: 2px
         }
 
         .template-card .t-desc {
-            font-size: 0.7rem;
-            color: var(--text-muted);
+            font-size: .72rem;
+            color: var(--text-muted)
         }
 
-        /* ── Responsive ── */
-        @media (max-width: 640px) {
+        @media(max-width:640px) {
             .wizard-container {
-                padding: 90px 14px 40px;
+                padding: 84px 16px 40px
             }
 
             .step-card {
-                padding: 28px 20px 24px;
+                padding: 26px 20px 22px
             }
 
             .voice-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(115px, 1fr))
             }
 
             .template-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr
             }
 
             .review-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr
             }
 
             .topbar {
-                padding: 0 16px;
+                padding: 0 16px
             }
 
             .step-label {
-                font-size: 0.6rem;
+                font-size: .6rem
             }
 
             .phone-search-row {
-                flex-direction: column;
+                flex-direction: column
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- ─── Top Bar ── -->
     <div class="topbar">
         <a href="/" class="topbar-back">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 5l-7 7 7 7" />
-            </svg>
-            Dashboard
+            <i data-lucide="arrow-left" style="width:16px;height:16px"></i> Dashboard
         </a>
-        <div class="topbar-brand">AI Voice Agent</div>
+        <div class="topbar-brand">
+            <div class="logo-mark"><i data-lucide="audio-waveform" style="width:15px;height:15px"></i></div>
+            VoiceAgent
+        </div>
+        <div class="topbar-right">
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
+                <i data-lucide="moon" style="width:18px;height:18px" id="themeIcon"></i>
+            </button>
+        </div>
     </div>
 
-    <!-- ─── Loading Overlay ── -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
         <div class="loading-text" id="loadingText">Creating your agent...</div>
     </div>
 
     <div class="wizard-container">
-        <!-- ─── Progress ── -->
         <div class="progress-wrap" id="progressWrap">
             <div class="progress-steps">
                 <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
                 <div class="step-indicator active" data-step="1">
-                    <div class="step-dot">1</div>
-                    <span class="step-label">Identity</span>
+                    <div class="step-dot">1</div><span class="step-label">Identity</span>
                 </div>
                 <div class="step-indicator" data-step="2">
-                    <div class="step-dot">2</div>
-                    <span class="step-label">Prompt</span>
+                    <div class="step-dot">2</div><span class="step-label">Prompt</span>
                 </div>
                 <div class="step-indicator" data-step="3">
-                    <div class="step-dot">3</div>
-                    <span class="step-label">Voice & Tools</span>
+                    <div class="step-dot">3</div><span class="step-label">Voice & Tools</span>
                 </div>
                 <div class="step-indicator" data-step="4">
-                    <div class="step-dot">4</div>
-                    <span class="step-label">Phone</span>
+                    <div class="step-dot">4</div><span class="step-label">Phone</span>
                 </div>
                 <div class="step-indicator" data-step="5">
-                    <div class="step-dot">5</div>
-                    <span class="step-label">Launch</span>
+                    <div class="step-dot">5</div><span class="step-label">Launch</span>
                 </div>
             </div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- STEP 1: Identity -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- STEP 1 -->
         <div class="step-card visible" data-step="1">
-            <h2>🤖 Agent Identity</h2>
+            <h2><span class="step-h-icon" style="background:var(--violet-dim);color:var(--violet)"><i
+                        data-lucide="user-circle" style="width:18px;height:18px"></i></span> Agent Identity</h2>
             <p class="step-subtitle">Give your AI voice agent a name and purpose.</p>
-
-            <div class="form-group">
-                <label for="agentName">Agent Name</label>
-                <input type="text" id="agentName" placeholder="e.g. Sarah — Customer Support" maxlength="80">
+            <div class="form-group"><label for="agentName">Agent Name</label><input type="text" id="agentName"
+                    placeholder="e.g. Sarah — Customer Support" maxlength="80">
                 <div class="form-hint">This name will be used to identify your agent</div>
             </div>
-
-            <div class="form-group">
-                <label for="agentDesc">Description</label>
-                <input type="text" id="agentDesc"
-                    placeholder="e.g. 24/7 customer support assistant for my e-commerce store" maxlength="200">
+            <div class="form-group"><label for="agentDesc">Description</label><input type="text" id="agentDesc"
+                    placeholder="e.g. 24/7 customer support assistant" maxlength="200">
                 <div class="form-hint">Brief description of what this agent does</div>
             </div>
-
-            <div class="form-group">
-                <label for="agentLang">Language</label>
-                <select id="agentLang">
+            <div class="form-group"><label for="agentLang">Language</label><select id="agentLang">
                     <option value="en-US">English (US)</option>
                     <option value="en-GB">English (UK)</option>
                     <option value="tr-TR">Türkçe</option>
@@ -978,196 +1039,151 @@
                     <option value="ko-KR">한국어</option>
                     <option value="zh-CN">中文</option>
                     <option value="ar-SA">العربية</option>
-                </select>
-            </div>
-
-            <div class="actions">
-                <span></span>
-                <button class="btn-next" id="btn1Next" onclick="goToStep(2)" disabled>Continue →</button>
-            </div>
+                </select></div>
+            <div class="actions"><span></span><button class="btn-next" id="btn1Next" onclick="goToStep(2)"
+                    disabled>Continue <i data-lucide="arrow-right" style="width:15px;height:15px"></i></button></div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- STEP 2: System Prompt -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- STEP 2 -->
         <div class="step-card" data-step="2">
-            <h2>📝 System Prompt</h2>
+            <h2><span class="step-h-icon" style="background:var(--sky-dim);color:var(--sky)"><i data-lucide="file-text"
+                        style="width:18px;height:18px"></i></span> System Prompt</h2>
             <p class="step-subtitle">Define your agent's personality, behavior, and instructions.</p>
-
-            <div style="margin-bottom:20px">
-                <label
-                    style="font-size:0.78rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;display:block;">Quick
+            <div style="margin-bottom:20px"><label
+                    style="font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block">Quick
                     Templates</label>
                 <div class="template-grid">
                     <div class="template-card" onclick="applyTemplate('support')">
-                        <div class="t-icon">🎧</div>
+                        <div class="t-icon support"><i data-lucide="headphones" style="width:17px;height:17px"></i>
+                        </div>
                         <div class="t-name">Customer Support</div>
                         <div class="t-desc">Friendly support agent for inquiries</div>
                     </div>
                     <div class="template-card" onclick="applyTemplate('sales')">
-                        <div class="t-icon">💼</div>
+                        <div class="t-icon sales"><i data-lucide="briefcase" style="width:17px;height:17px"></i></div>
                         <div class="t-name">Sales Agent</div>
                         <div class="t-desc">Persuasive agent for lead qualification</div>
                     </div>
                     <div class="template-card" onclick="applyTemplate('booking')">
-                        <div class="t-icon">📅</div>
+                        <div class="t-icon booking"><i data-lucide="calendar" style="width:17px;height:17px"></i></div>
                         <div class="t-name">Booking Assistant</div>
                         <div class="t-desc">Schedule appointments and bookings</div>
                     </div>
                     <div class="template-card" onclick="applyTemplate('info')">
-                        <div class="t-icon">ℹ️</div>
+                        <div class="t-icon info"><i data-lucide="info" style="width:17px;height:17px"></i></div>
                         <div class="t-name">Info Line</div>
                         <div class="t-desc">Answer questions about your business</div>
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="systemPrompt">System Prompt</label>
-                <textarea id="systemPrompt" rows="8"
-                    placeholder="You are a helpful AI voice assistant for [company]. Your name is [name].&#10;&#10;Rules:&#10;- Always be polite and professional&#10;- Keep answers concise&#10;- Ask clarifying questions when needed"></textarea>
+            <div class="form-group"><label for="systemPrompt">System Prompt</label><textarea id="systemPrompt" rows="8"
+                    placeholder="You are a helpful AI voice assistant for [company]. Your name is [name].&#10;&#10;Rules:&#10;- Always be polite and professional&#10;- Keep answers concise"></textarea>
                 <div class="char-count"><span id="promptCharCount">0</span> / 4000</div>
             </div>
-
-            <div class="form-group">
-                <label for="greetingPrompt">Greeting Instruction</label>
-                <textarea id="greetingPrompt" rows="3"
-                    placeholder="Greet the caller warmly. Introduce yourself. Ask how you can help. Keep it to 2-3 sentences."></textarea>
+            <div class="form-group"><label for="greetingPrompt">Greeting Instruction</label><textarea
+                    id="greetingPrompt" rows="3"
+                    placeholder="Greet the caller warmly. Introduce yourself. Ask how you can help."></textarea>
                 <div class="form-hint">How the AI should greet callers (invisible to caller)</div>
             </div>
-
-            <div class="form-group">
-                <label for="firstMessage">First Message (TTS)</label>
-                <input type="text" id="firstMessage"
-                    placeholder="Hello! You're being connected to our AI assistant. Please wait.">
-                <div class="form-hint">This message is spoken (via Twilio TTS) before the AI connects.</div>
+            <div class="form-group"><label for="firstMessage">First Message (TTS)</label><input type="text"
+                    id="firstMessage" placeholder="Hello! You're being connected to our AI assistant.">
+                <div class="form-hint">Spoken via Twilio TTS before the AI connects.</div>
             </div>
-
-            <div class="actions">
-                <button class="btn-back" onclick="goToStep(1)">← Back</button>
-                <button class="btn-next" id="btn2Next" onclick="goToStep(3)" disabled>Continue →</button>
-            </div>
+            <div class="actions"><button class="btn-back" onclick="goToStep(1)"><i data-lucide="arrow-left"
+                        style="width:15px;height:15px"></i> Back</button><button class="btn-next" id="btn2Next"
+                    onclick="goToStep(3)" disabled>Continue <i data-lucide="arrow-right"
+                        style="width:15px;height:15px"></i></button></div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- STEP 3: Voice & Tools -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- STEP 3 -->
         <div class="step-card" data-step="3">
-            <h2>🎙️ Voice & Tools</h2>
+            <h2><span class="step-h-icon" style="background:var(--teal-dim);color:var(--teal)"><i data-lucide="mic"
+                        style="width:18px;height:18px"></i></span> Voice & Tools</h2>
             <p class="step-subtitle">Choose the AI voice and enable function calling tools.</p>
-
-            <div class="form-group">
-                <label>Voice</label>
-                <div class="voice-grid" id="voiceGrid">
-                    <!-- Filled by JS -->
-                </div>
+            <div class="form-group"><label>Voice</label>
+                <div class="voice-grid" id="voiceGrid"></div>
             </div>
-
-            <div class="form-group" style="margin-top:28px">
-                <label>Function Calling Tools</label>
+            <div class="form-group" style="margin-top:24px"><label>Function Calling Tools</label>
                 <div class="form-hint" style="margin-bottom:12px">Enable built-in tools for the demo real estate
-                    database. You can toggle each tool individually.</div>
-
+                    database.</div>
                 <div class="toggle-row">
                     <div>
                         <div class="toggle-label">Enable Tools</div>
                         <div class="toggle-desc">Allow the agent to call functions during conversations</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="enableTools" onchange="toggleToolsPanel()">
-                        <span class="toggle-slider"></span>
-                    </label>
+                    </div><label class="toggle-switch"><input type="checkbox" id="enableTools"
+                            onchange="toggleToolsPanel()"><span class="toggle-slider"></span></label>
                 </div>
-
-                <div id="toolsPanel" style="display:none; margin-top:12px">
+                <div id="toolsPanel" style="display:none;margin-top:8px">
                     <div class="toggle-row">
                         <div>
-                            <div class="toggle-label">🔍 Search Properties</div>
+                            <div class="toggle-label">Search Properties</div>
                             <div class="toggle-desc">Search by location, price, rooms, type</div>
-                        </div>
-                        <label class="toggle-switch"><input type="checkbox" class="tool-cb" value="search_properties"
-                                checked><span class="toggle-slider"></span></label>
+                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                value="search_properties" checked><span class="toggle-slider"></span></label>
                     </div>
                     <div class="toggle-row">
                         <div>
-                            <div class="toggle-label">📋 Property Details</div>
+                            <div class="toggle-label">Property Details</div>
                             <div class="toggle-desc">Get full details by property ID</div>
-                        </div>
-                        <label class="toggle-switch"><input type="checkbox" class="tool-cb" value="get_property_details"
-                                checked><span class="toggle-slider"></span></label>
+                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                value="get_property_details" checked><span class="toggle-slider"></span></label>
                     </div>
                     <div class="toggle-row">
                         <div>
-                            <div class="toggle-label">📅 Check Availability</div>
+                            <div class="toggle-label">Check Availability</div>
                             <div class="toggle-desc">Check viewing availability for a date</div>
-                        </div>
-                        <label class="toggle-switch"><input type="checkbox" class="tool-cb" value="check_availability"
-                                checked><span class="toggle-slider"></span></label>
+                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                value="check_availability" checked><span class="toggle-slider"></span></label>
                     </div>
                     <div class="toggle-row">
                         <div>
-                            <div class="toggle-label">👁️ Book Viewing</div>
+                            <div class="toggle-label">Book Viewing</div>
                             <div class="toggle-desc">Schedule a property viewing appointment</div>
-                        </div>
-                        <label class="toggle-switch"><input type="checkbox" class="tool-cb" value="book_viewing"
+                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb" value="book_viewing"
                                 checked><span class="toggle-slider"></span></label>
                     </div>
                     <div class="toggle-row">
                         <div>
-                            <div class="toggle-label">📝 Make Reservation</div>
+                            <div class="toggle-label">Make Reservation</div>
                             <div class="toggle-desc">Create a purchase/rental reservation</div>
-                        </div>
-                        <label class="toggle-switch"><input type="checkbox" class="tool-cb" value="make_reservation"
-                                checked><span class="toggle-slider"></span></label>
+                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                value="make_reservation" checked><span class="toggle-slider"></span></label>
                     </div>
                 </div>
             </div>
-
-            <div class="actions">
-                <button class="btn-back" onclick="goToStep(2)">← Back</button>
-                <button class="btn-next" onclick="goToStep(4)">Continue →</button>
-            </div>
+            <div class="actions"><button class="btn-back" onclick="goToStep(2)"><i data-lucide="arrow-left"
+                        style="width:15px;height:15px"></i> Back</button><button class="btn-next"
+                    onclick="goToStep(4)">Continue <i data-lucide="arrow-right"
+                        style="width:15px;height:15px"></i></button></div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- STEP 4: Phone Number -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- STEP 4 -->
         <div class="step-card" data-step="4">
-            <h2>📱 Phone Number</h2>
-            <p class="step-subtitle">Search and select a US phone number for your agent. It will be purchased and
-                connected automatically.</p>
-
-            <div class="twilio-warning" id="twilioWarning">
-                ⚠️ Twilio is not configured. Add <strong>TWILIO_ACCOUNT_SID</strong> and
-                <strong>TWILIO_AUTH_TOKEN</strong> to your <code>.env</code> file to enable phone number purchasing. <a
-                    href="https://www.twilio.com/console" target="_blank">Get credentials →</a>
-            </div>
-
+            <h2><span class="step-h-icon" style="background:var(--amber-dim);color:var(--amber)"><i
+                        data-lucide="smartphone" style="width:18px;height:18px"></i></span> Phone Number</h2>
+            <p class="step-subtitle">Search and select a US phone number for your agent.</p>
+            <div class="twilio-warning" id="twilioWarning">Twilio is not configured. Add
+                <strong>TWILIO_ACCOUNT_SID</strong> and <strong>TWILIO_AUTH_TOKEN</strong> to your <code>.env</code>
+                file. <a href="https://www.twilio.com/console" target="_blank">Get credentials →</a></div>
             <div class="phone-search-area" id="phoneSearchArea">
-                <div class="phone-search-row">
-                    <input type="text" id="areaCodeInput" placeholder="Area code (e.g. 212, 415, 305)" maxlength="3">
-                    <button class="btn-search" id="btnSearchNumbers" onclick="searchNumbers()">
-                        Search Numbers
-                    </button>
-                </div>
+                <div class="phone-search-row"><input type="text" id="areaCodeInput"
+                        placeholder="Area code (e.g. 212, 415)" maxlength="3"><button class="btn-search"
+                        id="btnSearchNumbers" onclick="searchNumbers()">Search Numbers</button></div>
                 <div class="phone-results" id="phoneResults">
                     <div class="phone-status-msg">Enter an area code and search for available US (+1) numbers.</div>
                 </div>
             </div>
-
-            <div class="actions">
-                <button class="btn-back" onclick="goToStep(3)">← Back</button>
-                <button class="btn-next" id="btn4Next" onclick="goToStep(5)" disabled>Continue →</button>
-            </div>
+            <div class="actions"><button class="btn-back" onclick="goToStep(3)"><i data-lucide="arrow-left"
+                        style="width:15px;height:15px"></i> Back</button><button class="btn-next" id="btn4Next"
+                    onclick="goToStep(5)" disabled>Continue <i data-lucide="arrow-right"
+                        style="width:15px;height:15px"></i></button></div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- STEP 5: Review & Launch -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- STEP 5 -->
         <div class="step-card" data-step="5">
-            <h2>🚀 Review & Launch</h2>
+            <h2><span class="step-h-icon" style="background:var(--teal-dim);color:var(--teal)"><i data-lucide="rocket"
+                        style="width:18px;height:18px"></i></span> Review & Launch</h2>
             <p class="step-subtitle">Review your agent configuration before launching.</p>
-
             <div class="review-grid">
                 <div class="review-section">
                     <div class="review-label">Agent Name</div>
@@ -1178,17 +1194,14 @@
                     <div class="review-value" id="revLang">—</div>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-label">Description</div>
                 <div class="review-value" id="revDesc">—</div>
             </div>
-
             <div class="review-section">
                 <div class="review-label">System Prompt</div>
-                <div class="review-value" id="revPrompt" style="max-height:160px;overflow-y:auto;">—</div>
+                <div class="review-value" id="revPrompt" style="max-height:150px;overflow-y:auto">—</div>
             </div>
-
             <div class="review-grid">
                 <div class="review-section">
                     <div class="review-label">Voice</div>
@@ -1199,374 +1212,137 @@
                     <div class="review-value" id="revTools">—</div>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-label">Phone Number</div>
                 <div class="review-value review-highlight" id="revPhone">—</div>
             </div>
-
-            <div class="actions">
-                <button class="btn-back" onclick="goToStep(4)">← Back</button>
-                <button class="btn-launch" id="btnLaunch" onclick="launchAgent()">🚀 Launch Agent</button>
-            </div>
+            <div class="actions"><button class="btn-back" onclick="goToStep(4)"><i data-lucide="arrow-left"
+                        style="width:15px;height:15px"></i> Back</button><button class="btn-launch" id="btnLaunch"
+                    onclick="launchAgent()"><i data-lucide="rocket" style="width:16px;height:16px"></i> Launch
+                    Agent</button></div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- SUCCESS SCREEN -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SUCCESS -->
         <div class="success-screen" id="successScreen">
-            <div class="success-icon">✅</div>
+            <div class="success-icon"><i data-lucide="check" style="width:32px;height:32px"></i></div>
             <h2>Agent Launched!</h2>
             <p>Your AI voice agent is now live and ready to take calls.</p>
             <div class="success-number" id="successNumber">+1 (XXX) XXX-XXXX</div>
             <p>Share this number with your customers. When they call, your AI agent will answer automatically.</p>
-            <a href="/" class="btn-dashboard">← Back to Dashboard</a>
+            <a href="/" class="btn-dashboard"><i data-lucide="arrow-left" style="width:15px;height:15px"></i> Back to
+                Dashboard</a>
         </div>
     </div>
 
     <script>
-        // ═══════════════════════════════════════════════════════════════
-        // STATE
-        // ═══════════════════════════════════════════════════════════════
-        let currentStep = 1;
-        const totalSteps = 5;
-        let selectedVoice = "coral";
-        let selectedPhoneNumber = null;
-        let twilioConfigured = false;
+        function getStoredTheme() { return localStorage.getItem('theme') || 'dark' }
+        function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); requestAnimationFrame(() => { const el = document.getElementById('themeIcon'); if (el) el.setAttribute('data-lucide', t === 'dark' ? 'sun' : 'moon'); lucide.createIcons() }) }
+        function toggleTheme() { applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark') }
+        applyTheme(getStoredTheme());
 
-        // ═══════════════════════════════════════════════════════════════
-        // VOICES
-        // ═══════════════════════════════════════════════════════════════
+        let currentStep = 1; const totalSteps = 5; let selectedVoice = "coral"; let selectedPhoneNumber = null; let twilioConfigured = false;
+
         const VOICES = [
-            { id: "alloy", icon: "🎵", name: "Alloy", desc: "Neutral & balanced" },
-            { id: "ash", icon: "🌟", name: "Ash", desc: "Warm & clear" },
-            { id: "ballad", icon: "🎶", name: "Ballad", desc: "Melodic & smooth" },
-            { id: "coral", icon: "🌊", name: "Coral", desc: "Natural & friendly" },
-            { id: "echo", icon: "🔮", name: "Echo", desc: "Deep & resonant" },
-            { id: "sage", icon: "🍃", name: "Sage", desc: "Calm & authoritative" },
-            { id: "shimmer", icon: "✨", name: "Shimmer", desc: "Bright & energetic" },
-            { id: "verse", icon: "📖", name: "Verse", desc: "Expressive & dynamic" },
+            { id: "alloy", color: "var(--sky-dim)", iconColor: "var(--sky)", icon: "music", name: "Alloy", desc: "Neutral & balanced" },
+            { id: "ash", color: "var(--amber-dim)", iconColor: "var(--amber)", icon: "sparkles", name: "Ash", desc: "Warm & clear" },
+            { id: "ballad", color: "var(--violet-dim)", iconColor: "var(--violet)", icon: "music-2", name: "Ballad", desc: "Melodic & smooth" },
+            { id: "coral", color: "var(--teal-dim)", iconColor: "var(--teal)", icon: "waves", name: "Coral", desc: "Natural & friendly" },
+            { id: "echo", color: "var(--violet-dim)", iconColor: "var(--violet)", icon: "volume-2", name: "Echo", desc: "Deep & resonant" },
+            { id: "sage", color: "var(--teal-dim)", iconColor: "var(--teal)", icon: "leaf", name: "Sage", desc: "Calm & authoritative" },
+            { id: "shimmer", color: "var(--amber-dim)", iconColor: "var(--amber)", icon: "zap", name: "Shimmer", desc: "Bright & energetic" },
+            { id: "verse", color: "var(--sky-dim)", iconColor: "var(--sky)", icon: "book-open", name: "Verse", desc: "Expressive & dynamic" },
         ];
 
-        // ═══════════════════════════════════════════════════════════════
-        // TEMPLATES
-        // ═══════════════════════════════════════════════════════════════
         const TEMPLATES = {
-            support: {
-                prompt: `You are a friendly and professional customer support AI assistant for our company.
-
-Rules:
-- Always be polite, patient, and empathetic
-- Keep your answers concise and helpful
-- Ask clarifying questions when the issue is unclear
-- If you cannot solve a problem, let the customer know you'll escalate it
-- Never share internal company information
-- End each interaction by asking if there's anything else you can help with`,
-                greeting: "Greet the caller warmly. Introduce yourself as the AI customer support assistant. Ask how you can help them today. Keep it friendly and to 2-3 sentences.",
-                firstMessage: "Hello! You're being connected to our AI customer support. Please hold on."
-            },
-            sales: {
-                prompt: `You are a professional and persuasive sales AI assistant.
-
-Rules:
-- Be enthusiastic but not pushy
-- Listen carefully to customer needs
-- Ask qualifying questions to understand their requirements
-- Present relevant solutions based on their needs
-- Handle objections gracefully  
-- Always try to move the conversation toward a next step (schedule a demo, send information, etc.)
-- Keep responses concise and focused`,
-                greeting: "Greet the caller warmly. Introduce yourself as the AI sales assistant. Ask what they're looking for today. Be enthusiastic but professional.",
-                firstMessage: "Welcome! You're being connected to our AI sales assistant. One moment please."
-            },
-            booking: {
-                prompt: `You are a booking and scheduling AI assistant.
-
-Rules:
-- Help customers schedule appointments and bookings  
-- Ask for necessary details: name, preferred date/time, type of appointment
-- Confirm all details before finalizing
-- Be flexible and suggest alternatives if the preferred slot is unavailable
-- Always confirm the booking summary at the end  
-- Keep responses clear and organized`,
-                greeting: "Greet the caller cheerfully. Introduce yourself as the booking assistant. Ask what kind of appointment they'd like to schedule.",
-                firstMessage: "Hello! You're connected to our booking assistant. I'll help you schedule an appointment."
-            },
-            info: {
-                prompt: `You are an informational AI assistant for our business.
-
-Rules:
-- Provide accurate and helpful information about our services
-- Answer frequently asked questions clearly
-- If you don't know something, say so honestly
-- Direct customers to the appropriate department when needed
-- Keep responses concise and easy to understand
-- Be professional and friendly at all times`,
-                greeting: "Greet the caller politely. Introduce yourself as the AI info assistant. Ask what information they're looking for.",
-                firstMessage: "Hello! You're connected to our AI information line. How can I help you?"
-            }
+            support: { prompt: `You are a friendly and professional customer support AI assistant for our company.\n\nRules:\n- Always be polite, patient, and empathetic\n- Keep your answers concise and helpful\n- Ask clarifying questions when the issue is unclear\n- If you cannot solve a problem, let the customer know you'll escalate it\n- Never share internal company information\n- End each interaction by asking if there's anything else you can help with`, greeting: "Greet the caller warmly. Introduce yourself as the AI customer support assistant. Ask how you can help them today.", firstMessage: "Hello! You're being connected to our AI customer support. Please hold on." },
+            sales: { prompt: `You are a professional and persuasive sales AI assistant.\n\nRules:\n- Be enthusiastic but not pushy\n- Listen carefully to customer needs\n- Ask qualifying questions\n- Present relevant solutions based on their needs\n- Handle objections gracefully\n- Always try to move toward a next step\n- Keep responses concise`, greeting: "Greet the caller warmly. Introduce yourself as the AI sales assistant. Ask what they're looking for today.", firstMessage: "Welcome! You're being connected to our AI sales assistant." },
+            booking: { prompt: `You are a booking and scheduling AI assistant.\n\nRules:\n- Help customers schedule appointments and bookings\n- Ask for necessary details: name, preferred date/time, type of appointment\n- Confirm all details before finalizing\n- Be flexible and suggest alternatives if unavailable\n- Always confirm the booking summary at the end\n- Keep responses clear and organized`, greeting: "Greet the caller cheerfully. Introduce yourself as the booking assistant. Ask what kind of appointment they'd like to schedule.", firstMessage: "Hello! You're connected to our booking assistant." },
+            info: { prompt: `You are an informational AI assistant for our business.\n\nRules:\n- Provide accurate and helpful information about our services\n- Answer frequently asked questions clearly\n- If you don't know something, say so honestly\n- Direct customers to the appropriate department when needed\n- Keep responses concise and easy to understand\n- Be professional and friendly at all times`, greeting: "Greet the caller politely. Introduce yourself as the AI info assistant. Ask what information they're looking for.", firstMessage: "Hello! You're connected to our AI information line." }
         };
 
-        // ═══════════════════════════════════════════════════════════════
-        // INIT
-        // ═══════════════════════════════════════════════════════════════
-        (async function init() {
-            renderVoiceGrid();
-            setupValidation();
-            await checkTwilioStatus();
-        })();
+        (async function init() { renderVoiceGrid(); setupValidation(); await checkTwilioStatus(); lucide.createIcons() })();
 
-        async function checkTwilioStatus() {
-            try {
-                const res = await fetch("/api/twilio/status");
-                const data = await res.json();
-                twilioConfigured = data.configured;
-                if (!twilioConfigured) {
-                    document.getElementById("twilioWarning").style.display = "block";
-                }
-            } catch { twilioConfigured = false; }
-        }
+        async function checkTwilioStatus() { try { const r = await fetch("/api/twilio/status"); const d = await r.json(); twilioConfigured = d.configured; if (!twilioConfigured) document.getElementById("twilioWarning").style.display = "block" } catch { twilioConfigured = false } }
 
-        // ═══════════════════════════════════════════════════════════════
-        // NAVIGATION
-        // ═══════════════════════════════════════════════════════════════
         function goToStep(step) {
             if (step < 1 || step > totalSteps) return;
-            // Validate current step before moving forward
             if (step > currentStep && !validateStep(currentStep)) return;
-
             currentStep = step;
-            // Show/hide cards
-            document.querySelectorAll(".step-card").forEach(c => {
-                c.classList.toggle("visible", +c.dataset.step === step);
-            });
-            // Update indicators
-            document.querySelectorAll(".step-indicator").forEach(ind => {
-                const s = +ind.dataset.step;
-                ind.classList.remove("active", "complete");
-                if (s === step) ind.classList.add("active");
-                else if (s < step) ind.classList.add("complete");
-            });
-            // Progress bar
-            const pct = ((step - 1) / (totalSteps - 1)) * 100;
-            document.getElementById("progressFill").style.width = `calc(${pct}% - ${pct < 100 ? 0 : 0}px)`;
-            // Step 5: populate review
+            document.querySelectorAll(".step-card").forEach(c => c.classList.toggle("visible", +c.dataset.step === step));
+            document.querySelectorAll(".step-indicator").forEach(ind => { const s = +ind.dataset.step; ind.classList.remove("active", "complete"); if (s === step) ind.classList.add("active"); else if (s < step) ind.classList.add("complete") });
+            document.getElementById("progressFill").style.width = `calc(${((step - 1) / (totalSteps - 1)) * 100}%)`;
             if (step === 5) populateReview();
             window.scrollTo({ top: 0, behavior: "smooth" });
+            requestAnimationFrame(() => lucide.createIcons());
         }
 
-        function validateStep(step) {
-            switch (step) {
-                case 1: return document.getElementById("agentName").value.trim().length >= 2;
-                case 2: return document.getElementById("systemPrompt").value.trim().length >= 10;
-                case 3: return true; // voice always selected
-                case 4: return selectedPhoneNumber || !twilioConfigured;
-                default: return true;
-            }
-        }
+        function validateStep(s) { switch (s) { case 1: return document.getElementById("agentName").value.trim().length >= 2; case 2: return document.getElementById("systemPrompt").value.trim().length >= 10; case 3: return true; case 4: return selectedPhoneNumber || !twilioConfigured; default: return true } }
 
-        // ═══════════════════════════════════════════════════════════════
-        // VALIDATION
-        // ═══════════════════════════════════════════════════════════════
         function setupValidation() {
-            const nameInput = document.getElementById("agentName");
-            const promptInput = document.getElementById("systemPrompt");
-
-            nameInput.addEventListener("input", () => {
-                document.getElementById("btn1Next").disabled = nameInput.value.trim().length < 2;
-            });
-            promptInput.addEventListener("input", () => {
-                const len = promptInput.value.length;
-                document.getElementById("promptCharCount").textContent = len;
-                document.getElementById("btn2Next").disabled = promptInput.value.trim().length < 10;
-            });
+            const n = document.getElementById("agentName"), p = document.getElementById("systemPrompt");
+            n.addEventListener("input", () => document.getElementById("btn1Next").disabled = n.value.trim().length < 2);
+            p.addEventListener("input", () => { document.getElementById("promptCharCount").textContent = p.value.length; document.getElementById("btn2Next").disabled = p.value.trim().length < 10 });
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // TEMPLATES
-        // ═══════════════════════════════════════════════════════════════
-        function applyTemplate(key) {
-            const t = TEMPLATES[key];
-            if (!t) return;
-            document.getElementById("systemPrompt").value = t.prompt;
-            document.getElementById("greetingPrompt").value = t.greeting;
-            document.getElementById("firstMessage").value = t.firstMessage;
-            // Trigger validation
-            document.getElementById("systemPrompt").dispatchEvent(new Event("input"));
-        }
+        function applyTemplate(k) { const t = TEMPLATES[k]; if (!t) return; document.getElementById("systemPrompt").value = t.prompt; document.getElementById("greetingPrompt").value = t.greeting; document.getElementById("firstMessage").value = t.firstMessage; document.getElementById("systemPrompt").dispatchEvent(new Event("input")) }
 
-        // ═══════════════════════════════════════════════════════════════
-        // VOICE GRID
-        // ═══════════════════════════════════════════════════════════════
         function renderVoiceGrid() {
-            const grid = document.getElementById("voiceGrid");
-            grid.innerHTML = VOICES.map(v => `
+            document.getElementById("voiceGrid").innerHTML = VOICES.map(v => `
                 <div class="voice-card ${v.id === selectedVoice ? 'selected' : ''}" onclick="selectVoice('${v.id}')" id="voice-${v.id}">
-                    <div class="voice-icon">${v.icon}</div>
+                    <div class="voice-icon" style="background:${v.color};color:${v.iconColor}"><i data-lucide="${v.icon}" style="width:18px;height:18px"></i></div>
                     <div class="voice-name">${v.name}</div>
                     <div class="voice-desc">${v.desc}</div>
-                </div>
-            `).join("");
+                </div>`).join("");
+            lucide.createIcons();
         }
 
-        function selectVoice(id) {
-            selectedVoice = id;
-            document.querySelectorAll(".voice-card").forEach(c => c.classList.remove("selected"));
-            document.getElementById("voice-" + id).classList.add("selected");
-        }
+        function selectVoice(id) { selectedVoice = id; document.querySelectorAll(".voice-card").forEach(c => c.classList.remove("selected")); document.getElementById("voice-" + id).classList.add("selected") }
+        function toggleToolsPanel() { document.getElementById("toolsPanel").style.display = document.getElementById("enableTools").checked ? "block" : "none" }
 
-        // ═══════════════════════════════════════════════════════════════
-        // TOOLS TOGGLE
-        // ═══════════════════════════════════════════════════════════════
-        function toggleToolsPanel() {
-            const on = document.getElementById("enableTools").checked;
-            document.getElementById("toolsPanel").style.display = on ? "block" : "none";
-        }
-
-        // ═══════════════════════════════════════════════════════════════
-        // PHONE NUMBER SEARCH
-        // ═══════════════════════════════════════════════════════════════
         async function searchNumbers() {
-            if (!twilioConfigured) {
-                document.getElementById("phoneResults").innerHTML = `<div class="phone-status-msg error">Twilio is not configured. Add your credentials to .env</div>`;
-                return;
-            }
-            const areaCode = document.getElementById("areaCodeInput").value.trim();
-            const btn = document.getElementById("btnSearchNumbers");
-            const results = document.getElementById("phoneResults");
-
-            btn.disabled = true;
-            btn.textContent = "Searching...";
-            results.innerHTML = `<div class="phone-status-msg">🔍 Searching for available numbers...</div>`;
-
+            if (!twilioConfigured) { document.getElementById("phoneResults").innerHTML = `<div class="phone-status-msg error">Twilio is not configured.</div>`; return }
+            const ac = document.getElementById("areaCodeInput").value.trim(), btn = document.getElementById("btnSearchNumbers"), res = document.getElementById("phoneResults");
+            btn.disabled = true; btn.textContent = "Searching..."; res.innerHTML = `<div class="phone-status-msg">Searching for available numbers...</div>`;
             try {
-                const params = new URLSearchParams();
-                if (areaCode) params.set("areaCode", areaCode);
-                const res = await fetch(`/api/twilio/available-numbers?${params}`);
-                const data = await res.json();
-
-                if (data.error) {
-                    results.innerHTML = `<div class="phone-status-msg error">❌ ${data.error}</div>`;
-                    return;
-                }
-                if (data.length === 0) {
-                    results.innerHTML = `<div class="phone-status-msg">No numbers available for this area code. Try another.</div>`;
-                    return;
-                }
-
-                results.innerHTML = data.map(n => `
-                    <div class="phone-item" onclick="selectPhone(this, '${n.phoneNumber}')" data-number="${n.phoneNumber}">
-                        <div>
-                            <div class="phone-number">${formatPhone(n.phoneNumber)}</div>
-                            <div class="phone-location">${n.locality || ''} ${n.region || ''}</div>
-                        </div>
-                        <div class="phone-check">✅</div>
-                    </div>
-                `).join("");
-            } catch (err) {
-                results.innerHTML = `<div class="phone-status-msg error">❌ Error: ${err.message}</div>`;
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Search Numbers";
-            }
+                const p = new URLSearchParams(); if (ac) p.set("areaCode", ac); const r = await fetch(`/api/twilio/available-numbers?${p}`); const d = await r.json();
+                if (d.error) { res.innerHTML = `<div class="phone-status-msg error">${d.error}</div>`; return }
+                if (!d.length) { res.innerHTML = `<div class="phone-status-msg">No numbers available. Try another area code.</div>`; return }
+                res.innerHTML = d.map(n => `<div class="phone-item" onclick="selectPhone(this,'${n.phoneNumber}')"><div><div class="phone-number">${formatPhone(n.phoneNumber)}</div><div class="phone-location">${n.locality || ''} ${n.region || ''}</div></div><div class="phone-check"><i data-lucide="check-circle" style="width:18px;height:18px"></i></div></div>`).join("");
+                lucide.createIcons();
+            } catch (e) { res.innerHTML = `<div class="phone-status-msg error">Error: ${e.message}</div>` }
+            finally { btn.disabled = false; btn.textContent = "Search Numbers" }
         }
 
-        function selectPhone(el, number) {
-            selectedPhoneNumber = number;
-            document.querySelectorAll(".phone-item").forEach(i => i.classList.remove("selected"));
-            el.classList.add("selected");
-            document.getElementById("btn4Next").disabled = false;
-        }
+        function selectPhone(el, num) { selectedPhoneNumber = num; document.querySelectorAll(".phone-item").forEach(i => i.classList.remove("selected")); el.classList.add("selected"); document.getElementById("btn4Next").disabled = false }
+        function formatPhone(p) { const d = p.replace(/\D/g, ""); if (d.length === 11 && d.startsWith("1")) return `+1 (${d.slice(1, 4)}) ${d.slice(4, 7)}-${d.slice(7)}`; return p }
 
-        function formatPhone(phone) {
-            // +1XXXXXXXXXX → +1 (XXX) XXX-XXXX
-            const digits = phone.replace(/\D/g, "");
-            if (digits.length === 11 && digits.startsWith("1")) {
-                return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
-            }
-            return phone;
-        }
-
-        // ═══════════════════════════════════════════════════════════════
-        // REVIEW
-        // ═══════════════════════════════════════════════════════════════
         function populateReview() {
             document.getElementById("revName").textContent = document.getElementById("agentName").value;
             document.getElementById("revDesc").textContent = document.getElementById("agentDesc").value || "—";
             document.getElementById("revLang").textContent = document.getElementById("agentLang").selectedOptions[0].text;
             document.getElementById("revPrompt").textContent = document.getElementById("systemPrompt").value;
-
-            const voiceObj = VOICES.find(v => v.id === selectedVoice);
-            document.getElementById("revVoice").textContent = voiceObj ? `${voiceObj.icon} ${voiceObj.name}` : selectedVoice;
-
-            const enableTools = document.getElementById("enableTools").checked;
-            if (enableTools) {
-                const tools = [...document.querySelectorAll(".tool-cb:checked")].map(c => c.value);
-                document.getElementById("revTools").textContent = tools.length + " tool(s) enabled";
-            } else {
-                document.getElementById("revTools").textContent = "No tools";
-            }
-
-            document.getElementById("revPhone").textContent = selectedPhoneNumber
-                ? formatPhone(selectedPhoneNumber)
-                : (twilioConfigured ? "None selected" : "Twilio not configured — no number");
+            const v = VOICES.find(v => v.id === selectedVoice); document.getElementById("revVoice").textContent = v ? v.name : selectedVoice;
+            const et = document.getElementById("enableTools").checked;
+            document.getElementById("revTools").textContent = et ? [...document.querySelectorAll(".tool-cb:checked")].length + " tool(s) enabled" : "No tools";
+            document.getElementById("revPhone").textContent = selectedPhoneNumber ? formatPhone(selectedPhoneNumber) : (twilioConfigured ? "None selected" : "Twilio not configured");
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // LAUNCH
-        // ═══════════════════════════════════════════════════════════════
         async function launchAgent() {
-            const btn = document.getElementById("btnLaunch");
-            btn.disabled = true;
-
-            const overlay = document.getElementById("loadingOverlay");
-            overlay.classList.add("visible");
+            const btn = document.getElementById("btnLaunch"); btn.disabled = true;
+            const ov = document.getElementById("loadingOverlay"); ov.classList.add("visible");
             document.getElementById("loadingText").textContent = "Purchasing phone number & creating agent...";
-
-            const enableTools = document.getElementById("enableTools").checked;
-            const tools = enableTools ? [...document.querySelectorAll(".tool-cb:checked")].map(c => c.value) : [];
-
-            const payload = {
-                name: document.getElementById("agentName").value.trim(),
-                description: document.getElementById("agentDesc").value.trim(),
-                systemPrompt: document.getElementById("systemPrompt").value.trim(),
-                greeting: document.getElementById("greetingPrompt").value.trim(),
-                voice: selectedVoice,
-                language: document.getElementById("agentLang").value,
-                firstMessage: document.getElementById("firstMessage").value.trim(),
-                enableTools,
-                tools,
-                areaCode: document.getElementById("areaCodeInput").value.trim() || undefined,
-            };
-
+            const et = document.getElementById("enableTools").checked;
+            const tools = et ? [...document.querySelectorAll(".tool-cb:checked")].map(c => c.value) : [];
+            const payload = { name: document.getElementById("agentName").value.trim(), description: document.getElementById("agentDesc").value.trim(), systemPrompt: document.getElementById("systemPrompt").value.trim(), greeting: document.getElementById("greetingPrompt").value.trim(), voice: selectedVoice, language: document.getElementById("agentLang").value, firstMessage: document.getElementById("firstMessage").value.trim(), enableTools: et, tools, areaCode: document.getElementById("areaCodeInput").value.trim() || undefined };
             try {
-                const res = await fetch("/api/agents", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload),
-                });
-                const data = await res.json();
-
-                overlay.classList.remove("visible");
-
-                if (!res.ok) {
-                    alert("Error: " + (data.error || "Unknown error"));
-                    btn.disabled = false;
-                    return;
-                }
-
-                // Show success
+                const r = await fetch("/api/agents", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); const d = await r.json(); ov.classList.remove("visible");
+                if (!r.ok) { alert("Error: " + (d.error || "Unknown")); btn.disabled = false; return }
                 document.getElementById("progressWrap").style.display = "none";
                 document.querySelectorAll(".step-card").forEach(c => c.classList.remove("visible"));
                 document.getElementById("successScreen").classList.add("visible");
-                document.getElementById("successNumber").textContent = data.phoneNumber
-                    ? formatPhone(data.phoneNumber)
-                    : "No phone number (Twilio not configured)";
-            } catch (err) {
-                overlay.classList.remove("visible");
-                alert("Network error: " + err.message);
-                btn.disabled = false;
-            }
+                document.getElementById("successNumber").textContent = d.phoneNumber ? formatPhone(d.phoneNumber) : "No phone number (Twilio not configured)";
+                lucide.createIcons();
+            } catch (e) { ov.classList.remove("visible"); alert("Network error: " + e.message); btn.disabled = false }
         }
     </script>
 </body>
