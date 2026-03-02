@@ -1,4 +1,11 @@
-// ─── Demo Properties Database ─────────────────────────────────────────
+// ─── Demo Properties + Reservations (SQLite-backed) ───────────────────
+// Properties are static demo data (unchanged).
+// Reservations are now persisted in SQLite via db.js.
+
+const crypto = require("crypto");
+const { stmts } = require("./db");
+
+// ─── Static Demo Properties ────────────────────────────────────────────
 const properties = [
     {
         id: "P001",
@@ -80,22 +87,57 @@ const properties = [
     }
 ];
 
-// ─── In-Memory Reservations Store ─────────────────────────────────────
-const reservations = [];
+// ─── Reservations (SQLite-backed) ──────────────────────────────────────
+function generateReservationId() {
+    // Short human-readable ID: R + 6 hex chars
+    return "R" + crypto.randomBytes(3).toString("hex").toUpperCase();
+}
 
 function addReservation(reservation) {
     const entry = {
-        id: "R" + String(reservations.length + 1).padStart(3, "0"),
-        ...reservation,
-        created_at: new Date().toISOString()
+        id: generateReservationId(),
+        type: reservation.type,
+        property_id: reservation.property_id,
+        property_title: reservation.property_title,
+        customer_name: reservation.customer_name,
+        customer_phone: reservation.customer_phone,
+        date: reservation.date || null,
+        time: reservation.time || null,
+        notes: reservation.notes || "",
+        created_at: new Date().toISOString(),
     };
-    reservations.push(entry);
-    console.log(`📝 New reservation: ${JSON.stringify(entry)}`);
-    return entry;
+
+    stmts.reservationInsert.run(entry);
+    console.log(`📝 New reservation: ${entry.id} — ${entry.property_title} for ${entry.customer_name}`);
+
+    // Return in the same shape the server expects
+    return {
+        id: entry.id,
+        type: entry.type,
+        property_id: entry.property_id,
+        property_title: entry.property_title,
+        customer_name: entry.customer_name,
+        customer_phone: entry.customer_phone,
+        date: entry.date,
+        time: entry.time,
+        notes: entry.notes,
+        created_at: entry.created_at,
+    };
 }
 
 function getReservations() {
-    return reservations;
+    return stmts.reservationAll.all().map(row => ({
+        id: row.id,
+        type: row.type,
+        property_id: row.property_id,
+        property_title: row.property_title,
+        customer_name: row.customer_name,
+        customer_phone: row.customer_phone,
+        date: row.date,
+        time: row.time,
+        notes: row.notes,
+        created_at: row.created_at,
+    }));
 }
 
 function getProperties() {
@@ -118,10 +160,9 @@ function getPropertyById(id) {
 
 module.exports = {
     properties,
-    reservations,
     addReservation,
     getReservations,
     getProperties,
     searchProperties,
-    getPropertyById
+    getPropertyById,
 };

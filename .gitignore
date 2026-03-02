@@ -26,3 +26,8 @@ build/
 
 # Misc
 .antigravityignore
+
+# SQLite database
+voiceagent.db
+voiceagent.db-wal
+voiceagent.db-shm

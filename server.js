@@ -4,6 +4,7 @@ const path = require("path");
 const http = require("http");
 const WebSocket = require("ws");
 const { getProperties, searchProperties, getPropertyById, addReservation, getReservations } = require("./data");
+require("./db"); // Ensure DB is initialized and WAL mode is set on startup
 const {
     DEFAULT_AGENT,
     createAgent,
@@ -470,31 +471,48 @@ wss.on("connection", (twilioWs, req) => {
 
     const openaiUrl = "wss://api.openai.com/v1/realtime?model=gpt-realtime-mini";
     openaiWs = new WebSocket(openaiUrl, {
-        headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
+        // No "OpenAI-Beta" header needed — Realtime API is GA (not beta anymore)
+        headers: {
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+        },
     });
 
     openaiWs.on("open", () => {
         console.log(`✅ OpenAI connected for agent: ${agent.name}`);
 
+        // ── session.update — GA schema (developers.openai.com/api/reference/resources/realtime) ──
+        // Audio formats live inside audio.input.format / audio.output.format as OBJECTS: { type: "audio/pcmu" }
+        // Supported: { type: "audio/pcm" } (PCM16 24kHz) | { type: "audio/pcmu" } (G.711 μ-law) | { type: "audio/pcma" } (G.711 A-law)
+        // Twilio Media Streams use G.711 μ-law → { type: "audio/pcmu" }
+        // turn_detection lives inside audio.input (NOT flat on session)
+        // voice lives inside audio.output (NOT flat on session)
         const sessionUpdate = {
             type: "session.update",
             session: {
+                type: "realtime",
+                model: "gpt-realtime-mini",
+                // modalities: top-level under session
+                modalities: ["audio"],
                 instructions: agent.systemPrompt,
                 tools: sessionTools,
                 tool_choice: sessionTools.length > 0 ? "auto" : "none",
-                output_modalities: ["audio"],
                 audio: {
                     input: {
-                        format: { type: "audio/pcmu" },
+                        format: { type: "audio/pcmu" },  // Twilio G.711 μ-law
                         turn_detection: {
                             type: "server_vad",
                             threshold: 0.5,
                             prefix_padding_ms: 300,
                             silence_duration_ms: 500,
+                            create_response: true,
+                            interrupt_response: true,
+                        },
+                        transcription: {
+                            model: "gpt-4o-mini-transcribe",
                         },
                     },
                     output: {
-                        format: { type: "audio/pcmu" },
+                        format: { type: "audio/pcmu" },  // Twilio G.711 μ-law
                         voice: agent.voice || "coral",
                     },
                 },
@@ -503,12 +521,23 @@ wss.on("connection", (twilioWs, req) => {
         openaiWs.send(JSON.stringify(sessionUpdate));
         console.log(`📋 Session configured — ${sessionTools.length} tools, voice: ${agent.voice}`);
 
-        openaiWs.send(JSON.stringify({
-            type: "response.create",
-            response: {
-                instructions: agent.greeting,
-            },
-        }));
+        // ── Greeting: inject as a user message then trigger response ──
+        // Using conversation.item.create (NOT response.create with instructions)
+        // This ensures the greeting appears in conversation history correctly.
+        if (agent.greeting) {
+            openaiWs.send(JSON.stringify({
+                type: "conversation.item.create",
+                item: {
+                    type: "message",
+                    role: "user",
+                    content: [{
+                        type: "input_text",
+                        text: agent.greeting,
+                    }],
+                },
+            }));
+            openaiWs.send(JSON.stringify({ type: "response.create" }));
+        }
 
         for (const chunk of audioBufferQueue) openaiWs.send(JSON.stringify(chunk));
         audioBufferQueue = [];

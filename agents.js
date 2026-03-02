@@ -1,13 +1,11 @@
-// ─── Agents Store ─────────────────────────────────────────────────────
-// In-memory store for AI voice agents created via the wizard.
-// Each agent is owned by a userId; the default agent is global.
+// ─── Agents Store (SQLite-backed) ─────────────────────────────────────
+// Agent data is persisted in SQLite via db.js.
 
 const crypto = require("crypto");
+const { stmts, rowToAgent } = require("./db");
 
-// Per-user agents: userId → Agent[]
-const agentsByUser = {}; // { [userId]: Agent[] }
-
-// ─── Default (test) agent — preserves original functionality ──────────
+// ─── Default (test) agent — runtime-only, never stored in DB ──────────
+// This is the built-in demo agent with no phone number.
 const DEFAULT_AGENT = {
     id: "agent_default",
     name: "Sophia — PrestigeAI",
@@ -33,7 +31,7 @@ Rules:
     enableTools: true,
     tools: ["search_properties", "get_property_details", "check_availability", "book_viewing", "make_reservation"],
     status: "active",
-    ownerId: null, // global default
+    ownerId: null,
     createdAt: new Date().toISOString(),
 };
 
@@ -59,69 +57,70 @@ function createAgent({
 }) {
     if (!ownerId) throw new Error("ownerId is required to create an agent.");
 
-    const agent = {
+    const row = {
         id: generateId(),
+        owner_id: ownerId,
         name,
         description: description || "",
-        systemPrompt,
+        system_prompt: systemPrompt,
         greeting: greeting || `Greet the caller warmly. Introduce yourself as the AI assistant for ${name}. Ask how you can help. Keep it to 2-3 sentences.`,
         voice,
         language,
-        firstMessage: firstMessage || `Hello, you are being connected to ${name}. Please wait.`,
-        phoneNumber,
-        phoneNumberSid,
-        enableTools,
-        tools,
+        first_message: firstMessage || `Hello, you are being connected to ${name}. Please wait.`,
+        enable_tools: enableTools ? 1 : 0,
+        tools: JSON.stringify(tools),
+        phone_number: phoneNumber,
+        phone_number_sid: phoneNumberSid,
         status: "active",
-        ownerId,
-        createdAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
     };
 
-    if (!agentsByUser[ownerId]) agentsByUser[ownerId] = [];
-    agentsByUser[ownerId].push(agent);
-
+    stmts.agentInsert.run(row);
+    const agent = rowToAgent(stmts.agentById.get(row.id));
     console.log(`🤖 Agent created: ${agent.name} (${agent.id}) for user ${ownerId} → ${agent.phoneNumber || "no number"}`);
     return agent;
 }
 
-/** Returns all agents for a specific user (does NOT include DEFAULT_AGENT for normal use) */
+/** Returns all agents for a specific user (does NOT include DEFAULT_AGENT) */
 function getAgentsByUser(userId) {
-    return agentsByUser[userId] || [];
+    return stmts.agentsByOwner.all(userId).map(rowToAgent);
 }
 
 /** Returns all agents globally (DEFAULT + all user agents) — for internal/Twilio routing */
 function getAllAgents() {
-    const all = [];
-    for (const agents of Object.values(agentsByUser)) {
-        all.push(...agents);
-    }
-    return [DEFAULT_AGENT, ...all];
+    return [DEFAULT_AGENT, ...stmts.agentAll.all().map(rowToAgent)];
 }
 
-/** Legacy helper used by dashboard — returns DEFAULT + user's agents */
+/** Returns DEFAULT + user's own agents — for dashboard display */
 function getAgentsForUser(userId) {
-    return [DEFAULT_AGENT, ...(agentsByUser[userId] || [])];
+    return [DEFAULT_AGENT, ...stmts.agentsByOwner.all(userId).map(rowToAgent)];
 }
 
 function getAgentById(id) {
     if (id === DEFAULT_AGENT.id) return DEFAULT_AGENT;
-    for (const agents of Object.values(agentsByUser)) {
-        const found = agents.find(a => a.id === id);
-        if (found) return found;
-    }
-    return null;
+    const row = stmts.agentById.get(id);
+    return rowToAgent(row);
 }
 
 function getAgentByPhoneNumber(phoneNumber) {
+    if (!phoneNumber) return null;
     const normalized = phoneNumber.replace(/[\s\-()]/g, "");
-    if (DEFAULT_AGENT.phoneNumber && DEFAULT_AGENT.phoneNumber.replace(/[\s\-()]/g, "") === normalized) {
+
+    // Check default agent first
+    if (DEFAULT_AGENT.phoneNumber &&
+        DEFAULT_AGENT.phoneNumber.replace(/[\s\-()]/g, "") === normalized) {
         return DEFAULT_AGENT;
     }
-    for (const agents of Object.values(agentsByUser)) {
-        const found = agents.find(a => a.phoneNumber && a.phoneNumber.replace(/[\s\-()]/g, "") === normalized);
-        if (found) return found;
-    }
-    return null;
+
+    // Exact match in DB
+    const row = stmts.agentByPhone.get(phoneNumber);
+    if (row) return rowToAgent(row);
+
+    // Fallback: normalize and compare all agents
+    const all = stmts.agentAll.all();
+    const found = all.find(a => a.phone_number &&
+        a.phone_number.replace(/[\s\-()]/g, "") === normalized);
+    return found ? rowToAgent(found) : null;
 }
 
 function updateAgent(id, updates) {
@@ -129,22 +128,33 @@ function updateAgent(id, updates) {
         Object.assign(DEFAULT_AGENT, updates);
         return DEFAULT_AGENT;
     }
-    const agent = getAgentById(id);
-    if (!agent) return null;
-    Object.assign(agent, updates);
-    return agent;
+    const existing = getAgentById(id);
+    if (!existing) return null;
+
+    const merged = {
+        id,
+        name: updates.name ?? existing.name,
+        description: updates.description ?? existing.description,
+        system_prompt: updates.systemPrompt ?? existing.systemPrompt,
+        greeting: updates.greeting ?? existing.greeting,
+        voice: updates.voice ?? existing.voice,
+        language: updates.language ?? existing.language,
+        first_message: updates.firstMessage ?? existing.firstMessage,
+        enable_tools: (updates.enableTools ?? existing.enableTools) ? 1 : 0,
+        tools: JSON.stringify(updates.tools ?? existing.tools),
+        phone_number: updates.phoneNumber ?? existing.phoneNumber,
+        phone_number_sid: updates.phoneNumberSid ?? existing.phoneNumberSid,
+        status: updates.status ?? existing.status,
+    };
+
+    stmts.agentUpdate.run(merged);
+    return getAgentById(id);
 }
 
 function deleteAgent(id) {
     if (id === DEFAULT_AGENT.id) return false;
-    for (const userId of Object.keys(agentsByUser)) {
-        const idx = agentsByUser[userId].findIndex(a => a.id === id);
-        if (idx !== -1) {
-            agentsByUser[userId].splice(idx, 1);
-            return true;
-        }
-    }
-    return false;
+    const result = stmts.agentDelete.run(id);
+    return result.changes > 0;
 }
 
 module.exports = {
