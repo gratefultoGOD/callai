@@ -451,7 +451,12 @@ app.all("/incoming-call", (req, res) => {
     res.send(twiml);
 });
 
+
+
+
 // ─── WebSocket server for Twilio Media Streams ─────────────────────────
+// Audio pipeline: Twilio ↔ OpenAI (NO server-side transcoding)
+//   Twilio: G.711 μ-law (PCMU), 8kHz — we tell OpenAI to use audio/pcmu too
 const wss = new WebSocket.Server({ server, path: "/media-stream" });
 
 wss.on("connection", (twilioWs, req) => {
@@ -469,71 +474,60 @@ wss.on("connection", (twilioWs, req) => {
 
     const sessionTools = agent.enableTools ? ALL_TOOLS.filter(t => agent.tools.includes(t.name)) : [];
 
+    // ── Connect to OpenAI Realtime ──────────────────────────────────────
     const openaiUrl = "wss://api.openai.com/v1/realtime?model=gpt-realtime-mini";
     openaiWs = new WebSocket(openaiUrl, {
-        // No "OpenAI-Beta" header needed — Realtime API is GA (not beta anymore)
-        headers: {
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
-        },
+        headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
     });
 
     openaiWs.on("open", () => {
         console.log(`✅ OpenAI connected for agent: ${agent.name}`);
 
-        // ── session.update — GA schema (developers.openai.com/api/reference/resources/realtime) ──
-        // Audio formats live inside audio.input.format / audio.output.format as OBJECTS: { type: "audio/pcmu" }
-        // Supported: { type: "audio/pcm" } (PCM16 24kHz) | { type: "audio/pcmu" } (G.711 μ-law) | { type: "audio/pcma" } (G.711 A-law)
-        // Twilio Media Streams use G.711 μ-law → { type: "audio/pcmu" }
-        // turn_detection lives inside audio.input (NOT flat on session)
-        // voice lives inside audio.output (NOT flat on session)
+        // ── session.update — schema verified from live API responses ──────
+        // output_modalities: ["audio"] (top-level, NOT modalities)
+        // audio.input.format:  { type: "audio/pcmu" } → G.711 μ-law 8kHz (Twilio native)
+        // audio.output.format: { type: "audio/pcmu" } → same, no transcoding needed
+        // turn_detection fields from live session.created schema
         const sessionUpdate = {
             type: "session.update",
             session: {
                 type: "realtime",
                 model: "gpt-realtime-mini",
-                // modalities: top-level under session
-                modalities: ["audio"],
+                output_modalities: ["audio"],
                 instructions: agent.systemPrompt,
                 tools: sessionTools,
                 tool_choice: sessionTools.length > 0 ? "auto" : "none",
                 audio: {
                     input: {
-                        format: { type: "audio/pcmu" },  // Twilio G.711 μ-law
+                        format: { type: "audio/pcmu" },
                         turn_detection: {
                             type: "server_vad",
                             threshold: 0.5,
                             prefix_padding_ms: 300,
-                            silence_duration_ms: 500,
+                            silence_duration_ms: 200,
+                            idle_timeout_ms: null,
                             create_response: true,
                             interrupt_response: true,
                         },
-                        transcription: {
-                            model: "gpt-4o-mini-transcribe",
-                        },
                     },
                     output: {
-                        format: { type: "audio/pcmu" },  // Twilio G.711 μ-law
+                        format: { type: "audio/pcmu" },
                         voice: agent.voice || "coral",
                     },
                 },
             },
         };
         openaiWs.send(JSON.stringify(sessionUpdate));
-        console.log(`📋 Session configured — ${sessionTools.length} tools, voice: ${agent.voice}`);
+        console.log(`📋 Session update sent — ${sessionTools.length} tools, voice: ${agent.voice}`);
 
-        // ── Greeting: inject as a user message then trigger response ──
-        // Using conversation.item.create (NOT response.create with instructions)
-        // This ensures the greeting appears in conversation history correctly.
+        // ── Greeting ────────────────────────────────────────────────────
         if (agent.greeting) {
             openaiWs.send(JSON.stringify({
                 type: "conversation.item.create",
                 item: {
                     type: "message",
                     role: "user",
-                    content: [{
-                        type: "input_text",
-                        text: agent.greeting,
-                    }],
+                    content: [{ type: "input_text", text: agent.greeting }],
                 },
             }));
             openaiWs.send(JSON.stringify({ type: "response.create" }));
@@ -549,14 +543,18 @@ wss.on("connection", (twilioWs, req) => {
 
             switch (event.type) {
                 case "session.created":
-                    console.log("🎉 Session:", event.session?.id);
+                    console.log("🎉 Session created:", event.session?.id);
+                    console.log("   └ input format :", event.session?.audio?.input?.format);
+                    console.log("   └ output format:", event.session?.audio?.output?.format);
+                    console.log("   └ voice        :", event.session?.audio?.output?.voice);
                     break;
 
                 case "session.updated":
-                    console.log("⚙️  Session updated");
+                    console.log("⚙️  Session updated — output format:", event.session?.audio?.output?.format?.type);
                     break;
 
                 case "response.output_audio.delta":
+                    // OpenAI returns audio/pcmu → pass directly to Twilio (no transcoding)
                     if (event.delta && streamSid) {
                         twilioWs.send(JSON.stringify({
                             event: "media",
@@ -595,10 +593,7 @@ wss.on("connection", (twilioWs, req) => {
                             output: result,
                         },
                     }));
-
-                    openaiWs.send(JSON.stringify({
-                        type: "response.create",
-                    }));
+                    openaiWs.send(JSON.stringify({ type: "response.create" }));
                     break;
                 }
 
@@ -647,7 +642,7 @@ wss.on("connection", (twilioWs, req) => {
     });
 
     openaiWs.on("error", (err) => console.error("❌ OpenAI WS error:", err.message));
-    openaiWs.on("close", (code, reason) => console.log(`🔒 OpenAI closed: ${code}`));
+    openaiWs.on("close", (code) => console.log(`🔒 OpenAI closed: ${code}`));
 
     twilioWs.on("message", (message) => {
         try {
@@ -658,6 +653,7 @@ wss.on("connection", (twilioWs, req) => {
                     console.log(`📞 Call started — Stream: ${streamSid}`);
                     break;
                 case "media":
+                    // Twilio sends audio/pcmu → pass directly to OpenAI (no transcoding)
                     const audioEvent = { type: "input_audio_buffer.append", audio: msg.media.payload };
                     if (openaiWs?.readyState === WebSocket.OPEN) openaiWs.send(JSON.stringify(audioEvent));
                     else audioBufferQueue.push(audioEvent);
@@ -691,9 +687,9 @@ server.listen(PORT, () => {
 ║                                                              ║
 ║  Endpoints:                                                  ║
 ║    • Landing:     http://localhost:${String(PORT).padEnd(26)}║
-║    • Login:       http://localhost:${String(PORT + "/login.html").padEnd(26)}║
-║    • Dashboard:   http://localhost:${String(PORT + "/dashboard.html").padEnd(26)}║
-║    • Wizard:      http://localhost:${String(PORT + "/wizard.html").padEnd(26)}║
+║    • Login:       http://localhost:${String(PORT + "/login").padEnd(26)}║
+║    • Dashboard:   http://localhost:${String(PORT + "/dashboard").padEnd(26)}║
+║    • Wizard:      http://localhost:${String(PORT + "/wizard").padEnd(26)}║
 ║    • API:         /api/agents, /api/properties               ║
 ║    • Auth:        /api/auth/register, /api/auth/login        ║
 ║    • Twilio:      /incoming-call                             ║
@@ -702,3 +698,4 @@ server.listen(PORT, () => {
 ╚══════════════════════════════════════════════════════════════╝
   `);
 });
+
