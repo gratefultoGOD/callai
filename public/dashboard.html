@@ -1,0 +1,1369 @@
+﻿<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — VoiceAgent Platform</title>
+    <meta name="description" content="AI ses agent'larınızı yönetin, rezervasyonları takip edin.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --transition-theme: 0.35s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #09090b;
+            --bg-surface: #111114;
+            --bg-card: #16161a;
+            --bg-card-hover: #1c1c21;
+            --bg-elevated: #1e1e24;
+            --bg-input: #16161a;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --border-focus: #7c3aed;
+            --text: #fafafa;
+            --text-sub: #a1a1aa;
+            --text-muted: #52525b;
+            --violet: #8b5cf6;
+            --violet-hover: #7c3aed;
+            --violet-dim: rgba(139, 92, 246, 0.10);
+            --violet-glow: rgba(139, 92, 246, 0.06);
+            --teal: #2dd4bf;
+            --teal-dim: rgba(45, 212, 191, 0.10);
+            --teal-border: rgba(45, 212, 191, 0.25);
+            --rose: #fb7185;
+            --rose-dim: rgba(251, 113, 133, 0.08);
+            --rose-border: rgba(251, 113, 133, 0.18);
+            --amber: #fbbf24;
+            --amber-dim: rgba(251, 191, 36, 0.08);
+            --amber-border: rgba(251, 191, 36, 0.18);
+            --sky: #38bdf8;
+            --sky-dim: rgba(56, 189, 248, 0.08);
+            --nav-bg: rgba(9, 9, 11, 0.88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #fafafa;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f9f9fb;
+            --bg-elevated: #f4f4f5;
+            --bg-input: #f4f4f5;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --border-focus: #7c3aed;
+            --text: #18181b;
+            --text-sub: #71717a;
+            --text-muted: #a1a1aa;
+            --violet: #7c3aed;
+            --violet-hover: #6d28d9;
+            --violet-dim: rgba(124, 58, 237, 0.07);
+            --violet-glow: rgba(124, 58, 237, 0.04);
+            --teal: #0d9488;
+            --teal-dim: rgba(13, 148, 136, 0.06);
+            --teal-border: rgba(13, 148, 136, 0.25);
+            --rose: #e11d48;
+            --rose-dim: rgba(225, 29, 72, 0.05);
+            --rose-border: rgba(225, 29, 72, 0.15);
+            --amber: #d97706;
+            --amber-dim: rgba(217, 119, 6, 0.06);
+            --amber-border: rgba(217, 119, 6, 0.18);
+            --sky: #0284c7;
+            --sky-dim: rgba(2, 132, 199, 0.06);
+            --nav-bg: rgba(255, 255, 255, 0.88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-body);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background var(--transition-theme), color var(--transition-theme);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ══ NAV ══ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px) saturate(1.4);
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0 40px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background var(--transition-theme), border-color var(--transition-theme);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--violet);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-mark svg {
+            color: #fff;
+        }
+
+        .logo-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.84rem;
+            font-weight: 500;
+            padding: 7px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--violet-dim);
+        }
+
+        .nav-links a.active {
+            color: var(--violet);
+            background: var(--violet-dim);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 6px 12px 6px 8px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        .user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--violet);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-hover);
+            color: var(--violet);
+            background: var(--violet-dim);
+        }
+
+        .btn-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 9px;
+            border: 1px solid var(--rose-border);
+            background: var(--rose-dim);
+            color: var(--rose);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-logout:hover {
+            background: rgba(251, 113, 133, 0.15);
+        }
+
+        /* ══ MAIN LAYOUT ══ */
+        .main {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 80px 40px 60px;
+        }
+
+        /* ══ HERO ══ */
+        .dash-hero {
+            padding: 30px 0 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .dash-hero h1 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        .dash-hero h1 span {
+            color: var(--violet);
+        }
+
+        .dash-hero p {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--violet);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.86rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-cta:hover {
+            background: var(--violet-hover);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* ══ STATS ══ */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 44px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition-theme);
+        }
+
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.violet {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .stat-icon.teal {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .stat-icon.sky {
+            background: var(--sky-dim);
+            color: var(--sky);
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .stat-number {
+            font-size: 1.9rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        /* ══ SECTION ══ */
+        .section {
+            margin-bottom: 44px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title-icon.violet {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .section-title-icon.sky {
+            background: var(--sky-dim);
+            color: var(--sky);
+        }
+
+        .section-title-icon.teal {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .section-title-icon.amber {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .btn-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--violet);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 9px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-sm:hover {
+            background: var(--violet-hover);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.25);
+        }
+
+        .btn-sm.secondary {
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border);
+        }
+
+        .btn-sm.secondary:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+            background: var(--violet-glow);
+            box-shadow: none;
+        }
+
+        /* ══ AGENT CARDS ══ */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .agent-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            transition: all 0.25s;
+            box-shadow: var(--shadow-card);
+        }
+
+        .agent-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .agent-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .agent-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .agent-avatar.violet {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .agent-avatar.amber {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .agent-avatar.teal {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .agent-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .agent-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .tag-active {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .tag-default {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .agent-desc {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-top: 3px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .agent-phone {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--teal);
+            margin-bottom: 16px;
+        }
+
+        .agent-phone.empty {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 0.8rem;
+        }
+
+        .agent-meta {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin: 14px 0;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.77rem;
+            color: var(--text-muted);
+        }
+
+        .agent-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 12px;
+            border-radius: 9px;
+            border: 1px solid;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .action-call {
+            color: var(--teal);
+            border-color: var(--teal-border);
+            background: var(--teal-dim);
+        }
+
+        .action-call:hover {
+            background: rgba(45, 212, 191, 0.16);
+        }
+
+        .action-delete {
+            color: var(--rose);
+            border-color: var(--rose-border);
+            background: var(--rose-dim);
+            max-width: 90px;
+        }
+
+        .action-delete:hover {
+            background: rgba(251, 113, 133, 0.14);
+        }
+
+        /* Create card */
+        .create-card {
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 36px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-decoration: none;
+            min-height: 240px;
+        }
+
+        .create-card:hover {
+            border-color: var(--violet);
+            background: var(--violet-glow);
+            transform: translateY(-2px);
+        }
+
+        .create-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: var(--violet-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--violet);
+            margin-bottom: 12px;
+            transition: all 0.25s;
+        }
+
+        .create-card:hover .create-icon {
+            background: var(--violet);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .create-card h3 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .create-card p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* ══ RESERVATIONS TABLE ══ */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition-theme);
+        }
+
+        .table-header {
+            padding: 16px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: var(--teal-dim);
+            border: 1px solid var(--teal-border);
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--teal);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--teal);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            padding: 10px 18px;
+            text-align: left;
+            font-size: 0.69rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-elevated);
+        }
+
+        tbody tr {
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-elevated);
+        }
+
+        tbody td {
+            padding: 13px 18px;
+            font-size: 0.83rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 5px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .type-reservation {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .type-viewing {
+            background: var(--sky-dim);
+            color: var(--sky);
+        }
+
+        .empty-state {
+            padding: 48px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .empty-state svg {
+            opacity: 0.3;
+            margin-bottom: 12px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ══ TABS (reservations) ══ */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            width: fit-content;
+        }
+
+        .tab-btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--text);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ══ LOADING ══ */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: var(--bg-body);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--violet);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ══ TOAST ══ */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--teal);
+            color: #fff;
+        }
+
+        .toast.error {
+            background: var(--rose);
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 16px;
+            }
+
+            .main {
+                padding: 80px 16px 40px;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dash-hero {
+                padding: 20px 0 28px;
+            }
+
+            tbody td {
+                font-size: 0.76rem;
+                padding: 10px 12px;
+            }
+
+            thead th {
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Yükleniyor...</div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-left">
+            <a href="/dashboard" class="logo">
+                <div class="logo-mark">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                        <line x1="12" y1="19" x2="12" y2="23" />
+                        <line x1="8" y1="23" x2="16" y2="23" />
+                    </svg>
+                </div>
+                <span class="logo-text">VoiceAgent</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/dashboard" class="active">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                        </svg>
+                        Dashboard
+                    </a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <div class="user-chip">
+                <div class="user-avatar" id="userAvatar">?</div>
+                <span id="userName">...</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
+                <svg id="iconSun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" style="display:none">
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" />
+                    <line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+                <svg id="iconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+            </button>
+            <button class="btn-logout" id="btnLogout">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Çıkış
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="main">
+        <!-- Hero -->
+        <div class="dash-hero">
+            <div>
+                <h1>Merhaba, <span id="heroName">...</span> 👋</h1>
+                <p>AI ses agent'larınızı buradan yönetebilirsiniz.</p>
+            </div>
+            <a href="/wizard" class="btn-cta" id="btnNewAgent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Yeni Agent Oluştur
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+                <div class="stat-icon violet">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="stat-label">Agent'larım</div>
+                    <div class="stat-number" id="statAgents">—</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon teal">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="stat-label">Rezervasyonlar</div>
+                    <div class="stat-number" id="statReservations">—</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon sky">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="stat-label">Arama Kaydı</div>
+                    <div class="stat-number" id="statViewings">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agents Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <div class="section-title-icon violet">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            <line x1="12" y1="19" x2="12" y2="23" />
+                            <line x1="8" y1="23" x2="16" y2="23" />
+                        </svg>
+                    </div>
+                    Agent'larım
+                </h2>
+            </div>
+            <div class="agents-grid" id="agentsGrid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Reservations Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <div class="section-title-icon teal">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </div>
+                    Rezervasyonlar & Aramalar
+                </h2>
+                <div class="tab-bar">
+                    <button class="tab-btn active" id="tabAll" onclick="filterRes('all')">Tümü</button>
+                    <button class="tab-btn" id="tabRes" onclick="filterRes('reservation')">Rezervasyon</button>
+                    <button class="tab-btn" id="tabView" onclick="filterRes('viewing')">Arama</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Kayıtlar</h3>
+                    <div class="live-badge">
+                        <div class="live-dot"></div>
+                        Canlı
+                    </div>
+                </div>
+                <div id="reservationsTable">
+                    <div class="empty-state">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        Henüz kayıt bulunmuyor.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ── Auth guard ─────────────────────────────────────────────────
+        const token = localStorage.getItem('va_token');
+        if (!token) { window.location.href = '/login'; }
+
+        const authHeaders = { 'Authorization': 'Bearer ' + token };
+
+        // ── Theme ──────────────────────────────────────────────────────
+        const html = document.documentElement;
+        const iconSun = document.getElementById('iconSun');
+        const iconMoon = document.getElementById('iconMoon');
+        function applyTheme(t) {
+            html.setAttribute('data-theme', t);
+            localStorage.setItem('va_theme', t);
+            iconSun.style.display = t === 'dark' ? 'block' : 'none';
+            iconMoon.style.display = t === 'light' ? 'block' : 'none';
+        }
+        applyTheme(localStorage.getItem('va_theme') || 'dark');
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+
+        // ── Toast ──────────────────────────────────────────────────────
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type + ' show';
+            setTimeout(() => { t.classList.remove('show'); }, 3200);
+        }
+
+        // ── Logout ─────────────────────────────────────────────────────
+        document.getElementById('btnLogout').addEventListener('click', async () => {
+            await fetch('/api/auth/logout', { method: 'POST', headers: authHeaders });
+            localStorage.removeItem('va_token');
+            localStorage.removeItem('va_user');
+            window.location.href = '/login';
+        });
+
+        // ── State ──────────────────────────────────────────────────────
+        let agents = [];
+        let reservations = [];
+        let resFilter = 'all';
+
+        // ── Init ───────────────────────────────────────────────────────
+        async function init() {
+            // Verify auth
+            try {
+                const r = await fetch('/api/auth/me', { headers: authHeaders });
+                if (!r.ok) throw new Error();
+                const { user } = await r.json();
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('heroName').textContent = user.name.split(' ')[0];
+                document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+            } catch {
+                localStorage.removeItem('va_token');
+                window.location.href = '/login';
+                return;
+            }
+
+            await Promise.all([loadAgents(), loadReservations()]);
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // ── Agents ─────────────────────────────────────────────────────
+        async function loadAgents() {
+            const r = await fetch('/api/agents', { headers: authHeaders });
+            agents = await r.json();
+            renderAgents();
+            document.getElementById('statAgents').textContent = agents.filter(a => a.id !== 'agent_default').length;
+        }
+
+        function renderAgents() {
+            const grid = document.getElementById('agentsGrid');
+            const colors = ['violet', 'teal', 'amber'];
+            let html = '';
+
+            agents.forEach((agent, i) => {
+                const color = agent.id === 'agent_default' ? 'amber' : colors[i % colors.length];
+                const initial = agent.name.charAt(0).toUpperCase();
+                const isDefault = agent.id === 'agent_default';
+                html += `
+                <div class="agent-card">
+                    <div class="agent-card-header">
+                        <div class="agent-avatar ${color}">${initial}</div>
+                        <div class="agent-info">
+                            <div class="agent-name">
+                                ${escHtml(agent.name)}
+                                ${isDefault ? '<span class="tag tag-default">Varsayılan</span>' : '<span class="tag tag-active">Aktif</span>'}
+                            </div>
+                            <div class="agent-desc">${escHtml(agent.description || 'Açıklama yok')}</div>
+                        </div>
+                    </div>
+                    <div class="${agent.phoneNumber ? 'agent-phone' : 'agent-phone empty'}">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 12 19.79 19.79 0 0 1 1.15 3.18 2 2 0 0 1 3.12 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16z"/></svg>
+                        ${agent.phoneNumber ? escHtml(agent.phoneNumber) : 'Telefon numarası yok'}
+                    </div>
+                    <div class="agent-meta">
+                        <div class="meta-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            ${formatDate(agent.createdAt)}
+                        </div>
+                        <div class="meta-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            ${escHtml(agent.voice || 'coral')}
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        ${agent.phoneNumber
+                        ? `<a href="tel:${escHtml(agent.phoneNumber)}" class="action-btn action-call">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 12 19.79 19.79 0 0 1 1.15 3.18 2 2 0 0 1 3.12 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16z"/></svg>
+                                Ara
+                              </a>`
+                        : `<span class="action-btn" style="color:var(--text-muted);border-color:var(--border);cursor:default;flex:1">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                                Numara Yok
+                               </span>`
+                    }
+                        ${!isDefault ? `
+                        <button class="action-btn action-delete" onclick="deleteAgent('${agent.id}')">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                            Sil
+                        </button>` : ''}
+                    </div>
+                </div>`;
+            });
+
+            // Add create card
+            html += `
+            <a href="/wizard" class="create-card">
+                <div class="create-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <h3>Yeni Agent Oluştur</h3>
+                <p>AI ses asistanı yapılandır ve başlat</p>
+            </a>`;
+
+            grid.innerHTML = html;
+        }
+
+        async function deleteAgent(id) {
+            if (!confirm('Bu agent\'ı silmek istediğinize emin misiniz?')) return;
+            const r = await fetch('/api/agents/' + id, { method: 'DELETE', headers: authHeaders });
+            if (r.ok) {
+                showToast('Agent silindi.');
+                await loadAgents();
+            } else {
+                const d = await r.json();
+                showToast(d.error || 'Silme işlemi başarısız.', 'error');
+            }
+        }
+
+        // ── Reservations ───────────────────────────────────────────────
+        async function loadReservations() {
+            const r = await fetch('/api/reservations', { headers: authHeaders });
+            reservations = await r.json();
+            renderReservations();
+            const total = reservations.length;
+            const viewings = reservations.filter(r => r.type === 'viewing').length;
+            document.getElementById('statReservations').textContent = reservations.filter(r => r.type === 'reservation').length;
+            document.getElementById('statViewings').textContent = viewings;
+        }
+
+        function filterRes(type) {
+            resFilter = type;
+            ['All', 'Res', 'View'].forEach(t => document.getElementById('tab' + t).classList.remove('active'));
+            const map = { all: 'All', reservation: 'Res', viewing: 'View' };
+            document.getElementById('tab' + map[type]).classList.add('active');
+            renderReservations();
+        }
+
+        function renderReservations() {
+            const container = document.getElementById('reservationsTable');
+            const filtered = resFilter === 'all' ? reservations : reservations.filter(r => r.type === resFilter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Henüz kayıt bulunmuyor.
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = `<table>
+                <thead><tr>
+                    <th>Tür</th><th>Müşteri</th><th>Telefon</th><th>Mülk</th><th>Tarih</th>
+                </tr></thead>
+                <tbody>
+                    ${filtered.map(r => `<tr>
+                        <td><span class="type-badge ${r.type === 'reservation' ? 'type-reservation' : 'type-viewing'}">
+                            ${r.type === 'reservation' ? 'Rezervasyon' : 'Arama'}
+                        </span></td>
+                        <td>${escHtml(r.customer_name)}</td>
+                        <td>${escHtml(r.customer_phone)}</td>
+                        <td>${escHtml(r.property_title)}</td>
+                        <td>${escHtml(r.date + (r.time ? ' ' + r.time : ''))}</td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>`;
+        }
+
+        // ── Helpers ────────────────────────────────────────────────────
+        function escHtml(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+        function formatDate(iso) {
+            if (!iso) return '—';
+            return new Date(iso).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        // Auto-refresh reservations every 15s
+        setInterval(loadReservations, 15000);
+
+        // Kick off
+        init();
+    </script>
+</body>
+
+</html>

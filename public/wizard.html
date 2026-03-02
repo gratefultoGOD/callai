@@ -1,15 +1,42 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create AI Voice Agent — Wizard</title>
-    <meta name="description" content="Create your own AI voice agent with a dedicated phone number.">
+    <title>Create AI Voice Agent — VoiceAgent Wizard | Corealist</title>
+    <meta name="description"
+        content="Create your own AI voice agent with a dedicated US phone number. Configure personality, voice, tools, and launch in minutes.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://corealist.com/wizard">
+
+    <!-- Favicon & Manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://corealist.com/wizard">
+    <meta property="og:title" content="Create AI Voice Agent — VoiceAgent Wizard">
+    <meta property="og:description"
+        content="Create your own AI voice agent with a dedicated US phone number. Configure personality, voice, tools, and launch in minutes.">
+    <meta property="og:site_name" content="Corealist">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Create AI Voice Agent — VoiceAgent Wizard">
+    <meta name="twitter:description"
+        content="Build your own AI voice agent with a dedicated phone number. Powered by OpenAI & Twilio.">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js" defer></script>
     <style>
         *,
         *::before,
@@ -972,8 +999,8 @@
 </head>
 
 <body>
-    <div class="topbar">
-        <a href="/" class="topbar-back">
+    <header class="topbar" role="banner">
+        <a href="/dashboard" class="topbar-back" aria-label="Back to Dashboard">
             <i data-lucide="arrow-left" style="width:16px;height:16px"></i> Dashboard
         </a>
         <div class="topbar-brand">
@@ -985,258 +1012,270 @@
                 <i data-lucide="moon" style="width:18px;height:18px" id="themeIcon"></i>
             </button>
         </div>
-    </div>
+    </header>
 
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-        <div class="loading-text" id="loadingText">Creating your agent...</div>
-    </div>
+    <main>
 
-    <div class="wizard-container">
-        <div class="progress-wrap" id="progressWrap">
-            <div class="progress-steps">
-                <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
-                <div class="step-indicator active" data-step="1">
-                    <div class="step-dot">1</div><span class="step-label">Identity</span>
-                </div>
-                <div class="step-indicator" data-step="2">
-                    <div class="step-dot">2</div><span class="step-label">Prompt</span>
-                </div>
-                <div class="step-indicator" data-step="3">
-                    <div class="step-dot">3</div><span class="step-label">Voice & Tools</span>
-                </div>
-                <div class="step-indicator" data-step="4">
-                    <div class="step-dot">4</div><span class="step-label">Phone</span>
-                </div>
-                <div class="step-indicator" data-step="5">
-                    <div class="step-dot">5</div><span class="step-label">Launch</span>
-                </div>
-            </div>
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <div class="loading-text" id="loadingText">Creating your agent...</div>
         </div>
 
-        <!-- STEP 1 -->
-        <div class="step-card visible" data-step="1">
-            <h2><span class="step-h-icon" style="background:var(--violet-dim);color:var(--violet)"><i
-                        data-lucide="user-circle" style="width:18px;height:18px"></i></span> Agent Identity</h2>
-            <p class="step-subtitle">Give your AI voice agent a name and purpose.</p>
-            <div class="form-group"><label for="agentName">Agent Name</label><input type="text" id="agentName"
-                    placeholder="e.g. Sarah — Customer Support" maxlength="80">
-                <div class="form-hint">This name will be used to identify your agent</div>
+        <div class="wizard-container">
+            <div class="progress-wrap" id="progressWrap">
+                <div class="progress-steps">
+                    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+                    <div class="step-indicator active" data-step="1">
+                        <div class="step-dot">1</div><span class="step-label">Identity</span>
+                    </div>
+                    <div class="step-indicator" data-step="2">
+                        <div class="step-dot">2</div><span class="step-label">Prompt</span>
+                    </div>
+                    <div class="step-indicator" data-step="3">
+                        <div class="step-dot">3</div><span class="step-label">Voice & Tools</span>
+                    </div>
+                    <div class="step-indicator" data-step="4">
+                        <div class="step-dot">4</div><span class="step-label">Phone</span>
+                    </div>
+                    <div class="step-indicator" data-step="5">
+                        <div class="step-dot">5</div><span class="step-label">Launch</span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group"><label for="agentDesc">Description</label><input type="text" id="agentDesc"
-                    placeholder="e.g. 24/7 customer support assistant" maxlength="200">
-                <div class="form-hint">Brief description of what this agent does</div>
-            </div>
-            <div class="form-group"><label for="agentLang">Language</label><select id="agentLang">
-                    <option value="en-US">English (US)</option>
-                    <option value="en-GB">English (UK)</option>
-                    <option value="tr-TR">Türkçe</option>
-                    <option value="es-ES">Español</option>
-                    <option value="fr-FR">Français</option>
-                    <option value="de-DE">Deutsch</option>
-                    <option value="pt-BR">Português (BR)</option>
-                    <option value="ja-JP">日本語</option>
-                    <option value="ko-KR">한국어</option>
-                    <option value="zh-CN">中文</option>
-                    <option value="ar-SA">العربية</option>
-                </select></div>
-            <div class="actions"><span></span><button class="btn-next" id="btn1Next" onclick="goToStep(2)"
-                    disabled>Continue <i data-lucide="arrow-right" style="width:15px;height:15px"></i></button></div>
-        </div>
 
-        <!-- STEP 2 -->
-        <div class="step-card" data-step="2">
-            <h2><span class="step-h-icon" style="background:var(--sky-dim);color:var(--sky)"><i data-lucide="file-text"
-                        style="width:18px;height:18px"></i></span> System Prompt</h2>
-            <p class="step-subtitle">Define your agent's personality, behavior, and instructions.</p>
-            <div style="margin-bottom:20px"><label
-                    style="font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block">Quick
-                    Templates</label>
-                <div class="template-grid">
-                    <div class="template-card" onclick="applyTemplate('support')">
-                        <div class="t-icon support"><i data-lucide="headphones" style="width:17px;height:17px"></i>
+            <!-- STEP 1 -->
+            <div class="step-card visible" data-step="1">
+                <h2><span class="step-h-icon" style="background:var(--violet-dim);color:var(--violet)"><i
+                            data-lucide="user-circle" style="width:18px;height:18px"></i></span> Agent Identity</h2>
+                <p class="step-subtitle">Give your AI voice agent a name and purpose.</p>
+                <div class="form-group"><label for="agentName">Agent Name</label><input type="text" id="agentName"
+                        placeholder="e.g. Sarah — Customer Support" maxlength="80">
+                    <div class="form-hint">This name will be used to identify your agent</div>
+                </div>
+                <div class="form-group"><label for="agentDesc">Description</label><input type="text" id="agentDesc"
+                        placeholder="e.g. 24/7 customer support assistant" maxlength="200">
+                    <div class="form-hint">Brief description of what this agent does</div>
+                </div>
+                <div class="form-group"><label for="agentLang">Language</label><select id="agentLang">
+                        <option value="en-US">English (US)</option>
+                        <option value="en-GB">English (UK)</option>
+                        <option value="tr-TR">Türkçe</option>
+                        <option value="es-ES">Español</option>
+                        <option value="fr-FR">Français</option>
+                        <option value="de-DE">Deutsch</option>
+                        <option value="pt-BR">Português (BR)</option>
+                        <option value="ja-JP">日本語</option>
+                        <option value="ko-KR">한국어</option>
+                        <option value="zh-CN">中文</option>
+                        <option value="ar-SA">العربية</option>
+                    </select></div>
+                <div class="actions"><span></span><button class="btn-next" id="btn1Next" onclick="goToStep(2)"
+                        disabled>Continue <i data-lucide="arrow-right" style="width:15px;height:15px"></i></button>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step-card" data-step="2">
+                <h2><span class="step-h-icon" style="background:var(--sky-dim);color:var(--sky)"><i
+                            data-lucide="file-text" style="width:18px;height:18px"></i></span> System Prompt</h2>
+                <p class="step-subtitle">Define your agent's personality, behavior, and instructions.</p>
+                <div style="margin-bottom:20px"><label
+                        style="font-size:.8rem;font-weight:600;color:var(--text-sub);margin-bottom:10px;display:block">Quick
+                        Templates</label>
+                    <div class="template-grid">
+                        <div class="template-card" onclick="applyTemplate('support')">
+                            <div class="t-icon support"><i data-lucide="headphones" style="width:17px;height:17px"></i>
+                            </div>
+                            <div class="t-name">Customer Support</div>
+                            <div class="t-desc">Friendly support agent for inquiries</div>
                         </div>
-                        <div class="t-name">Customer Support</div>
-                        <div class="t-desc">Friendly support agent for inquiries</div>
-                    </div>
-                    <div class="template-card" onclick="applyTemplate('sales')">
-                        <div class="t-icon sales"><i data-lucide="briefcase" style="width:17px;height:17px"></i></div>
-                        <div class="t-name">Sales Agent</div>
-                        <div class="t-desc">Persuasive agent for lead qualification</div>
-                    </div>
-                    <div class="template-card" onclick="applyTemplate('booking')">
-                        <div class="t-icon booking"><i data-lucide="calendar" style="width:17px;height:17px"></i></div>
-                        <div class="t-name">Booking Assistant</div>
-                        <div class="t-desc">Schedule appointments and bookings</div>
-                    </div>
-                    <div class="template-card" onclick="applyTemplate('info')">
-                        <div class="t-icon info"><i data-lucide="info" style="width:17px;height:17px"></i></div>
-                        <div class="t-name">Info Line</div>
-                        <div class="t-desc">Answer questions about your business</div>
+                        <div class="template-card" onclick="applyTemplate('sales')">
+                            <div class="t-icon sales"><i data-lucide="briefcase" style="width:17px;height:17px"></i>
+                            </div>
+                            <div class="t-name">Sales Agent</div>
+                            <div class="t-desc">Persuasive agent for lead qualification</div>
+                        </div>
+                        <div class="template-card" onclick="applyTemplate('booking')">
+                            <div class="t-icon booking"><i data-lucide="calendar" style="width:17px;height:17px"></i>
+                            </div>
+                            <div class="t-name">Booking Assistant</div>
+                            <div class="t-desc">Schedule appointments and bookings</div>
+                        </div>
+                        <div class="template-card" onclick="applyTemplate('info')">
+                            <div class="t-icon info"><i data-lucide="info" style="width:17px;height:17px"></i></div>
+                            <div class="t-name">Info Line</div>
+                            <div class="t-desc">Answer questions about your business</div>
+                        </div>
                     </div>
                 </div>
+                <div class="form-group"><label for="systemPrompt">System Prompt</label><textarea id="systemPrompt"
+                        rows="8"
+                        placeholder="You are a helpful AI voice assistant for [company]. Your name is [name].&#10;&#10;Rules:&#10;- Always be polite and professional&#10;- Keep answers concise"></textarea>
+                    <div class="char-count"><span id="promptCharCount">0</span> / 4000</div>
+                </div>
+                <div class="form-group"><label for="greetingPrompt">Greeting Instruction</label><textarea
+                        id="greetingPrompt" rows="3"
+                        placeholder="Greet the caller warmly. Introduce yourself. Ask how you can help."></textarea>
+                    <div class="form-hint">How the AI should greet callers (invisible to caller)</div>
+                </div>
+                <div class="form-group"><label for="firstMessage">First Message (TTS)</label><input type="text"
+                        id="firstMessage" placeholder="Hello! You're being connected to our AI assistant.">
+                    <div class="form-hint">Spoken via Twilio TTS before the AI connects.</div>
+                </div>
+                <div class="actions"><button class="btn-back" onclick="goToStep(1)"><i data-lucide="arrow-left"
+                            style="width:15px;height:15px"></i> Back</button><button class="btn-next" id="btn2Next"
+                        onclick="goToStep(3)" disabled>Continue <i data-lucide="arrow-right"
+                            style="width:15px;height:15px"></i></button></div>
             </div>
-            <div class="form-group"><label for="systemPrompt">System Prompt</label><textarea id="systemPrompt" rows="8"
-                    placeholder="You are a helpful AI voice assistant for [company]. Your name is [name].&#10;&#10;Rules:&#10;- Always be polite and professional&#10;- Keep answers concise"></textarea>
-                <div class="char-count"><span id="promptCharCount">0</span> / 4000</div>
-            </div>
-            <div class="form-group"><label for="greetingPrompt">Greeting Instruction</label><textarea
-                    id="greetingPrompt" rows="3"
-                    placeholder="Greet the caller warmly. Introduce yourself. Ask how you can help."></textarea>
-                <div class="form-hint">How the AI should greet callers (invisible to caller)</div>
-            </div>
-            <div class="form-group"><label for="firstMessage">First Message (TTS)</label><input type="text"
-                    id="firstMessage" placeholder="Hello! You're being connected to our AI assistant.">
-                <div class="form-hint">Spoken via Twilio TTS before the AI connects.</div>
-            </div>
-            <div class="actions"><button class="btn-back" onclick="goToStep(1)"><i data-lucide="arrow-left"
-                        style="width:15px;height:15px"></i> Back</button><button class="btn-next" id="btn2Next"
-                    onclick="goToStep(3)" disabled>Continue <i data-lucide="arrow-right"
-                        style="width:15px;height:15px"></i></button></div>
-        </div>
 
-        <!-- STEP 3 -->
-        <div class="step-card" data-step="3">
-            <h2><span class="step-h-icon" style="background:var(--teal-dim);color:var(--teal)"><i data-lucide="mic"
-                        style="width:18px;height:18px"></i></span> Voice & Tools</h2>
-            <p class="step-subtitle">Choose the AI voice and enable function calling tools.</p>
-            <div class="form-group"><label>Voice</label>
-                <div class="voice-grid" id="voiceGrid"></div>
-            </div>
-            <div class="form-group" style="margin-top:24px"><label>Function Calling Tools</label>
-                <div class="form-hint" style="margin-bottom:12px">Enable built-in tools for the demo real estate
-                    database.</div>
-                <div class="toggle-row">
-                    <div>
-                        <div class="toggle-label">Enable Tools</div>
-                        <div class="toggle-desc">Allow the agent to call functions during conversations</div>
-                    </div><label class="toggle-switch"><input type="checkbox" id="enableTools"
-                            onchange="toggleToolsPanel()"><span class="toggle-slider"></span></label>
+            <!-- STEP 3 -->
+            <div class="step-card" data-step="3">
+                <h2><span class="step-h-icon" style="background:var(--teal-dim);color:var(--teal)"><i data-lucide="mic"
+                            style="width:18px;height:18px"></i></span> Voice & Tools</h2>
+                <p class="step-subtitle">Choose the AI voice and enable function calling tools.</p>
+                <div class="form-group"><label>Voice</label>
+                    <div class="voice-grid" id="voiceGrid"></div>
                 </div>
-                <div id="toolsPanel" style="display:none;margin-top:8px">
+                <div class="form-group" style="margin-top:24px"><label>Function Calling Tools</label>
+                    <div class="form-hint" style="margin-bottom:12px">Enable built-in tools for the demo real estate
+                        database.</div>
                     <div class="toggle-row">
                         <div>
-                            <div class="toggle-label">Search Properties</div>
-                            <div class="toggle-desc">Search by location, price, rooms, type</div>
-                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
-                                value="search_properties" checked><span class="toggle-slider"></span></label>
+                            <div class="toggle-label">Enable Tools</div>
+                            <div class="toggle-desc">Allow the agent to call functions during conversations</div>
+                        </div><label class="toggle-switch"><input type="checkbox" id="enableTools"
+                                onchange="toggleToolsPanel()"><span class="toggle-slider"></span></label>
                     </div>
-                    <div class="toggle-row">
-                        <div>
-                            <div class="toggle-label">Property Details</div>
-                            <div class="toggle-desc">Get full details by property ID</div>
-                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
-                                value="get_property_details" checked><span class="toggle-slider"></span></label>
-                    </div>
-                    <div class="toggle-row">
-                        <div>
-                            <div class="toggle-label">Check Availability</div>
-                            <div class="toggle-desc">Check viewing availability for a date</div>
-                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
-                                value="check_availability" checked><span class="toggle-slider"></span></label>
-                    </div>
-                    <div class="toggle-row">
-                        <div>
-                            <div class="toggle-label">Book Viewing</div>
-                            <div class="toggle-desc">Schedule a property viewing appointment</div>
-                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb" value="book_viewing"
-                                checked><span class="toggle-slider"></span></label>
-                    </div>
-                    <div class="toggle-row">
-                        <div>
-                            <div class="toggle-label">Make Reservation</div>
-                            <div class="toggle-desc">Create a purchase/rental reservation</div>
-                        </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
-                                value="make_reservation" checked><span class="toggle-slider"></span></label>
+                    <div id="toolsPanel" style="display:none;margin-top:8px">
+                        <div class="toggle-row">
+                            <div>
+                                <div class="toggle-label">Search Properties</div>
+                                <div class="toggle-desc">Search by location, price, rooms, type</div>
+                            </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                    value="search_properties" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="toggle-row">
+                            <div>
+                                <div class="toggle-label">Property Details</div>
+                                <div class="toggle-desc">Get full details by property ID</div>
+                            </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                    value="get_property_details" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="toggle-row">
+                            <div>
+                                <div class="toggle-label">Check Availability</div>
+                                <div class="toggle-desc">Check viewing availability for a date</div>
+                            </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                    value="check_availability" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="toggle-row">
+                            <div>
+                                <div class="toggle-label">Book Viewing</div>
+                                <div class="toggle-desc">Schedule a property viewing appointment</div>
+                            </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                    value="book_viewing" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="toggle-row">
+                            <div>
+                                <div class="toggle-label">Make Reservation</div>
+                                <div class="toggle-desc">Create a purchase/rental reservation</div>
+                            </div><label class="toggle-switch"><input type="checkbox" class="tool-cb"
+                                    value="make_reservation" checked><span class="toggle-slider"></span></label>
+                        </div>
                     </div>
                 </div>
+                <div class="actions"><button class="btn-back" onclick="goToStep(2)"><i data-lucide="arrow-left"
+                            style="width:15px;height:15px"></i> Back</button><button class="btn-next"
+                        onclick="goToStep(4)">Continue <i data-lucide="arrow-right"
+                            style="width:15px;height:15px"></i></button></div>
             </div>
-            <div class="actions"><button class="btn-back" onclick="goToStep(2)"><i data-lucide="arrow-left"
-                        style="width:15px;height:15px"></i> Back</button><button class="btn-next"
-                    onclick="goToStep(4)">Continue <i data-lucide="arrow-right"
-                        style="width:15px;height:15px"></i></button></div>
-        </div>
 
-        <!-- STEP 4 -->
-        <div class="step-card" data-step="4">
-            <h2><span class="step-h-icon" style="background:var(--amber-dim);color:var(--amber)"><i
-                        data-lucide="smartphone" style="width:18px;height:18px"></i></span> Phone Number</h2>
-            <p class="step-subtitle">Search and select a US phone number for your agent.</p>
-            <div class="twilio-warning" id="twilioWarning">Twilio is not configured. Add
-                <strong>TWILIO_ACCOUNT_SID</strong> and <strong>TWILIO_AUTH_TOKEN</strong> to your <code>.env</code>
-                file. <a href="https://www.twilio.com/console" target="_blank">Get credentials →</a></div>
-            <div class="phone-search-area" id="phoneSearchArea">
-                <div class="phone-search-row"><input type="text" id="areaCodeInput"
-                        placeholder="Area code (e.g. 212, 415)" maxlength="3"><button class="btn-search"
-                        id="btnSearchNumbers" onclick="searchNumbers()">Search Numbers</button></div>
-                <div class="phone-results" id="phoneResults">
-                    <div class="phone-status-msg">Enter an area code and search for available US (+1) numbers.</div>
+            <!-- STEP 4 -->
+            <div class="step-card" data-step="4">
+                <h2><span class="step-h-icon" style="background:var(--amber-dim);color:var(--amber)"><i
+                            data-lucide="smartphone" style="width:18px;height:18px"></i></span> Phone Number</h2>
+                <p class="step-subtitle">Search and select a US phone number for your agent.</p>
+                <div class="twilio-warning" id="twilioWarning">Twilio is not configured. Add
+                    <strong>TWILIO_ACCOUNT_SID</strong> and <strong>TWILIO_AUTH_TOKEN</strong> to your <code>.env</code>
+                    file. <a href="https://www.twilio.com/console" target="_blank">Get credentials →</a>
                 </div>
+                <div class="phone-search-area" id="phoneSearchArea">
+                    <div class="phone-search-row"><input type="text" id="areaCodeInput"
+                            placeholder="Area code (e.g. 212, 415)" maxlength="3"><button class="btn-search"
+                            id="btnSearchNumbers" onclick="searchNumbers()">Search Numbers</button></div>
+                    <div class="phone-results" id="phoneResults">
+                        <div class="phone-status-msg">Enter an area code and search for available US (+1) numbers.</div>
+                    </div>
+                </div>
+                <div class="actions"><button class="btn-back" onclick="goToStep(3)"><i data-lucide="arrow-left"
+                            style="width:15px;height:15px"></i> Back</button><button class="btn-next" id="btn4Next"
+                        onclick="goToStep(5)" disabled>Continue <i data-lucide="arrow-right"
+                            style="width:15px;height:15px"></i></button></div>
             </div>
-            <div class="actions"><button class="btn-back" onclick="goToStep(3)"><i data-lucide="arrow-left"
-                        style="width:15px;height:15px"></i> Back</button><button class="btn-next" id="btn4Next"
-                    onclick="goToStep(5)" disabled>Continue <i data-lucide="arrow-right"
-                        style="width:15px;height:15px"></i></button></div>
-        </div>
 
-        <!-- STEP 5 -->
-        <div class="step-card" data-step="5">
-            <h2><span class="step-h-icon" style="background:var(--teal-dim);color:var(--teal)"><i data-lucide="rocket"
-                        style="width:18px;height:18px"></i></span> Review & Launch</h2>
-            <p class="step-subtitle">Review your agent configuration before launching.</p>
-            <div class="review-grid">
-                <div class="review-section">
-                    <div class="review-label">Agent Name</div>
-                    <div class="review-value" id="revName">—</div>
-                </div>
-                <div class="review-section">
-                    <div class="review-label">Language</div>
-                    <div class="review-value" id="revLang">—</div>
-                </div>
-            </div>
-            <div class="review-section">
-                <div class="review-label">Description</div>
-                <div class="review-value" id="revDesc">—</div>
-            </div>
-            <div class="review-section">
-                <div class="review-label">System Prompt</div>
-                <div class="review-value" id="revPrompt" style="max-height:150px;overflow-y:auto">—</div>
-            </div>
-            <div class="review-grid">
-                <div class="review-section">
-                    <div class="review-label">Voice</div>
-                    <div class="review-value" id="revVoice">—</div>
+            <!-- STEP 5 -->
+            <div class="step-card" data-step="5">
+                <h2><span class="step-h-icon" style="background:var(--teal-dim);color:var(--teal)"><i
+                            data-lucide="rocket" style="width:18px;height:18px"></i></span> Review & Launch</h2>
+                <p class="step-subtitle">Review your agent configuration before launching.</p>
+                <div class="review-grid">
+                    <div class="review-section">
+                        <div class="review-label">Agent Name</div>
+                        <div class="review-value" id="revName">—</div>
+                    </div>
+                    <div class="review-section">
+                        <div class="review-label">Language</div>
+                        <div class="review-value" id="revLang">—</div>
+                    </div>
                 </div>
                 <div class="review-section">
-                    <div class="review-label">Tools</div>
-                    <div class="review-value" id="revTools">—</div>
+                    <div class="review-label">Description</div>
+                    <div class="review-value" id="revDesc">—</div>
                 </div>
+                <div class="review-section">
+                    <div class="review-label">System Prompt</div>
+                    <div class="review-value" id="revPrompt" style="max-height:150px;overflow-y:auto">—</div>
+                </div>
+                <div class="review-grid">
+                    <div class="review-section">
+                        <div class="review-label">Voice</div>
+                        <div class="review-value" id="revVoice">—</div>
+                    </div>
+                    <div class="review-section">
+                        <div class="review-label">Tools</div>
+                        <div class="review-value" id="revTools">—</div>
+                    </div>
+                </div>
+                <div class="review-section">
+                    <div class="review-label">Phone Number</div>
+                    <div class="review-value review-highlight" id="revPhone">—</div>
+                </div>
+                <div class="actions"><button class="btn-back" onclick="goToStep(4)"><i data-lucide="arrow-left"
+                            style="width:15px;height:15px"></i> Back</button><button class="btn-launch" id="btnLaunch"
+                        onclick="launchAgent()"><i data-lucide="rocket" style="width:16px;height:16px"></i> Launch
+                        Agent</button></div>
             </div>
-            <div class="review-section">
-                <div class="review-label">Phone Number</div>
-                <div class="review-value review-highlight" id="revPhone">—</div>
-            </div>
-            <div class="actions"><button class="btn-back" onclick="goToStep(4)"><i data-lucide="arrow-left"
-                        style="width:15px;height:15px"></i> Back</button><button class="btn-launch" id="btnLaunch"
-                    onclick="launchAgent()"><i data-lucide="rocket" style="width:16px;height:16px"></i> Launch
-                    Agent</button></div>
-        </div>
 
-        <!-- SUCCESS -->
-        <div class="success-screen" id="successScreen">
-            <div class="success-icon"><i data-lucide="check" style="width:32px;height:32px"></i></div>
-            <h2>Agent Launched!</h2>
-            <p>Your AI voice agent is now live and ready to take calls.</p>
-            <div class="success-number" id="successNumber">+1 (XXX) XXX-XXXX</div>
-            <p>Share this number with your customers. When they call, your AI agent will answer automatically.</p>
-            <a href="/" class="btn-dashboard"><i data-lucide="arrow-left" style="width:15px;height:15px"></i> Back to
-                Dashboard</a>
-        </div>
-    </div>
+            <!-- SUCCESS -->
+            <div class="success-screen" id="successScreen">
+                <div class="success-icon"><i data-lucide="check" style="width:32px;height:32px"></i></div>
+                <h2>Agent Launched!</h2>
+                <p>Your AI voice agent is now live and ready to take calls.</p>
+                <div class="success-number" id="successNumber">+1 (XXX) XXX-XXXX</div>
+                <p>Share this number with your customers. When they call, your AI agent will answer automatically.</p>
+                <a href="/dashboard" class="btn-dashboard"><i data-lucide="arrow-left"
+                        style="width:15px;height:15px"></i> Dashboard'a Dön</a>
+            </div>
+    </main>
 
     <script>
-        function getStoredTheme() { return localStorage.getItem('theme') || 'dark' }
-        function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); requestAnimationFrame(() => { const el = document.getElementById('themeIcon'); if (el) el.setAttribute('data-lucide', t === 'dark' ? 'sun' : 'moon'); lucide.createIcons() }) }
+        // ── Auth guard ──────────────────────────────────────────────────
+        const vaToken = localStorage.getItem('va_token');
+        if (!vaToken) { window.location.href = '/login'; }
+        const authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + vaToken };
+
+        function getStoredTheme() { return localStorage.getItem('va_theme') || localStorage.getItem('theme') || 'dark' }
+        function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('va_theme', t); localStorage.setItem('theme', t); requestAnimationFrame(() => { const el = document.getElementById('themeIcon'); if (el) el.setAttribute('data-lucide', t === 'dark' ? 'sun' : 'moon'); if (typeof lucide !== 'undefined') lucide.createIcons() }) }
         function toggleTheme() { applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark') }
         applyTheme(getStoredTheme());
 
@@ -1260,7 +1299,7 @@
             info: { prompt: `You are an informational AI assistant for our business.\n\nRules:\n- Provide accurate and helpful information about our services\n- Answer frequently asked questions clearly\n- If you don't know something, say so honestly\n- Direct customers to the appropriate department when needed\n- Keep responses concise and easy to understand\n- Be professional and friendly at all times`, greeting: "Greet the caller politely. Introduce yourself as the AI info assistant. Ask what information they're looking for.", firstMessage: "Hello! You're connected to our AI information line." }
         };
 
-        (async function init() { renderVoiceGrid(); setupValidation(); await checkTwilioStatus(); lucide.createIcons() })();
+        document.addEventListener('DOMContentLoaded', async function () { renderVoiceGrid(); setupValidation(); await checkTwilioStatus(); if (typeof lucide !== 'undefined') lucide.createIcons() });
 
         async function checkTwilioStatus() { try { const r = await fetch("/api/twilio/status"); const d = await r.json(); twilioConfigured = d.configured; if (!twilioConfigured) document.getElementById("twilioWarning").style.display = "block" } catch { twilioConfigured = false } }
 
@@ -1304,7 +1343,7 @@
             const ac = document.getElementById("areaCodeInput").value.trim(), btn = document.getElementById("btnSearchNumbers"), res = document.getElementById("phoneResults");
             btn.disabled = true; btn.textContent = "Searching..."; res.innerHTML = `<div class="phone-status-msg">Searching for available numbers...</div>`;
             try {
-                const p = new URLSearchParams(); if (ac) p.set("areaCode", ac); const r = await fetch(`/api/twilio/available-numbers?${p}`); const d = await r.json();
+                const p = new URLSearchParams(); if (ac) p.set("areaCode", ac); const r = await fetch(`/api/twilio/available-numbers?${p}`, { headers: { 'Authorization': 'Bearer ' + vaToken } }); const d = await r.json();
                 if (d.error) { res.innerHTML = `<div class="phone-status-msg error">${d.error}</div>`; return }
                 if (!d.length) { res.innerHTML = `<div class="phone-status-msg">No numbers available. Try another area code.</div>`; return }
                 res.innerHTML = d.map(n => `<div class="phone-item" onclick="selectPhone(this,'${n.phoneNumber}')"><div><div class="phone-number">${formatPhone(n.phoneNumber)}</div><div class="phone-location">${n.locality || ''} ${n.region || ''}</div></div><div class="phone-check"><i data-lucide="check-circle" style="width:18px;height:18px"></i></div></div>`).join("");
@@ -1335,8 +1374,8 @@
             const tools = et ? [...document.querySelectorAll(".tool-cb:checked")].map(c => c.value) : [];
             const payload = { name: document.getElementById("agentName").value.trim(), description: document.getElementById("agentDesc").value.trim(), systemPrompt: document.getElementById("systemPrompt").value.trim(), greeting: document.getElementById("greetingPrompt").value.trim(), voice: selectedVoice, language: document.getElementById("agentLang").value, firstMessage: document.getElementById("firstMessage").value.trim(), enableTools: et, tools, areaCode: document.getElementById("areaCodeInput").value.trim() || undefined };
             try {
-                const r = await fetch("/api/agents", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); const d = await r.json(); ov.classList.remove("visible");
-                if (!r.ok) { alert("Error: " + (d.error || "Unknown")); btn.disabled = false; return }
+                const r = await fetch("/api/agents", { method: "POST", headers: authHeaders, body: JSON.stringify(payload) }); const d = await r.json(); ov.classList.remove("visible");
+                if (!r.ok) { if (r.status === 401) { window.location.href = '/login'; return; } alert("Error: " + (d.error || "Unknown")); btn.disabled = false; return }
                 document.getElementById("progressWrap").style.display = "none";
                 document.querySelectorAll(".step-card").forEach(c => c.classList.remove("visible"));
                 document.getElementById("successScreen").classList.add("visible");

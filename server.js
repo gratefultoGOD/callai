@@ -7,12 +7,24 @@ const { getProperties, searchProperties, getPropertyById, addReservation, getRes
 const {
     DEFAULT_AGENT,
     createAgent,
-    getAgents,
+    getAllAgents,
+    getAgentsForUser,
     getAgentById,
     getAgentByPhoneNumber,
     updateAgent,
     deleteAgent,
 } = require("./agents");
+const {
+    registerUser,
+    loginUser,
+    loginOrRegisterGoogleUser,
+    logoutToken,
+    safeUser,
+    requireAuth,
+    extractToken,
+    getUserByToken,
+    GOOGLE_CLIENT_ID,
+} = require("./auth");
 
 const app = express();
 const server = http.createServer(app);
@@ -195,29 +207,95 @@ function executeFunction(name, args) {
     }
 }
 
-// ─── Serve static frontend ────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, "public")));
+// ─── Middleware ────────────────────────────────────────────────────────
 app.use(express.json());
+
+// ─── Page Routes (clean URLs) — must come BEFORE static ───────────────
+const pub = (file) => path.join(__dirname, "public", file);
+
+app.get("/", (req, res) => res.sendFile(pub("index.html")));
+app.get("/login", (req, res) => res.sendFile(pub("login.html")));
+app.get("/dashboard", (req, res) => res.sendFile(pub("dashboard.html")));
+app.get("/wizard", (req, res) => res.sendFile(pub("wizard.html")));
+
+// Redirect legacy .html URLs → clean URLs (301 permanent)
+app.get("/index.html", (req, res) => res.redirect(301, "/"));
+app.get("/login.html", (req, res) => res.redirect(301, "/login"));
+app.get("/dashboard.html", (req, res) => res.redirect(301, "/dashboard"));
+app.get("/wizard.html", (req, res) => res.redirect(301, "/wizard"));
+
+// Static assets (js, css, images, fonts...) — index:false so "/" is handled above
+app.use(express.static(path.join(__dirname, "public"), { index: false }));
+
+// ─── Auth API ─────────────────────────────────────────────────────────
+app.post("/api/auth/register", (req, res) => {
+    const { email, password, name } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: "E-posta ve şifre zorunludur." });
+    }
+    const result = registerUser({ email, password, name });
+    if (!result.ok) return res.status(400).json({ error: result.error });
+    // Auto-login after register
+    const loginResult = loginUser({ email, password });
+    res.status(201).json({ token: loginResult.token, user: loginResult.user });
+});
+
+app.post("/api/auth/login", (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: "E-posta ve şifre zorunludur." });
+    }
+    const result = loginUser({ email, password });
+    if (!result.ok) return res.status(401).json({ error: result.error });
+    res.json({ token: result.token, user: result.user });
+});
+
+app.post("/api/auth/logout", (req, res) => {
+    const token = extractToken(req);
+    if (token) logoutToken(token);
+    res.json({ ok: true });
+});
+
+app.get("/api/auth/me", requireAuth, (req, res) => {
+    res.json({ user: safeUser(req.currentUser) });
+});
+
+app.post("/api/auth/google", async (req, res) => {
+    const { credential } = req.body;
+    if (!credential) return res.status(400).json({ error: "Google credential eksik." });
+    const result = await loginOrRegisterGoogleUser(credential);
+    if (!result.ok) return res.status(401).json({ error: result.error });
+    res.json({ token: result.token, user: result.user });
+});
+
+app.get("/api/auth/google-client-id", (req, res) => {
+    res.json({ clientId: GOOGLE_CLIENT_ID || null });
+});
 
 // ─── API Endpoints (original) ─────────────────────────────────────────
 app.get("/api/properties", (req, res) => res.json(getProperties()));
-app.get("/api/reservations", (req, res) => res.json(getReservations()));
+app.get("/api/reservations", requireAuth, (req, res) => res.json(getReservations()));
 app.get("/api/properties/:id", (req, res) => {
     const p = getPropertyById(req.params.id);
     p ? res.json(p) : res.status(404).json({ error: "Not found" });
 });
 
-// ─── Agent CRUD API ───────────────────────────────────────────────────
-app.get("/api/agents", (req, res) => {
-    res.json(getAgents());
+// ─── Agent CRUD API (requires auth) ───────────────────────────────────
+app.get("/api/agents", requireAuth, (req, res) => {
+    res.json(getAgentsForUser(req.currentUser.id));
 });
 
-app.get("/api/agents/:id", (req, res) => {
+app.get("/api/agents/:id", requireAuth, (req, res) => {
     const agent = getAgentById(req.params.id);
-    agent ? res.json(agent) : res.status(404).json({ error: "Agent not found" });
+    if (!agent) return res.status(404).json({ error: "Agent not found" });
+    // Allow access to default agent or own agents
+    if (agent.id !== "agent_default" && agent.ownerId !== req.currentUser.id) {
+        return res.status(403).json({ error: "Bu agent'a erişim izniniz yok." });
+    }
+    res.json(agent);
 });
 
-app.post("/api/agents", async (req, res) => {
+app.post("/api/agents", requireAuth, async (req, res) => {
     try {
         const {
             name,
@@ -243,7 +321,6 @@ app.post("/api/agents", async (req, res) => {
 
         if (client) {
             try {
-                // Search for available US numbers
                 const searchParams = { limit: 1, voiceEnabled: true };
                 if (areaCode) searchParams.areaCode = areaCode;
 
@@ -255,13 +332,10 @@ app.post("/api/agents", async (req, res) => {
                 }
 
                 const chosenNumber = availableNumbers[0].phoneNumber;
-
-                // Get the public host URL for webhook
                 const host = req.headers.host;
                 const protocol = req.headers["x-forwarded-proto"] || req.protocol;
                 const baseUrl = `${protocol}://${host}`;
 
-                // Purchase the number and configure webhook
                 const purchased = await client.incomingPhoneNumbers.create({
                     phoneNumber: chosenNumber,
                     voiceUrl: `${baseUrl}/incoming-call`,
@@ -292,6 +366,7 @@ app.post("/api/agents", async (req, res) => {
             tools: tools || [],
             phoneNumber,
             phoneNumberSid,
+            ownerId: req.currentUser.id,
         });
 
         res.status(201).json(agent);
@@ -301,12 +376,14 @@ app.post("/api/agents", async (req, res) => {
     }
 });
 
-app.delete("/api/agents/:id", async (req, res) => {
+app.delete("/api/agents/:id", requireAuth, async (req, res) => {
     const agent = getAgentById(req.params.id);
     if (!agent) return res.status(404).json({ error: "Agent not found" });
     if (agent.id === "agent_default") return res.status(400).json({ error: "Cannot delete the default test agent." });
+    if (agent.ownerId !== req.currentUser.id) {
+        return res.status(403).json({ error: "Bu agent'ı silme yetkiniz yok." });
+    }
 
-    // Release the Twilio number
     const client = getTwilioClient();
     if (client && agent.phoneNumberSid) {
         try {
@@ -322,7 +399,7 @@ app.delete("/api/agents/:id", async (req, res) => {
 });
 
 // ─── Twilio Number Search API ──────────────────────────────────────────
-app.get("/api/twilio/available-numbers", async (req, res) => {
+app.get("/api/twilio/available-numbers", requireAuth, async (req, res) => {
     const client = getTwilioClient();
     if (!client) {
         return res.status(400).json({ error: "Twilio is not configured. Add TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN to .env" });
@@ -357,7 +434,6 @@ app.all("/incoming-call", (req, res) => {
     const host = req.headers.host;
     const calledNumber = req.body?.To || req.query?.To || "";
 
-    // Find agent by called number, fall back to default
     let agent = getAgentByPhoneNumber(calledNumber);
     if (!agent) agent = DEFAULT_AGENT;
 
@@ -378,7 +454,6 @@ app.all("/incoming-call", (req, res) => {
 const wss = new WebSocket.Server({ server, path: "/media-stream" });
 
 wss.on("connection", (twilioWs, req) => {
-    // Extract agentId from query string
     const url = new URL(req.url, `http://${req.headers.host}`);
     const agentId = url.searchParams.get("agentId");
     let agent = agentId ? getAgentById(agentId) : DEFAULT_AGENT;
@@ -391,10 +466,8 @@ wss.on("connection", (twilioWs, req) => {
     let audioBufferQueue = [];
     let isResponseActive = false;
 
-    // ── Build session config from agent ──
     const sessionTools = agent.enableTools ? ALL_TOOLS.filter(t => agent.tools.includes(t.name)) : [];
 
-    // ── Connect to OpenAI Realtime API ──
     const openaiUrl = "wss://api.openai.com/v1/realtime?model=gpt-realtime-mini";
     openaiWs = new WebSocket(openaiUrl, {
         headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
@@ -403,7 +476,6 @@ wss.on("connection", (twilioWs, req) => {
     openaiWs.on("open", () => {
         console.log(`✅ OpenAI connected for agent: ${agent.name}`);
 
-        // Configure the session with agent-specific settings
         const sessionUpdate = {
             type: "session.update",
             session: {
@@ -431,7 +503,6 @@ wss.on("connection", (twilioWs, req) => {
         openaiWs.send(JSON.stringify(sessionUpdate));
         console.log(`📋 Session configured — ${sessionTools.length} tools, voice: ${agent.voice}`);
 
-        // Agent-specific greeting
         openaiWs.send(JSON.stringify({
             type: "response.create",
             response: {
@@ -439,7 +510,6 @@ wss.on("connection", (twilioWs, req) => {
             },
         }));
 
-        // Flush buffered audio
         for (const chunk of audioBufferQueue) openaiWs.send(JSON.stringify(chunk));
         audioBufferQueue = [];
     });
@@ -479,7 +549,6 @@ wss.on("connection", (twilioWs, req) => {
                     console.log("\n📝 AI:", event.transcript);
                     break;
 
-                // ── Function Calling ──────────────────────────────
                 case "response.function_call_arguments.done": {
                     const fnName = event.name;
                     let fnArgs = {};
@@ -489,7 +558,6 @@ wss.on("connection", (twilioWs, req) => {
                     const result = executeFunction(fnName, fnArgs);
                     console.log(`✅ Result: ${result}`);
 
-                    // Send function output back to OpenAI
                     openaiWs.send(JSON.stringify({
                         type: "conversation.item.create",
                         item: {
@@ -499,7 +567,6 @@ wss.on("connection", (twilioWs, req) => {
                         },
                     }));
 
-                    // Trigger AI to respond with the result
                     openaiWs.send(JSON.stringify({
                         type: "response.create",
                     }));
@@ -553,7 +620,6 @@ wss.on("connection", (twilioWs, req) => {
     openaiWs.on("error", (err) => console.error("❌ OpenAI WS error:", err.message));
     openaiWs.on("close", (code, reason) => console.log(`🔒 OpenAI closed: ${code}`));
 
-    // ── Handle Twilio messages ──
     twilioWs.on("message", (message) => {
         try {
             const msg = JSON.parse(message.toString());
@@ -595,9 +661,12 @@ server.listen(PORT, () => {
 ║  Twilio: ${String(TWILIO_ACCOUNT_SID ? "✅ Configured" : "⚠️ Not configured").padEnd(51)}║
 ║                                                              ║
 ║  Endpoints:                                                  ║
-║    • Dashboard:   http://localhost:${String(PORT).padEnd(26)}║
+║    • Landing:     http://localhost:${String(PORT).padEnd(26)}║
+║    • Login:       http://localhost:${String(PORT + "/login.html").padEnd(26)}║
+║    • Dashboard:   http://localhost:${String(PORT + "/dashboard.html").padEnd(26)}║
 ║    • Wizard:      http://localhost:${String(PORT + "/wizard.html").padEnd(26)}║
 ║    • API:         /api/agents, /api/properties               ║
+║    • Auth:        /api/auth/register, /api/auth/login        ║
 ║    • Twilio:      /incoming-call                             ║
 ║    • WebSocket:   /media-stream                              ║
 ║                                                              ║

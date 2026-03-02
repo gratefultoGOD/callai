@@ -1,0 +1,10 @@
+# robots.txt — VoiceAgent by Corealist
+# https://corealist.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /media-stream
+Disallow: /incoming-call
+
+Sitemap: https://corealist.com/sitemap.xml

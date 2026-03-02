@@ -1,16 +1,66 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoiceAgent — AI Voice Agent Platform</title>
+    <title>VoiceAgent — AI Voice Agent Platform | Corealist</title>
     <meta name="description"
-        content="Create and manage AI voice agents with dedicated phone numbers. Powered by OpenAI Realtime API and Twilio.">
+        content="Create and manage AI voice agents with dedicated phone numbers. Build custom voice assistants powered by OpenAI Realtime API and Twilio. By Corealist.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://corealist.com/">
+
+    <!-- Favicon & Manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://corealist.com/">
+    <meta property="og:title" content="VoiceAgent — AI Voice Agent Platform">
+    <meta property="og:description"
+        content="Create and manage AI voice agents with dedicated phone numbers. Build custom voice assistants powered by OpenAI Realtime API and Twilio.">
+    <meta property="og:site_name" content="Corealist">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="VoiceAgent — AI Voice Agent Platform">
+    <meta name="twitter:description"
+        content="Create and manage AI voice agents with dedicated phone numbers. Powered by OpenAI & Twilio.">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js" defer></script>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "VoiceAgent",
+        "url": "https://corealist.com",
+        "description": "Create and manage AI voice agents with dedicated phone numbers. Build custom voice assistants powered by OpenAI Realtime API and Twilio.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "Corealist",
+            "url": "https://corealist.com"
+        }
+    }
+    </script>
     <style>
         *,
         *::before,
@@ -301,7 +351,9 @@
             color: var(--sky);
         }
 
-        .stat-info {}
+        .stat-info {
+            min-width: 0;
+        }
 
         .stat-label {
             font-size: 0.76rem;
@@ -481,6 +533,7 @@
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
+            line-clamp: 2;
             overflow: hidden;
         }
 
@@ -854,6 +907,208 @@
             border-radius: 2px;
         }
 
+        /* ══════════════ FEATURE PILLS ══════════════ */
+        .feature-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+            background: var(--bg-card);
+            transition: all 0.2s;
+            cursor: default;
+            user-select: none;
+        }
+
+        .pill svg {
+            flex-shrink: 0;
+        }
+
+        .pill.teal {
+            color: var(--teal);
+            border-color: var(--teal-border);
+            background: var(--teal-dim);
+        }
+
+        .pill.violet {
+            color: var(--violet);
+            border-color: rgba(139, 92, 246, .25);
+            background: var(--violet-dim);
+        }
+
+        .pill.sky {
+            color: var(--sky);
+            border-color: rgba(56, 189, 248, .25);
+            background: var(--sky-dim);
+        }
+
+        .pill.amber {
+            color: var(--amber);
+            border-color: var(--amber-border);
+            background: var(--amber-dim);
+        }
+
+        /* ══════════════ GUEST BANNER ══════════════ */
+        .guest-banner {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 40px 40px 0;
+        }
+
+        .guest-banner-inner {
+            background: linear-gradient(135deg,
+                    rgba(139, 92, 246, .12) 0%,
+                    rgba(45, 212, 191, .08) 60%,
+                    rgba(56, 189, 248, .06) 100%);
+            border: 1px solid rgba(139, 92, 246, .25);
+            border-radius: 20px;
+            padding: 36px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guest-banner-inner::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(139, 92, 246, .18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .guest-banner-text h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -.025em;
+            margin-bottom: 8px;
+        }
+
+        .guest-banner-text p {
+            font-size: 0.86rem;
+            color: var(--text-sub);
+            max-width: 420px;
+            line-height: 1.65;
+        }
+
+        .guest-banner-steps {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .step-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+        }
+
+        .step-num {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--violet);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .guest-banner-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .btn-banner-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--violet);
+            color: #fff;
+            border: none;
+            padding: 13px 26px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 4px 24px rgba(139, 92, 246, .3);
+        }
+
+        .btn-banner-primary:hover {
+            background: var(--violet-hover);
+            box-shadow: 0 6px 30px rgba(139, 92, 246, .4);
+            transform: translateY(-1px);
+        }
+
+        .btn-banner-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--text-sub);
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .btn-banner-secondary:hover {
+            color: var(--text);
+        }
+
+        @media (max-width: 768px) {
+            .guest-banner {
+                padding: 28px 20px 0;
+            }
+
+            .guest-banner-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 28px 24px;
+            }
+
+            .guest-banner-cta {
+                align-items: stretch;
+                width: 100%;
+            }
+
+            .btn-banner-primary {
+                justify-content: center;
+            }
+        }
+
         /* ══════════════ FOOTER ══════════════ */
         footer {
             border-top: 1px solid var(--border);
@@ -910,7 +1165,27 @@
 </head>
 
 <body>
-    <nav>
+    <!-- Noscript fallback for search engine crawlers -->
+    <noscript>
+        <div style="max-width:800px;margin:60px auto;padding:40px;font-family:sans-serif">
+            <h1>VoiceAgent — AI Voice Agent Platform</h1>
+            <p>Create and manage AI voice agents with dedicated phone numbers. Each agent answers calls with its own
+                personality, voice, and skills. Powered by OpenAI Realtime API and Twilio.</p>
+            <h2>Features</h2>
+            <ul>
+                <li>Create customized AI voice agents with unique phone numbers</li>
+                <li>Real-time voice conversations powered by OpenAI GPT</li>
+                <li>Function calling for property search, bookings, and reservations</li>
+                <li>Multi-agent support — each with its own personality and tools</li>
+                <li>Twilio integration for automatic phone number provisioning</li>
+            </ul>
+            <h2>Demo Properties</h2>
+            <p>Browse luxury real estate listings including penthouses in Manhattan, villas in Beverly Hills, waterfront
+                apartments in Miami Beach, and more.</p>
+            <p><a href="/wizard">Create a new AI Voice Agent →</a></p>
+        </div>
+    </noscript>
+    <nav role="navigation" aria-label="Main navigation">
         <div class="nav-left">
             <a href="/" class="logo">
                 <div class="logo-mark">
@@ -930,101 +1205,182 @@
             <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
                 <i data-lucide="moon" style="width:18px;height:18px" id="themeIcon"></i>
             </button>
-            <a href="/wizard.html" class="btn-cta">
-                <i data-lucide="plus" style="width:16px;height:16px"></i> Create Agent
-            </a>
+            <!-- Shown when logged out -->
+            <div id="navGuest" style="display:flex;gap:8px;align-items:center">
+                <a href="/login" class="btn-cta"
+                    style="background:transparent;color:var(--text-sub);border:1px solid var(--border)">
+                    Giriş Yap
+                </a>
+                <a href="/login?tab=register" class="btn-cta">
+                    <i data-lucide="user-plus" style="width:16px;height:16px"></i> Kayıt Ol
+                </a>
+            </div>
+            <!-- Shown when logged in -->
+            <div id="navUser" style="display:none;gap:8px;align-items:center">
+                <a href="/dashboard" class="btn-cta" style="background:var(--teal);">
+                    <i data-lucide="layout-dashboard" style="width:16px;height:16px"></i> Dashboard
+                </a>
+            </div>
         </div>
     </nav>
 
-    <section class="hero">
-        <h1>Your <span class="accent-word">AI Voice Agents</span>,<br>all in one place.</h1>
-        <p>Create customized voice assistants with unique phone numbers. Each agent answers calls with its own
-            personality, voice, and skills.</p>
-    </section>
+    <main>
+        <section class="hero">
+            <h1>Your <span class="accent-word">AI Voice Agents</span>,<br>all in one place.</h1>
+            <p>Dakikalar içinde kendi AI ses asistanınızı oluşturun. Kod bilgisi gerekmez — sadece bir istem yazın,
+                geri kalanını platform halleder.</p>
+            <div class="feature-pills" id="heroPills">
+                <span class="pill teal">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <polyline points="13 2 13 9 20 9" />
+                        <path d="M21 15.5A10 10 0 1 1 8.5 3" />
+                    </svg>
+                    2 Dakikada Kurulum
+                </span>
+                <span class="pill violet">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 8v4l3 3" />
+                    </svg>
+                    Sıfır Karmaşıklık
+                </span>
+                <span class="pill sky">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    </svg>
+                    Gerçek Zamanlı Ses
+                </span>
+                <span class="pill amber">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Kod Gerektirmez
+                </span>
+            </div>
+        </section>
 
-    <section class="stats-row" id="stats">
-        <div class="stat-card">
-            <div class="stat-icon violet"><i data-lucide="bot" style="width:22px;height:22px"></i></div>
-            <div class="stat-info">
-                <div class="stat-label">Active Agents</div>
-                <div class="stat-number" id="statAgents">0</div>
+        <section class="stats-row" id="stats">
+            <div class="stat-card">
+                <div class="stat-icon violet"><i data-lucide="bot" style="width:22px;height:22px"></i></div>
+                <div class="stat-info">
+                    <div class="stat-label">Active Agents</div>
+                    <div class="stat-number" id="statAgents">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon teal"><i data-lucide="phone" style="width:22px;height:22px"></i></div>
+                <div class="stat-info">
+                    <div class="stat-label">Phone Numbers</div>
+                    <div class="stat-number" id="statPhones">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon sky"><i data-lucide="calendar-check" style="width:22px;height:22px"></i></div>
+                <div class="stat-info">
+                    <div class="stat-label">Reservations</div>
+                    <div class="stat-number" id="statReservations">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guest CTA Banner (hidden when logged in) -->
+        <div class="guest-banner" id="guestBanner">
+            <div class="guest-banner-inner">
+                <div class="guest-banner-text">
+                    <h2>⚡ Çok Hızlı Kurulum — 3 Adımda Hazır</h2>
+                    <p>İlk AI ses agentınızı oluşturmak hiç bu kadar kolay olmamıştı. Teknik bilgi gerekmez, sunucu
+                        kurmanıza gerek yok, karmaşık ayar yok.</p>
+                    <div class="guest-banner-steps">
+                        <span class="step-chip"><span class="step-num">1</span> Hesap oluştur</span>
+                        <span class="step-chip"><span class="step-num">2</span> İstem yaz, ses seç</span>
+                        <span class="step-chip"><span class="step-num">3</span> Telefon numarası al — Bitir ✓</span>
+                    </div>
+                </div>
+                <div class="guest-banner-cta">
+                    <a href="/login?tab=register" class="btn-banner-primary">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                        </svg>
+                        Ücretsiz Başla
+                    </a>
+                    <a href="/login" class="btn-banner-secondary">
+                        Zaten hesabın var mı? Giriş yap →
+                    </a>
+                </div>
             </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon teal"><i data-lucide="phone" style="width:22px;height:22px"></i></div>
-            <div class="stat-info">
-                <div class="stat-label">Phone Numbers</div>
-                <div class="stat-number" id="statPhones">0</div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon sky"><i data-lucide="calendar-check" style="width:22px;height:22px"></i></div>
-            <div class="stat-info">
-                <div class="stat-label">Reservations</div>
-                <div class="stat-number" id="statReservations">0</div>
-            </div>
-        </div>
-    </section>
 
-    <section class="section" id="agents">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span class="section-title-icon violet"><i data-lucide="bot" style="width:17px;height:17px"></i></span>
-                Your Agents
-            </h2>
-            <a href="/wizard.html" class="btn-sm">
-                <i data-lucide="plus" style="width:14px;height:14px"></i> New Agent
-            </a>
-        </div>
-        <div class="agents-grid" id="agentsGrid"></div>
-    </section>
-
-    <section class="section" id="properties">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span class="section-title-icon sky"><i data-lucide="building-2"
-                        style="width:17px;height:17px"></i></span>
-                Demo Properties
-            </h2>
-        </div>
-        <div class="properties-grid" id="propertiesGrid"></div>
-    </section>
-
-    <section class="section" id="reservations">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span class="section-title-icon teal"><i data-lucide="calendar-check"
-                        style="width:17px;height:17px"></i></span>
-                Live Reservations
-            </h2>
-        </div>
-        <div class="reservations-container">
-            <div class="res-header">
-                <h3>Recent Activity</h3>
-                <span class="live-badge"><span class="live-dot"></span> Live</span>
+        <section class="section" id="agents">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-title-icon violet"><i data-lucide="bot"
+                            style="width:17px;height:17px"></i></span>
+                    AI Voice Agents
+                </h2>
+                <a href="/login?tab=register" class="btn-sm" id="navCreateBtn">
+                    <i data-lucide="plus" style="width:14px;height:14px"></i> Agent Oluştur
+                </a>
             </div>
-            <div class="res-list" id="resList">
-                <div class="res-empty">No reservations yet. Call an agent to create one.</div>
-            </div>
-        </div>
-    </section>
+            <div class="agents-grid" id="agentsGrid"></div>
+        </section>
 
-    <footer>
-        <p>&copy; 2026 VoiceAgent — Powered by OpenAI Realtime API &amp; Twilio</p>
+        <section class="section" id="properties">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-title-icon sky"><i data-lucide="building-2"
+                            style="width:17px;height:17px"></i></span>
+                    Demo Properties
+                </h2>
+            </div>
+            <div class="properties-grid" id="propertiesGrid"></div>
+        </section>
+
+        <section class="section" id="reservations">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-title-icon teal"><i data-lucide="calendar-check"
+                            style="width:17px;height:17px"></i></span>
+                    Live Reservations
+                </h2>
+            </div>
+            <div class="reservations-container">
+                <div class="res-header">
+                    <h3>Recent Activity</h3>
+                    <span class="live-badge"><span class="live-dot"></span> Live</span>
+                </div>
+                <div class="res-list" id="resList">
+                    <div class="res-empty">No reservations yet. Call an agent to create one.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2026 <a href="https://corealist.com"
+                style="color:var(--text-muted);text-decoration:none">Corealist</a> — VoiceAgent Platform. Powered by
+            OpenAI Realtime API &amp; Twilio.</p>
     </footer>
 
     <script>
         // ── Theme ──
-        function getStoredTheme() { return localStorage.getItem('theme') || 'dark'; }
+        function getStoredTheme() { return localStorage.getItem('va_theme') || localStorage.getItem('theme') || 'dark'; }
 
         function applyTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('va_theme', theme);
             localStorage.setItem('theme', theme);
-            // Re-render icons after theme swap
             requestAnimationFrame(() => {
                 const el = document.getElementById('themeIcon');
                 if (el) el.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
-                lucide.createIcons();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             });
         }
 
@@ -1033,6 +1389,19 @@
         }
 
         applyTheme(getStoredTheme());
+        document.addEventListener('DOMContentLoaded', () => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+
+        // ── Auth state ──
+        const vaToken = localStorage.getItem('va_token');
+        if (vaToken) {
+            document.getElementById('navGuest').style.display = 'none';
+            document.getElementById('navUser').style.display = 'flex';
+            const createBtn = document.getElementById('navCreateBtn');
+            if (createBtn) { createBtn.href = '/wizard'; createBtn.textContent = '+ Yeni Agent'; }
+            // Hide guest CTA banner when logged in
+            const banner = document.getElementById('guestBanner');
+            if (banner) banner.style.display = 'none';
+        }
 
         // ── Helpers ──
         function formatPhone(phone) {
@@ -1043,12 +1412,23 @@
             return phone;
         }
 
-        // ── Load Agents ──
+        // ── Load Agents (auth-aware, read-only on landing) ──
         async function loadAgents() {
             try {
-                const res = await fetch('/api/agents');
+                const headers = vaToken ? { 'Authorization': 'Bearer ' + vaToken } : {};
+                const res = await fetch('/api/agents', { headers });
+                if (!res.ok) {
+                    // Not authenticated — show placeholder
+                    document.getElementById('statAgents').textContent = '—';
+                    document.getElementById('statPhones').textContent = '—';
+                    document.getElementById('agentsGrid').innerHTML = `
+                        <div style="grid-column:1/-1;padding:48px 24px;text-align:center;color:var(--text-muted);">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3;margin:0 auto 12px;display:block"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                            <div>Agent'larınızı görmek için <a href="/login" style="color:var(--violet)">giriş yapın</a>.</div>
+                        </div>`;
+                    return;
+                }
                 const agents = await res.json();
-                const grid = document.getElementById('agentsGrid');
                 const withPhones = agents.filter(a => a.phoneNumber).length;
                 document.getElementById('statAgents').textContent = agents.length;
                 document.getElementById('statPhones').textContent = withPhones;
@@ -1071,15 +1451,9 @@
                             </div>
                         </div>
                         <div class="agent-details">
-                            <div class="agent-detail-item">
-                                <i data-lucide="mic" style="width:14px;height:14px"></i> ${a.voice || 'coral'}
-                            </div>
-                            <div class="agent-detail-item">
-                                <i data-lucide="globe" style="width:14px;height:14px"></i> ${a.language || 'en-US'}
-                            </div>
-                            <div class="agent-detail-item">
-                                <i data-lucide="wrench" style="width:14px;height:14px"></i> ${(a.tools || []).length} tools
-                            </div>
+                            <div class="agent-detail-item"><i data-lucide="mic" style="width:14px;height:14px"></i> ${a.voice || 'coral'}</div>
+                            <div class="agent-detail-item"><i data-lucide="globe" style="width:14px;height:14px"></i> ${a.language || 'en-US'}</div>
+                            <div class="agent-detail-item"><i data-lucide="wrench" style="width:14px;height:14px"></i> ${(a.tools || []).length} tools</div>
                         </div>
                         <div class="agent-phone ${a.phoneNumber ? '' : 'empty'}">
                             <i data-lucide="${a.phoneNumber ? 'smartphone' : 'phone-off'}" style="width:16px;height:16px"></i>
@@ -1087,31 +1461,21 @@
                         </div>
                         <div class="agent-actions">
                             ${a.phoneNumber ? `<a href="tel:${a.phoneNumber}" class="action-btn action-call"><i data-lucide="phone-call" style="width:15px;height:15px"></i> Call</a>` : '<span style="flex:1"></span>'}
-                            ${!isDefault ? `<button class="action-btn action-delete" onclick="deleteAgent('${a.id}')"><i data-lucide="trash-2" style="width:14px;height:14px"></i> Delete</button>` : ''}
                         </div>
                     </div>`;
                 }).join('');
 
-                html += `
-                <a href="/wizard.html" class="create-card">
-                    <div class="create-icon"><i data-lucide="plus" style="width:26px;height:26px"></i></div>
-                    <h3>Create New Agent</h3>
-                    <p>Set up a new AI voice agent with its own phone number</p>
-                </a>`;
+                if (vaToken) {
+                    html += `<a href="/wizard" class="create-card">
+                        <div class="create-icon"><i data-lucide="plus" style="width:26px;height:26px"></i></div>
+                        <h3>Yeni Agent Oluştur</h3>
+                        <p>AI ses asistanı yapılandır ve başlat</p>
+                    </a>`;
+                }
 
-                grid.innerHTML = html;
+                document.getElementById('agentsGrid').innerHTML = html;
                 lucide.createIcons();
             } catch (e) { console.error(e); }
-        }
-
-        // ── Delete Agent ──
-        async function deleteAgent(id) {
-            if (!confirm('Are you sure you want to delete this agent? Its phone number will be released.')) return;
-            try {
-                const res = await fetch(`/api/agents/${id}`, { method: 'DELETE' });
-                const data = await res.json();
-                data.success ? loadAgents() : alert('Error: ' + (data.error || 'Could not delete'));
-            } catch (e) { alert('Error: ' + e.message); }
         }
 
         // ── Load Properties ──
@@ -1127,9 +1491,7 @@
                         </div>
                         <div class="property-body">
                             <div class="property-title">${p.title}</div>
-                            <div class="property-location">
-                                <i data-lucide="map-pin" style="width:13px;height:13px"></i> ${p.location}
-                            </div>
+                            <div class="property-location"><i data-lucide="map-pin" style="width:13px;height:13px"></i> ${p.location}</div>
                             <div class="property-specs">
                                 <span class="spec-item"><i data-lucide="bed-double" style="width:14px;height:14px"></i> ${p.rooms}</span>
                                 <span class="spec-item"><i data-lucide="ruler" style="width:14px;height:14px"></i> ${p.area} sq ft</span>
@@ -1143,21 +1505,27 @@
             } catch (e) { console.error(e); }
         }
 
-        // ── Load Reservations ──
+        // ── Load Reservations (auth required) ──
         async function loadReservations() {
+            const list = document.getElementById('resList');
+            if (!vaToken) {
+                document.getElementById('statReservations').textContent = '—';
+                list.innerHTML = '<div class="res-empty">Rezervasyonları görmek için <a href="/login" style="color:var(--violet)">giriş yapın</a>.</div>';
+                return;
+            }
             try {
-                const res = await fetch('/api/reservations');
+                const res = await fetch('/api/reservations', { headers: { 'Authorization': 'Bearer ' + vaToken } });
+                if (!res.ok) { list.innerHTML = '<div class="res-empty">Oturum süresi dolmuş.</div>'; return; }
                 const data = await res.json();
                 document.getElementById('statReservations').textContent = data.length;
-                const list = document.getElementById('resList');
                 if (!data.length) {
-                    list.innerHTML = '<div class="res-empty">No reservations yet. Call an agent to create one.</div>';
+                    list.innerHTML = '<div class="res-empty">Henüz rezervasyon yok. Bir agent\'i arayın.</div>';
                     return;
                 }
                 list.innerHTML = data.slice().reverse().map(r => {
                     const isViewing = r.type === 'viewing';
                     const date = new Date(r.created_at);
-                    const timeStr = date.toLocaleString('en-US', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+                    const timeStr = date.toLocaleString('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
                     return `
                     <div class="res-item">
                         <div class="res-icon ${isViewing ? 'viewing' : 'reservation'}">
@@ -1178,8 +1546,8 @@
         loadAgents();
         loadProperties();
         loadReservations();
-        setInterval(loadReservations, 5000);
-        setInterval(loadAgents, 10000);
+        setInterval(loadReservations, 10000);
+        setInterval(loadAgents, 15000);
     </script>
 </body>
 

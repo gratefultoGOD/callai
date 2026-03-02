@@ -1,0 +1,871 @@
+﻿<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap — VoiceAgent Platform</title>
+    <meta name="description" content="VoiceAgent platformuna giriş yapın veya yeni hesap oluşturun.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --transition-theme: 0.35s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #09090b;
+            --bg-surface: #111114;
+            --bg-card: #16161a;
+            --bg-input: #1a1a1f;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --border-focus: #7c3aed;
+            --text: #fafafa;
+            --text-sub: #a1a1aa;
+            --text-muted: #52525b;
+            --violet: #8b5cf6;
+            --violet-hover: #7c3aed;
+            --violet-dim: rgba(139, 92, 246, 0.10);
+            --violet-glow: rgba(139, 92, 246, 0.06);
+            --teal: #2dd4bf;
+            --teal-dim: rgba(45, 212, 191, 0.10);
+            --rose: #fb7185;
+            --rose-dim: rgba(251, 113, 133, 0.08);
+            --rose-border: rgba(251, 113, 133, 0.22);
+            --nav-bg: rgba(9, 9, 11, 0.88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #fafafa;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-input: #f4f4f5;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --border-focus: #7c3aed;
+            --text: #18181b;
+            --text-sub: #71717a;
+            --text-muted: #a1a1aa;
+            --violet: #7c3aed;
+            --violet-hover: #6d28d9;
+            --violet-dim: rgba(124, 58, 237, 0.07);
+            --violet-glow: rgba(124, 58, 237, 0.04);
+            --teal: #0d9488;
+            --teal-dim: rgba(13, 148, 136, 0.06);
+            --rose: #e11d48;
+            --rose-dim: rgba(225, 29, 72, 0.05);
+            --rose-border: rgba(225, 29, 72, 0.15);
+            --nav-bg: rgba(255, 255, 255, 0.88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-body);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition-theme), color var(--transition-theme);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Background decoration */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 500px;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Top bar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px) saturate(1.4);
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border);
+            height: 60px;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 30px;
+            height: 30px;
+            background: var(--violet);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-mark svg {
+            color: #fff;
+        }
+
+        .logo-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .theme-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-hover);
+            color: var(--violet);
+            background: var(--violet-dim);
+        }
+
+        /* Auth card */
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+        }
+
+        .auth-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition-theme), border-color var(--transition-theme);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .auth-logo {
+            width: 52px;
+            height: 52px;
+            background: var(--violet-dim);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--violet);
+        }
+
+        .auth-header h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 6px;
+        }
+
+        .auth-header p {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        /* Tabs */
+        .auth-tabs {
+            display: flex;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 26px;
+            gap: 4px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            border-radius: 9px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .auth-tab.active {
+            background: var(--violet);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Form */
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.visible {
+            display: block;
+            animation: fadeUp 0.25s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--violet);
+            box-shadow: 0 0 0 3px var(--violet-dim);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--violet);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-auth:hover {
+            background: var(--violet-hover);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-auth:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Error / success */
+        .auth-alert {
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-alert.error {
+            display: flex;
+            background: var(--rose-dim);
+            border: 1px solid var(--rose-border);
+            color: var(--rose);
+        }
+
+        .auth-alert.success {
+            display: flex;
+            background: var(--teal-dim);
+            border: 1px solid rgba(45, 212, 191, 0.25);
+            color: var(--teal);
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            margin: 20px 0 16px;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: calc(50% - 28px);
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .btn-back-to-home {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-sub);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.84rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .btn-back-to-home:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+            background: var(--violet-glow);
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        .spinner.visible {
+            display: block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Google Button */
+        .btn-google {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-input);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        .btn-google:hover {
+            border-color: var(--border-hover);
+            background: var(--violet-glow);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-google:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-google svg {
+            flex-shrink: 0;
+        }
+
+        .google-section {
+            margin-bottom: 4px;
+        }
+
+        .or-divider {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: calc(50% - 24px);
+            height: 1px;
+            background: var(--border);
+        }
+
+        .or-divider::before {
+            left: 0;
+        }
+
+        .or-divider::after {
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Bar -->
+    <nav class="topbar">
+        <a href="/" class="topbar-brand">
+            <div class="logo-mark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" y1="19" x2="12" y2="23" />
+                    <line x1="8" y1="23" x2="16" y2="23" />
+                </svg>
+            </div>
+            <span class="logo-text">VoiceAgent</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
+            <svg id="iconSun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" style="display:none">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg id="iconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Auth Container -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                        <line x1="12" y1="19" x2="12" y2="23" />
+                        <line x1="8" y1="23" x2="16" y2="23" />
+                    </svg>
+                </div>
+                <h1>VoiceAgent'a Hoş Geldin</h1>
+                <p>AI ses asistanlarını yönetmek için giriş yapın</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Giriş Yap</button>
+                <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Kayıt Ol</button>
+            </div>
+
+            <!-- Google Sign-In -->
+            <div class="google-section">
+                <button class="btn-google" id="btnGoogle" onclick="handleGoogleSignIn()">
+                    <!-- Google 'G' logo SVG -->
+                    <svg width="18" height="18" viewBox="0 0 48 48">
+                        <path fill="#EA4335"
+                            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                        <path fill="#4285F4"
+                            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                        <path fill="#FBBC05"
+                            d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                        <path fill="#34A853"
+                            d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                    </svg>
+                    <span id="googleBtnText">Google ile Giriş Yap / Kayıt Ol</span>
+                    <div class="spinner" id="googleSpinner"
+                        style="border-color:rgba(0,0,0,0.15);border-top-color:var(--violet);"></div>
+                </button>
+            </div>
+
+            <div class="or-divider">e-posta ile devam et</div>
+
+            <!-- Alert -->
+            <div class="auth-alert" id="authAlert">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span id="authAlertMsg"></span>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form visible" id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">E-posta</label>
+                    <input type="email" id="loginEmail" placeholder="ornek@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Şifre</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required
+                        autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn-auth" id="btnLogin">
+                    <div class="spinner" id="loginSpinner"></div>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        id="loginIcon">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
+                    </svg>
+                    Giriş Yap
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="regName">Ad Soyad</label>
+                    <input type="text" id="regName" placeholder="Adınız Soyadınız" autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">E-posta</label>
+                    <input type="email" id="regEmail" placeholder="ornek@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Şifre <span style="color:var(--text-muted);font-weight:400">(en az 6
+                            karakter)</span></label>
+                    <input type="password" id="regPassword" placeholder="••••••••" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn-auth" id="btnRegister">
+                    <div class="spinner" id="registerSpinner"></div>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        id="registerIcon">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <line x1="19" y1="8" x2="19" y2="14" />
+                        <line x1="22" y1="11" x2="16" y2="11" />
+                    </svg>
+                    Hesap Oluştur
+                </button>
+            </form>
+
+            <div class="divider">veya</div>
+
+            <a href="/" class="btn-back-to-home">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
+                Ana Sayfaya Dön
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // ── Theme ──────────────────────────────────────────────────────
+        const html = document.documentElement;
+        const iconSun = document.getElementById('iconSun');
+        const iconMoon = document.getElementById('iconMoon');
+
+        function applyTheme(t) {
+            html.setAttribute('data-theme', t);
+            localStorage.setItem('va_theme', t);
+            iconSun.style.display = t === 'dark' ? 'block' : 'none';
+            iconMoon.style.display = t === 'light' ? 'block' : 'none';
+        }
+        applyTheme(localStorage.getItem('va_theme') || 'dark');
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // ── Check already logged in ────────────────────────────────────
+        const savedToken = localStorage.getItem('va_token');
+        if (savedToken) {
+            fetch('/api/auth/me', { headers: { Authorization: 'Bearer ' + savedToken } })
+                .then(r => { if (r.ok) window.location.href = '/dashboard'; })
+                .catch(() => { });
+        }
+
+        // ── Tab switch ─────────────────────────────────────────────────
+        function switchTab(tab) {
+            document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+            document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+            document.getElementById('loginForm').classList.toggle('visible', tab === 'login');
+            document.getElementById('registerForm').classList.toggle('visible', tab === 'register');
+            hideAlert();
+        }
+
+        // ── Alert ──────────────────────────────────────────────────────
+        function showAlert(msg, type = 'error') {
+            const el = document.getElementById('authAlert');
+            el.className = 'auth-alert ' + type;
+            document.getElementById('authAlertMsg').textContent = msg;
+        }
+        function hideAlert() {
+            document.getElementById('authAlert').className = 'auth-alert';
+        }
+
+        // ── Login ──────────────────────────────────────────────────────
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideAlert();
+            const btn = document.getElementById('btnLogin');
+            const spinner = document.getElementById('loginSpinner');
+            const icon = document.getElementById('loginIcon');
+
+            btn.disabled = true;
+            spinner.classList.add('visible');
+            icon.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('loginEmail').value,
+                        password: document.getElementById('loginPassword').value,
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Giriş başarısız.');
+                localStorage.setItem('va_token', data.token);
+                localStorage.setItem('va_user', JSON.stringify(data.user));
+                showAlert('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+                setTimeout(() => { window.location.href = '/dashboard'; }, 700);
+            } catch (err) {
+                showAlert(err.message);
+                btn.disabled = false;
+                spinner.classList.remove('visible');
+                icon.style.display = '';
+            }
+        }
+
+        // ── Register ───────────────────────────────────────────────────
+        async function handleRegister(e) {
+            e.preventDefault();
+            hideAlert();
+            const btn = document.getElementById('btnRegister');
+            const spinner = document.getElementById('registerSpinner');
+            const icon = document.getElementById('registerIcon');
+
+            btn.disabled = true;
+            spinner.classList.add('visible');
+            icon.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('regName').value,
+                        email: document.getElementById('regEmail').value,
+                        password: document.getElementById('regPassword').value,
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Kayıt başarısız.');
+                localStorage.setItem('va_token', data.token);
+                localStorage.setItem('va_user', JSON.stringify(data.user));
+                showAlert('Hesabınız oluşturuldu! Yönlendiriliyorsunuz...', 'success');
+                setTimeout(() => { window.location.href = '/dashboard'; }, 700);
+            } catch (err) {
+                showAlert(err.message);
+                btn.disabled = false;
+                spinner.classList.remove('visible');
+                icon.style.display = '';
+            }
+        }
+
+        // Read URL param for pre-selecting tab
+        const params = new URLSearchParams(location.search);
+        if (params.get('tab') === 'register') switchTab('register');
+
+        // ── Google Identity Services ──────────────────────────────
+        let googleClientId = null;
+
+        async function initGoogle() {
+            try {
+                const res = await fetch('/api/auth/google-client-id');
+                const data = await res.json();
+                googleClientId = data.clientId;
+
+                if (!googleClientId) {
+                    document.getElementById('btnGoogle').disabled = true;
+                    document.getElementById('googleBtnText').textContent = 'Google OAuth yapılandırılmamış';
+                    return;
+                }
+
+                // Load Google Identity Services script dynamically
+                const script = document.createElement('script');
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+            } catch (e) {
+                console.warn('Google init failed:', e);
+            }
+        }
+
+        async function handleGoogleSignIn() {
+            if (!googleClientId) {
+                showAlert('Google OAuth yapılandırılmamış. Lütfen .env dosyasına GOOGLE_CLIENT_ID ekleyin.', 'error');
+                return;
+            }
+            if (typeof google === 'undefined') {
+                showAlert('Google servisleri yükleniyor, lütfen bir saniye bekleyin...', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnGoogle');
+            const spinner = document.getElementById('googleSpinner');
+            const btnText = document.getElementById('googleBtnText');
+
+            btn.disabled = true;
+            spinner.classList.add('visible');
+            btnText.style.opacity = '0.5';
+
+            try {
+                const credential = await new Promise((resolve, reject) => {
+                    google.accounts.id.initialize({
+                        client_id: googleClientId,
+                        callback: (response) => {
+                            if (response.credential) resolve(response.credential);
+                            else reject(new Error('Google girişi iptal edildi.'));
+                        },
+                        auto_select: false,
+                        cancel_on_tap_outside: true,
+                    });
+                    google.accounts.id.prompt((notification) => {
+                        if (notification.isSkippedMoment() || notification.isDismissedMoment()) {
+                            // Fallback: open popup manually
+                            const tokenClient = google.accounts.oauth2.initTokenClient({
+                                client_id: googleClientId,
+                                scope: 'openid email profile',
+                                callback: () => { }, // not used
+                            });
+                            // Use id token flow instead
+                            reject(new Error('Lütfen popup’u kapatıp tekrar deneyin.'));
+                        }
+                    });
+                });
+
+                // Send credential (id_token) to backend
+                const res = await fetch('/api/auth/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ credential }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Google girişi başarısız.');
+
+                localStorage.setItem('va_token', data.token);
+                localStorage.setItem('va_user', JSON.stringify(data.user));
+                showAlert('Google ile giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+                setTimeout(() => { window.location.href = '/dashboard'; }, 800);
+
+            } catch (err) {
+                showAlert(err.message, 'error');
+                btn.disabled = false;
+                spinner.classList.remove('visible');
+                btnText.style.opacity = '';
+            }
+        }
+
+        initGoogle();
+    </script>
+</body>
+
+</html>
