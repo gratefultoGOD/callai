@@ -26,6 +26,9 @@ const {
     getUserByToken,
     GOOGLE_CLIENT_ID,
 } = require("./auth");
+const gcal = require("./google-calendar");
+
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "").toLowerCase().trim();
 
 const app = express();
 const server = http.createServer(app);
@@ -123,6 +126,36 @@ const ALL_TOOLS = [
             },
             required: ["property_id", "customer_name", "customer_phone"]
         }
+    },
+    {
+        type: "function",
+        name: "check_calendar_availability",
+        description: "Check the business owner's Google Calendar for available appointment slots on a specific date. Returns busy times and available 30-minute slots during working hours (9 AM - 6 PM).",
+        parameters: {
+            type: "object",
+            properties: {
+                date: { type: "string", description: "Date to check availability, format: YYYY-MM-DD, e.g. 2026-03-15" }
+            },
+            required: ["date"]
+        }
+    },
+    {
+        type: "function",
+        name: "schedule_calendar_appointment",
+        description: "Schedule an appointment on the business owner's Google Calendar. Use this after confirming available slots with check_calendar_availability.",
+        parameters: {
+            type: "object",
+            properties: {
+                title: { type: "string", description: "Appointment title/summary, e.g. 'Property viewing with John' " },
+                date: { type: "string", description: "Date for the appointment, format: YYYY-MM-DD" },
+                start_time: { type: "string", description: "Start time in HH:MM format, e.g. 14:00" },
+                duration_minutes: { type: "number", description: "Duration in minutes, default 30" },
+                customer_name: { type: "string", description: "Customer name" },
+                customer_phone: { type: "string", description: "Customer phone number" },
+                notes: { type: "string", description: "Additional notes or description" }
+            },
+            required: ["title", "date", "start_time", "customer_name"]
+        }
     }
 ];
 
@@ -203,12 +236,107 @@ function executeFunction(name, args) {
                 message: `Reservation made for ${prop.title}. Ref: ${entry.id}. We will contact you shortly.`
             });
         }
+        case "check_calendar_availability": {
+            // This function is async; we return a promise-like wrapper
+            // Actually, executeFunction needs to be sync for the current flow.
+            // We'll handle this specially — return a placeholder and process async.
+            return JSON.stringify({ async: true, function: "check_calendar_availability", args });
+        }
+        case "schedule_calendar_appointment": {
+            return JSON.stringify({ async: true, function: "schedule_calendar_appointment", args });
+        }
         default:
             return JSON.stringify({ error: "Unknown function." });
     }
 }
 
-// ─── Middleware ────────────────────────────────────────────────────────
+// ─── Async Function Execution (for Google Calendar) ───────────────────
+async function executeFunctionAsync(name, args, agentOwnerId) {
+    switch (name) {
+        case "check_calendar_availability": {
+            if (!agentOwnerId) return JSON.stringify({ error: "No agent owner configured for calendar access." });
+            try {
+                const result = await gcal.checkAvailability(agentOwnerId, args.date);
+                if (!result.hasAvailability) {
+                    return JSON.stringify({ available: false, message: `No available slots on ${args.date}. All times are booked.`, busySlots: result.busySlots });
+                }
+                return JSON.stringify({
+                    available: true,
+                    date: result.date,
+                    availableSlots: result.availableSlots.slice(0, 10), // limit to 10 for context
+                    totalAvailable: result.availableSlots.length,
+                    busyCount: result.busySlots.length,
+                });
+            } catch (err) {
+                return JSON.stringify({ error: "Calendar error: " + err.message });
+            }
+        }
+        case "schedule_calendar_appointment": {
+            if (!agentOwnerId) return JSON.stringify({ error: "No agent owner configured for calendar access." });
+            try {
+                const duration = args.duration_minutes || 30;
+                const startDateTime = `${args.date}T${args.start_time}:00Z`;
+                const endDate = new Date(new Date(startDateTime).getTime() + duration * 60 * 1000);
+                const endDateTime = endDate.toISOString();
+
+                const description = [
+                    args.customer_name ? `Customer: ${args.customer_name}` : "",
+                    args.customer_phone ? `Phone: ${args.customer_phone}` : "",
+                    args.notes || "",
+                ].filter(Boolean).join("\n");
+
+                const event = await gcal.createEvent(agentOwnerId, {
+                    summary: args.title,
+                    description,
+                    startDateTime,
+                    endDateTime,
+                });
+
+                return JSON.stringify({
+                    success: true,
+                    message: `Appointment "${event.summary}" scheduled on ${args.date} at ${args.start_time} (${duration} min).`,
+                    eventId: event.id,
+                    link: event.htmlLink,
+                });
+            } catch (err) {
+                return JSON.stringify({ error: "Calendar error: " + err.message });
+            }
+        }
+        default:
+            return JSON.stringify({ error: "Unknown async function." });
+    }
+}
+
+// ─── Analytics Middleware (track all page requests) ──────────────────
+const SKIP_ANALYTICS = /^\/(api|_|favicon|robots|sitemap|manifest)/;
+app.use((req, res, next) => {
+    if (SKIP_ANALYTICS.test(req.path)) return next();
+    const start = Date.now();
+    res.on("finish", () => {
+        try {
+            const ip = req.headers["x-forwarded-for"]?.split(",")[0].trim() || req.socket.remoteAddress || "";
+            const ua = req.headers["user-agent"] || "";
+            const ref = req.headers["referer"] || req.headers["referrer"] || "";
+            const ms = Date.now() - start;
+            const { stmts } = require("./db");
+            stmts.pageViewInsert.run(req.path, req.method, res.statusCode, ip, ua, ref, ms);
+        } catch (_) { }
+    });
+    next();
+});
+
+// ─── Admin-only middleware ────────────────────────────────────────────
+function requireAdmin(req, res, next) {
+    const token = extractToken(req);
+    const user = getUserByToken(token);
+    if (!user) return res.status(401).sendFile(pub("login.html"));
+    if (!ADMIN_EMAIL || user.email.toLowerCase() !== ADMIN_EMAIL) {
+        return res.status(403).send("<h2>403 Yasak &#x1F6AB;</h2><p>Bu sayfaya eri&#351;im yetkiniz yok.</p>");
+    }
+    req.currentUser = user;
+    next();
+}
+
 app.use(express.json());
 
 // ─── Page Routes (clean URLs) — must come BEFORE static ───────────────
@@ -218,15 +346,37 @@ app.get("/", (req, res) => res.sendFile(pub("index.html")));
 app.get("/login", (req, res) => res.sendFile(pub("login.html")));
 app.get("/dashboard", (req, res) => res.sendFile(pub("dashboard.html")));
 app.get("/wizard", (req, res) => res.sendFile(pub("wizard.html")));
+app.get("/analytics", (req, res) => res.sendFile(pub("analytics.html")));
+app.get("/demo", (req, res) => res.sendFile(pub("demo.html")));
 
 // Redirect legacy .html URLs → clean URLs (301 permanent)
 app.get("/index.html", (req, res) => res.redirect(301, "/"));
 app.get("/login.html", (req, res) => res.redirect(301, "/login"));
 app.get("/dashboard.html", (req, res) => res.redirect(301, "/dashboard"));
 app.get("/wizard.html", (req, res) => res.redirect(301, "/wizard"));
+app.get("/analytics.html", (req, res) => res.redirect(301, "/analytics"));
 
 // Static assets (js, css, images, fonts...) — index:false so "/" is handled above
 app.use(express.static(path.join(__dirname, "public"), { index: false }));
+
+// ─── Analytics API (admin only) ───────────────────────────────────────
+app.get("/api/analytics/summary", requireAdmin, (req, res) => {
+    const { stmts } = require("./db");
+    res.json({
+        total: stmts.pageViewsTotal.get().count,
+        today: stmts.pageViewsToday.get().count,
+        last7Days: stmts.pageViewsLast7Days.get().count,
+        uniqueIPs: stmts.pageViewsUniqueIPs.get().count,
+        avgResponse: Math.round(stmts.pageViewsAvgResponse.get().avg || 0),
+    });
+});
+
+app.get("/api/analytics/by-path", requireAdmin, (req, res) => res.json(require("./db").stmts.pageViewsByPath.all()));
+app.get("/api/analytics/by-day", requireAdmin, (req, res) => res.json(require("./db").stmts.pageViewsByDay.all()));
+app.get("/api/analytics/by-hour", requireAdmin, (req, res) => res.json(require("./db").stmts.pageViewsByHour.all()));
+app.get("/api/analytics/by-referer", requireAdmin, (req, res) => res.json(require("./db").stmts.pageViewsByReferer.all()));
+app.get("/api/analytics/by-ua", requireAdmin, (req, res) => res.json(require("./db").stmts.pageViewsByUserAgent.all()));
+app.get("/api/analytics/recent", requireAdmin, (req, res) => res.json(require("./db").stmts.pageViewsRecent.all()));
 
 // ─── Auth API ─────────────────────────────────────────────────────────
 app.post("/api/auth/register", (req, res) => {
@@ -273,9 +423,90 @@ app.get("/api/auth/google-client-id", (req, res) => {
     res.json({ clientId: GOOGLE_CLIENT_ID || null });
 });
 
+// ─── Google Calendar API ──────────────────────────────────────────────
+app.get("/api/calendar/status", requireAuth, (req, res) => {
+    res.json({
+        configured: gcal.isConfigured(),
+        connected: gcal.isCalendarConnected(req.currentUser.id),
+    });
+});
+
+app.get("/api/calendar/auth-url", requireAuth, (req, res) => {
+    if (!gcal.isConfigured()) {
+        return res.status(400).json({ error: "Google Calendar OAuth is not configured. Add GOOGLE_CALENDAR_CLIENT_ID and GOOGLE_CALENDAR_CLIENT_SECRET to .env" });
+    }
+    const url = gcal.getAuthUrl(req.currentUser.id);
+    res.json({ url });
+});
+
+app.get("/api/calendar/callback", async (req, res) => {
+    const { code, state: userId } = req.query;
+    if (!code || !userId) {
+        return res.status(400).send("Missing code or state parameter.");
+    }
+    try {
+        const tokens = await gcal.exchangeCode(code);
+        gcal.saveTokens(userId, tokens);
+        // Redirect to dashboard with success message
+        res.redirect("/dashboard?calendar=connected");
+    } catch (err) {
+        console.error("❌ Google Calendar callback error:", err.message);
+        res.redirect("/dashboard?calendar=error");
+    }
+});
+
+app.get("/api/calendar/events", requireAuth, async (req, res) => {
+    if (!gcal.isCalendarConnected(req.currentUser.id)) {
+        return res.status(400).json({ error: "Google Calendar not connected." });
+    }
+    try {
+        const { timeMin, timeMax } = req.query;
+        const events = await gcal.getEvents(req.currentUser.id, timeMin, timeMax);
+        res.json(events);
+    } catch (err) {
+        console.error("❌ Calendar events error:", err.message);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post("/api/calendar/events", requireAuth, async (req, res) => {
+    if (!gcal.isCalendarConnected(req.currentUser.id)) {
+        return res.status(400).json({ error: "Google Calendar not connected." });
+    }
+    try {
+        const event = await gcal.createEvent(req.currentUser.id, req.body);
+        res.status(201).json(event);
+    } catch (err) {
+        console.error("❌ Calendar create error:", err.message);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete("/api/calendar/disconnect", requireAuth, (req, res) => {
+    gcal.disconnectCalendar(req.currentUser.id);
+    res.json({ ok: true });
+});
+
+app.get("/api/calendar/availability", requireAuth, async (req, res) => {
+    if (!gcal.isCalendarConnected(req.currentUser.id)) {
+        return res.status(400).json({ error: "Google Calendar not connected." });
+    }
+    try {
+        const { date } = req.query;
+        if (!date) return res.status(400).json({ error: "date query parameter required (YYYY-MM-DD)" });
+        const result = await gcal.checkAvailability(req.currentUser.id, date);
+        res.json(result);
+    } catch (err) {
+        console.error("❌ Calendar availability error:", err.message);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // ─── API Endpoints (original) ─────────────────────────────────────────
 app.get("/api/properties", (req, res) => res.json(getProperties()));
 app.get("/api/reservations", requireAuth, (req, res) => res.json(getReservations()));
+// Public demo reservations endpoint (no auth needed — shown on demo page)
+app.get("/api/demo/reservations", (req, res) => res.json(getReservations()));
 app.get("/api/properties/:id", (req, res) => {
     const p = getPropertyById(req.params.id);
     p ? res.json(p) : res.status(404).json({ error: "Not found" });
@@ -582,18 +813,54 @@ wss.on("connection", (twilioWs, req) => {
                     try { fnArgs = JSON.parse(event.arguments || "{}"); } catch { }
 
                     console.log(`🔧 Function call: ${fnName}(${JSON.stringify(fnArgs)})`);
-                    const result = executeFunction(fnName, fnArgs);
-                    console.log(`✅ Result: ${result}`);
 
-                    openaiWs.send(JSON.stringify({
-                        type: "conversation.item.create",
-                        item: {
-                            type: "function_call_output",
-                            call_id: event.call_id,
-                            output: result,
-                        },
-                    }));
-                    openaiWs.send(JSON.stringify({ type: "response.create" }));
+                    // Check if this is an async function (calendar)
+                    const isAsyncFn = ["check_calendar_availability", "schedule_calendar_appointment"].includes(fnName);
+
+                    if (isAsyncFn) {
+                        // Execute async function
+                        const callId = event.call_id;
+                        executeFunctionAsync(fnName, fnArgs, agent.ownerId).then((result) => {
+                            console.log(`✅ Async Result: ${result}`);
+                            if (openaiWs?.readyState === WebSocket.OPEN) {
+                                openaiWs.send(JSON.stringify({
+                                    type: "conversation.item.create",
+                                    item: {
+                                        type: "function_call_output",
+                                        call_id: callId,
+                                        output: result,
+                                    },
+                                }));
+                                openaiWs.send(JSON.stringify({ type: "response.create" }));
+                            }
+                        }).catch((err) => {
+                            console.error(`❌ Async function error:`, err);
+                            if (openaiWs?.readyState === WebSocket.OPEN) {
+                                openaiWs.send(JSON.stringify({
+                                    type: "conversation.item.create",
+                                    item: {
+                                        type: "function_call_output",
+                                        call_id: callId,
+                                        output: JSON.stringify({ error: err.message }),
+                                    },
+                                }));
+                                openaiWs.send(JSON.stringify({ type: "response.create" }));
+                            }
+                        });
+                    } else {
+                        const result = executeFunction(fnName, fnArgs);
+                        console.log(`✅ Result: ${result}`);
+
+                        openaiWs.send(JSON.stringify({
+                            type: "conversation.item.create",
+                            item: {
+                                type: "function_call_output",
+                                call_id: event.call_id,
+                                output: result,
+                            },
+                        }));
+                        openaiWs.send(JSON.stringify({ type: "response.create" }));
+                    }
                     break;
                 }
 

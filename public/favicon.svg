@@ -1,4 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#8b5cf6"/>
-  <path d="M8 16c0-1 .5-2 1.5-2s1.5 1 1.5 2v4c0 1-.5 2-1.5 2S8 21 8 20v-4zm5-3c0-1 .5-2 1.5-2s1.5 1 1.5 2v8c0 1-.5 2-1.5 2S13 22 13 21v-8zm5 1c0-1 .5-2 1.5-2s1.5 1 1.5 2v6c0 1-.5 2-1.5 2S18 21 18 20v-6zm5 2c0-1 .5-2 1.5-2s1.5 1 1.5 2v4c0 1-.5 2-1.5 2S23 21 23 20v-4z" fill="white"/>
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#g)"/>
+  <!-- Outer arc (C shape) -->
+  <path d="M22 10.5A8 8 0 1 0 22 21.5" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+  <!-- Inner dot - core -->
+  <circle cx="16" cy="16" r="2.2" fill="white"/>
+  <!-- Mid ring segment -->
+  <path d="M20 12.5A5 5 0 1 0 20 19.5" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.8" stroke-linecap="round"/>
 </svg>

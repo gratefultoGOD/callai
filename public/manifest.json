@@ -1,6 +1,6 @@
 {
-    "name": "VoiceAgent — AI Voice Agent Platform",
-    "short_name": "VoiceAgent",
+    "name": "Corealist — VoiceAgent Platform",
+    "short_name": "Corealist",
     "description": "Create and manage AI voice agents with dedicated phone numbers. Powered by OpenAI Realtime API and Twilio.",
     "start_url": "/",
     "display": "standalone",

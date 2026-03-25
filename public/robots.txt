@@ -1,4 +1,4 @@
-# robots.txt — VoiceAgent by Corealist
+# robots.txt — Corealist VoiceAgent Platform
 # https://corealist.com
 
 User-agent: *

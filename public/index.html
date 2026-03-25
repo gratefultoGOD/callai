@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
@@ -11,7 +11,7 @@
     <link rel="canonical" href="https://corealist.com/">
 
     <!-- Favicon & Manifest -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#8b5cf6">
 
@@ -21,6 +21,10 @@
     <meta property="og:title" content="VoiceAgent — AI Voice Agent Platform">
     <meta property="og:description"
         content="Create and manage AI voice agents with dedicated phone numbers. Build custom voice assistants powered by OpenAI Realtime API and Twilio.">
+    <meta property="og:image" content="https://corealist.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Corealist — AI Voice Agent Platform">
     <meta property="og:site_name" content="Corealist">
     <meta property="og:locale" content="en_US">
 
@@ -29,6 +33,8 @@
     <meta name="twitter:title" content="VoiceAgent — AI Voice Agent Platform">
     <meta name="twitter:description"
         content="Create and manage AI voice agents with dedicated phone numbers. Powered by OpenAI & Twilio.">
+    <meta name="twitter:image" content="https://corealist.com/og-image.png">
+    <meta name="twitter:site" content="@corealist">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,6 +55,7 @@
         "description": "Create and manage AI voice agents with dedicated phone numbers. Build custom voice assistants powered by OpenAI Realtime API and Twilio.",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web",
+        "image": "https://corealist.com/og-image.png",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -57,7 +64,13 @@
         "creator": {
             "@type": "Organization",
             "name": "Corealist",
-            "url": "https://corealist.com"
+            "url": "https://corealist.com",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://corealist.com/favicon.svg",
+                "width": 32,
+                "height": 32
+            }
         }
     }
     </script>
@@ -171,6 +184,121 @@
             align-items: center;
             justify-content: space-between;
             transition: background var(--transition-theme), border-color var(--transition-theme);
+        }
+
+        /* ══════════════ HAMBURGER ══════════════ */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            cursor: pointer;
+            padding: 7px 9px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .hamburger:hover {
+            border-color: var(--border-hover);
+            background: var(--violet-dim);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text-sub);
+            border-radius: 2px;
+            transition: all 0.3s;
+            transform-origin: center;
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* ══════════════ MOBILE DRAWER ══════════════ */
+        .mobile-drawer {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: drawerSlide 0.25s ease;
+        }
+
+        @keyframes drawerSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-drawer.open {
+            display: flex;
+        }
+
+        .mobile-drawer a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .mobile-drawer a:hover {
+            background: var(--violet-dim);
+            color: var(--text);
+        }
+
+        .mobile-drawer .drawer-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 8px 0;
+        }
+
+        .mobile-drawer .drawer-cta {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .mobile-drawer .drawer-cta a {
+            flex: 1;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: 600;
         }
 
         .nav-left {
@@ -1119,32 +1247,55 @@
             margin-top: 64px;
         }
 
-        /* ══════════════ RESPONSIVE ══════════════ */
+        /* ══════════════ FOOTER ══════════════ */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 40px;
+            text-align: center;
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 64px;
+        }
+
+        /* ══════════════ RESPONSIVE — 768px ══════════════ */
         @media (max-width: 768px) {
             nav {
-                padding: 0 20px;
+                padding: 0 16px;
             }
 
             .nav-links {
                 display: none;
             }
 
+            .hamburger {
+                display: flex;
+            }
+
+            #navGuest,
+            #navUser {
+                display: none !important;
+            }
+
             .hero {
-                padding: 90px 20px 16px;
+                padding: 84px 16px 16px;
             }
 
             .hero h1 {
-                font-size: 1.6rem;
+                font-size: 1.7rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
             }
 
             .stats-row {
                 grid-template-columns: 1fr;
-                padding: 28px 20px 0;
+                padding: 24px 16px 0;
                 gap: 10px;
             }
 
             .section {
-                padding: 36px 20px 0;
+                padding: 32px 16px 0;
             }
 
             .section-header {
@@ -1159,6 +1310,70 @@
 
             .properties-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .guest-banner {
+                padding: 24px 16px 0;
+            }
+
+            .guest-banner-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 24px 20px;
+            }
+
+            .guest-banner-cta {
+                align-items: stretch;
+                width: 100%;
+            }
+
+            .btn-banner-primary {
+                justify-content: center;
+            }
+
+            footer {
+                padding: 28px 16px;
+            }
+        }
+
+        /* ══════════════ RESPONSIVE — 480px ══════════════ */
+        @media (max-width: 480px) {
+            .stat-card {
+                padding: 18px 16px;
+            }
+
+            .stat-number {
+                font-size: 1.6rem;
+            }
+
+            .agent-card {
+                padding: 20px;
+            }
+
+            .agent-details {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .agent-actions {
+                flex-direction: column;
+            }
+
+            .action-delete {
+                max-width: unset;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .feature-pills {
+                gap: 7px;
+            }
+
+            .pill {
+                font-size: 0.72rem;
+                padding: 5px 10px;
             }
         }
     </style>
@@ -1189,16 +1404,18 @@
         <div class="nav-left">
             <a href="/" class="logo">
                 <div class="logo-mark">
-                    <i data-lucide="audio-waveform" style="width:18px;height:18px"></i>
+                    <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 10.5A8 8 0 1 0 22 21.5" stroke="white" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="16" cy="16" r="2.5" fill="white" />
+                        <path d="M20 12.8A4.5 4.5 0 1 0 20 19.2" stroke="rgba(255,255,255,0.6)" stroke-width="1.8"
+                            stroke-linecap="round" />
+                    </svg>
                 </div>
-                <span class="logo-text">VoiceAgent</span>
+                <span class="logo-text">Corealist</span>
             </a>
             <ul class="nav-links">
-                <li><a href="#agents"><i data-lucide="bot" style="width:15px;height:15px"></i> Agents</a></li>
-                <li><a href="#properties"><i data-lucide="building-2" style="width:15px;height:15px"></i> Properties</a>
-                </li>
-                <li><a href="#reservations"><i data-lucide="calendar-check" style="width:15px;height:15px"></i>
-                        Reservations</a></li>
+                <li><a href="/demo" style="color:var(--teal);"><i data-lucide="zap" style="width:15px;height:15px"></i>
+                        Demo Dene</a></li>
             </ul>
         </div>
         <div class="nav-right">
@@ -1221,333 +1438,1644 @@
                     <i data-lucide="layout-dashboard" style="width:16px;height:16px"></i> Dashboard
                 </a>
             </div>
+            <!-- Hamburger (mobile only) -->
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" onclick="toggleMobileMenu()">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <a href="/demo" onclick="closeMobileMenu()" style="color:var(--teal)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+            Demo Dene
+        </a>
+        <div class="drawer-divider"></div>
+        <div class="drawer-cta" id="drawerGuest">
+            <a href="/login" style="background:transparent;border:1px solid var(--border);color:var(--text-sub)">Giriş
+                Yap</a>
+            <a href="/login?tab=register" style="background:var(--violet);color:#fff">Kayıt Ol</a>
+        </div>
+        <div class="drawer-cta" id="drawerUser" style="display:none">
+            <a href="/dashboard" style="background:var(--teal);color:#fff">Dashboard</a>
+        </div>
+    </div>
+
     <main>
-        <section class="hero">
-            <h1>Your <span class="accent-word">AI Voice Agents</span>,<br>all in one place.</h1>
-            <p>Dakikalar içinde kendi AI ses asistanınızı oluşturun. Kod bilgisi gerekmez — sadece bir istem yazın,
-                geri kalanını platform halleder.</p>
-            <div class="feature-pills" id="heroPills">
-                <span class="pill teal">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <polyline points="13 2 13 9 20 9" />
-                        <path d="M21 15.5A10 10 0 1 1 8.5 3" />
-                    </svg>
-                    2 Dakikada Kurulum
-                </span>
-                <span class="pill violet">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 8v4l3 3" />
-                    </svg>
-                    Sıfır Karmaşıklık
-                </span>
-                <span class="pill sky">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                    </svg>
-                    Gerçek Zamanlı Ses
-                </span>
-                <span class="pill amber">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                    Kod Gerektirmez
-                </span>
+
+        <!-- ════ HERO ════ -->
+        <section class="lp-hero" id="hero">
+            <div class="lp-hero-bg">
+                <div class="lp-orb lp-orb-1"></div>
+                <div class="lp-orb lp-orb-2"></div>
+                <div class="lp-orb lp-orb-3"></div>
+                <div class="lp-grid-overlay"></div>
+            </div>
+            <div class="lp-hero-inner">
+                <div class="lp-badge" id="lpBadge">
+                    <span class="live-dot"></span>
+                    Demo Şu An Aktif &mdash; Arayın ve Deneyin
+                </div>
+                <h1 class="lp-h1">
+                    AI Ses Agent'ı<br>
+                    <span class="lp-gradient">Dakikada Yayında</span>
+                </h1>
+                <p class="lp-lead">Koda gerek yok. Bir sistem istemi yaz, ses seç, telefon numarası al — agent'ın
+                    müşteri aramalarını gerçek zamanlı sesle karşılamasını izle.</p>
+                <div class="lp-ctas" id="lpCtas">
+                    <a href="/demo" class="lp-btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            <line x1="12" y1="19" x2="12" y2="23" />
+                        </svg>
+                        Sistemi Dene &mdash; Ücretsiz
+                    </a>
+                    <a href="/login?tab=register" class="lp-btn-secondary">
+                        Kendi Agent'ını Oluştur
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="lp-hero-stats">
+                    <div class="lp-stat"><span class="lp-stat-num">~2&thinsp;dk</span><span
+                            class="lp-stat-label">Kuruluma kadar</span></div>
+                    <div class="lp-stat-div"></div>
+                    <div class="lp-stat"><span class="lp-stat-num">Sıfır</span><span class="lp-stat-label">Kod
+                            gerektirmez</span></div>
+                    <div class="lp-stat-div"></div>
+                    <div class="lp-stat"><span class="lp-stat-num">7/24</span><span class="lp-stat-label">Kesintisiz
+                            cevap</span></div>
+                </div>
+            </div>
+
+            <!-- Phone call screen -->
+            <div class="lp-call-screen">
+                <!-- Phone shell -->
+                <div class="lp-phone-shell">
+                    <!-- Status bar -->
+                    <div class="lp-phone-status">
+                        <span class="lp-phone-time" id="phoneTime">11:42</span>
+                        <div class="lp-phone-icons">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M1 6l5.1 5.1A7 7 0 0 1 17.9 6L23 1" />
+                                <path d="M5.5 10.5A5 5 0 0 1 14.5 10.5" />
+                                <path d="M10 15h.01" />
+                            </svg>
+                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                <rect x="1" y="6" width="4" height="12" rx="1" />
+                                <rect x="7" y="3" width="4" height="18" rx="1" />
+                                <rect x="13" y="0" width="4" height="24" rx="1" opacity=".4" />
+                                <rect x="19" y="0" width="4" height="24" rx="1" opacity=".2" />
+                            </svg>
+                        </div>
+                    </div>
+                    <!-- Call info -->
+                    <div class="lp-call-info">
+                        <div class="lp-call-label">Gelen Arama</div>
+                        <div class="lp-call-from">PrestigeAI</div>
+                        <div class="lp-call-agent-name">Sophia &bull; AI Ses Asistanı</div>
+                        <!-- Animated ring -->
+                        <div class="lp-call-ring">
+                            <div class="lp-ring-pulse lp-ring-1"></div>
+                            <div class="lp-ring-pulse lp-ring-2"></div>
+                            <div class="lp-ring-pulse lp-ring-3"></div>
+                            <div class="lp-call-avatar-big">
+                                <svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.4"
+                                    viewBox="0 0 24 24">
+                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                    <line x1="12" y1="19" x2="12" y2="23" />
+                                    <line x1="8" y1="23" x2="16" y2="23" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Live transcript -->
+                    <div class="lp-transcript" id="lpTranscript">
+                        <div class="lp-tr-row lp-tr-agent" id="tr1">
+                            <div class="lp-tr-dot" style="background:var(--teal)"></div>
+                            <div class="lp-tr-text">Merhaba, ben Sophia. Nasıl yardımcı olabilirim?</div>
+                        </div>
+                        <div class="lp-tr-row lp-tr-user" id="tr2" style="opacity:0">
+                            <div class="lp-tr-text">Manhattan'da 3+1 mülk arıyorum.</div>
+                            <div class="lp-tr-dot" style="background:var(--violet)"></div>
+                        </div>
+                        <div class="lp-tr-row lp-tr-agent" id="tr3" style="opacity:0">
+                            <div class="lp-tr-dot" style="background:var(--teal)"></div>
+                            <div class="lp-tr-text">3 sonuç buldum. En iyi eşleşme: Waterfront Apt, $2.2M</div>
+                        </div>
+                        <div class="lp-tr-row lp-tr-user" id="tr4" style="opacity:0">
+                            <div class="lp-tr-text">Cumartesi görüntüleme yapabilir miyiz?</div>
+                            <div class="lp-tr-dot" style="background:var(--violet)"></div>
+                        </div>
+                        <div class="lp-tr-row lp-tr-agent" id="tr5" style="opacity:0">
+                            <div class="lp-tr-dot" style="background:var(--teal)"></div>
+                            <div class="lp-tr-text">✅ Cumartesi 14:00 için randevunuz oluşturuldu!</div>
+                        </div>
+                    </div>
+                    <!-- Wave visualizer -->
+                    <div class="lp-audio-wave" id="lpWave">
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </div>
+                    <!-- Call duration -->
+                    <div class="lp-duration"><span class="lp-dur-dot"></span> <span id="lpDuration">0:00</span></div>
+                    <!-- Action buttons -->
+                    <div class="lp-phone-actions">
+                        <div class="lp-phone-btn">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            </svg>
+                            <span>Sessiz</span>
+                        </div>
+                        <div class="lp-phone-btn lp-phone-btn-end">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45c.927.386 1.898.65 2.91.79A2 2 0 0 1 22 17v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.45-2.87m-2.72-4.1A19.79 19.79 0 0 1 2 3.18 2 2 0 0 1 4 1h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0 .57 2.57 2 2 0 0 1-.45 2.11L8.09 8.4" />
+                                <line x1="23" y1="1" x2="1" y2="23" />
+                            </svg>
+                            <span>Kapat</span>
+                        </div>
+                        <div class="lp-phone-btn">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <polyline points="9 11 12 14 22 4" />
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                            </svg>
+                            <span>Not</span>
+                        </div>
+                    </div>
+                    <!-- Home bar -->
+                    <div class="lp-home-bar"></div>
+                </div>
             </div>
         </section>
 
-        <section class="stats-row" id="stats">
-            <div class="stat-card">
-                <div class="stat-icon violet"><i data-lucide="bot" style="width:22px;height:22px"></i></div>
-                <div class="stat-info">
-                    <div class="stat-label">Active Agents</div>
-                    <div class="stat-number" id="statAgents">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon teal"><i data-lucide="phone" style="width:22px;height:22px"></i></div>
-                <div class="stat-info">
-                    <div class="stat-label">Phone Numbers</div>
-                    <div class="stat-number" id="statPhones">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon sky"><i data-lucide="calendar-check" style="width:22px;height:22px"></i></div>
-                <div class="stat-info">
-                    <div class="stat-label">Reservations</div>
-                    <div class="stat-number" id="statReservations">0</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Guest CTA Banner (hidden when logged in) -->
-        <div class="guest-banner" id="guestBanner">
-            <div class="guest-banner-inner">
-                <div class="guest-banner-text">
-                    <h2>⚡ Çok Hızlı Kurulum — 3 Adımda Hazır</h2>
-                    <p>İlk AI ses agentınızı oluşturmak hiç bu kadar kolay olmamıştı. Teknik bilgi gerekmez, sunucu
-                        kurmanıza gerek yok, karmaşık ayar yok.</p>
-                    <div class="guest-banner-steps">
-                        <span class="step-chip"><span class="step-num">1</span> Hesap oluştur</span>
-                        <span class="step-chip"><span class="step-num">2</span> İstem yaz, ses seç</span>
-                        <span class="step-chip"><span class="step-num">3</span> Telefon numarası al — Bitir ✓</span>
+        <!-- ════ HOW IT WORKS ════ -->
+        <section class="lp-section" id="how">
+            <div class="lp-section-inner">
+                <div class="lp-section-tag">Nasıl Çalışır?</div>
+                <h2 class="lp-section-title">3 Adımda Canlıya Al</h2>
+                <p class="lp-section-sub">Teknik altyapıyı biz yönetiyoruz. Sen sadece agent'ının nasıl konuşacağını
+                    tanımla.</p>
+                <div class="lp-steps">
+                    <div class="lp-step">
+                        <div class="lp-step-num">01</div>
+                        <div class="lp-step-icon" style="background:var(--violet-dim);color:var(--violet)">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M12 20h9" />
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                            </svg>
+                        </div>
+                        <h3>İstem Yaz</h3>
+                        <p>Agent'ının nasıl davranacağını doğal dilde tanımla. İsim, kişilik, uzmanlık alanı — hepsi
+                            senin kontrolünde.</p>
+                    </div>
+                    <div class="lp-step-arrow">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                    <div class="lp-step">
+                        <div class="lp-step-num">02</div>
+                        <div class="lp-step-icon" style="background:var(--teal-dim);color:var(--teal)">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            </svg>
+                        </div>
+                        <h3>Ses &amp; Araçları Seç</h3>
+                        <p>Ses tonunu seç, hangi araçları (mülk arama, rezervasyon, takvim) kullanacağını belirle.</p>
+                    </div>
+                    <div class="lp-step-arrow">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                    <div class="lp-step">
+                        <div class="lp-step-num">03</div>
+                        <div class="lp-step-icon" style="background:var(--sky-dim);color:var(--sky)">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <rect x="5" y="2" width="14" height="20" rx="2" />
+                                <path d="M12 18h.01" />
+                            </svg>
+                        </div>
+                        <h3>Numara Al, Yayına Gir</h3>
+                        <p>Platform sana özel bir telefon numarası tahsis eder. Artık agent'ın gerçek aramalara cevap veriyor.</p>
                     </div>
                 </div>
-                <div class="guest-banner-cta">
-                    <a href="/login?tab=register" class="btn-banner-primary">
+            </div>
+        </section>
+
+        <!-- ════ FEATURES ════ -->
+        <section class="lp-section lp-features-section" id="features">
+            <div class="lp-section-inner" style="text-align:center">
+                <div class="lp-section-tag" style="display:inline-flex">Platform Özellikleri</div>
+                <h2 class="lp-section-title">Neden Corealist?</h2>
+                <p class="lp-section-sub" style="max-width:560px;margin-left:auto;margin-right:auto">Gerçek zamanlı ses kalitesi, anında kurulum ve kesintisiz 7/24 erişim — hepsi tek platformda, hiç kod yazmadan.</p>
+                <div class="lp-feat-grid" style="margin-top:40px">
+                    <div class="lp-feat-card lp-feat-big">
+                        <div class="lp-feat-icon" style="color:var(--violet)">
+                            <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8"
+                                viewBox="0 0 24 24">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                        </div>
+                        <h3>Dakikada Canlıya Al</h3>
+                        <p>Sistem istemi yaz, sesi seç, numaranı al. Kod yazmana gerek yok — birkaç tıklamayla agent'ın gerçek aramaları karşılamaya başlar.</p>
+                    </div>
+                    <div class="lp-feat-card">
+                        <div class="lp-feat-icon" style="color:var(--sky)">
+                            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8"
+                                viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3>Aynı Anda Onlarca Arama</h3>
+                        <p>Agent aynı anda birden fazla müşteriye yanıt verir. Yoğun saatlerde hiçbir arama boşa gitmez.</p>
+                    </div>
+                    <div class="lp-feat-card">
+                        <div class="lp-feat-icon" style="color:var(--teal)">
+                            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8"
+                                viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 8v4l3 3" />
+                            </svg>
+                        </div>
+                        <h3>7/24 Kesintisiz</h3>
+                        <p>Agent'ın çalışma saatlerini sınırlayan bir şey yok. Mesai saatleri dışında da her aramayı
+                            karşılar.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ════ USE CASE ════ -->
+        <section class="lp-section lp-usecase-section" id="usecase">
+            <div class="lp-section-inner lp-uc-inner">
+                <div class="lp-uc-text">
+                    <div class="lp-section-tag">Örnek Kullanım</div>
+                    <h2 class="lp-section-title" style="text-align:left">Gayrimenkul Sektöründe<br>AI Ses Asistanı</h2>
+                    <p class="lp-section-sub" style="text-align:left">Sophia, PrestigeAI'nın varsayılan demo agent'ıdır.
+                        Müşteri aramaları geldiğinde mülk veritabanını sorgular, randevu planlar ve rezervasyon
+                        oluşturur.</p>
+                    <ul class="lp-uc-list">
+                        <li><span class="lp-uc-check">✓</span> Konum, oda sayısı ve bütçeye göre mülk filtreleme</li>
+                        <li><span class="lp-uc-check">✓</span> Görüntüleme randevusu planlama ve takvime ekleme</li>
+                        <li><span class="lp-uc-check">✓</span> Satın alma ve kiralama rezervasyonu oluşturma</li>
+                        <li><span class="lp-uc-check">✓</span> Mülk detaylarını (fiyat, kat, alan) sesli aktarma</li>
+                        <li><span class="lp-uc-check">✓</span> Türkçe ve İngilizce çok dil desteği</li>
+                    </ul>
+                    <a href="/demo" class="lp-btn-primary" style="margin-top:28px;display:inline-flex">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                         </svg>
-                        Ücretsiz Başla
-                    </a>
-                    <a href="/login" class="btn-banner-secondary">
-                        Zaten hesabın var mı? Giriş yap →
+                        Sophia'yı Dene
                     </a>
                 </div>
+                <div class="lp-uc-visual">
+                    <div class="lp-phone">
+                        <div class="lp-phone-notch"></div>
+                        <div class="lp-phone-screen">
+                            <div class="lp-call-ui">
+                                <div class="lp-call-avatar">
+                                    <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                        <line x1="12" y1="19" x2="12" y2="23" />
+                                        <line x1="8" y1="23" x2="16" y2="23" />
+                                    </svg>
+                                </div>
+                                <div class="lp-call-name">Sophia</div>
+                                <div class="lp-call-status">PrestigeAI &bull; Aktif</div>
+                                <div class="lp-wave">
+                                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="lp-call-timer" id="callTimer">0:00</div>
+                                <div class="lp-call-btns">
+                                    <div class="lp-call-btn lp-call-btn-red">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45c.927.386 1.898.65 2.91.79A2 2 0 0 1 22 17v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.45-2.87m-2.72-4.1A19.79 19.79 0 0 1 2 3.18 2 2 0 0 1 4 1h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0 .57 2.57 2 2 0 0 1-.45 2.11L8.09 8.4" />
+                                            <line x1="23" y1="1" x2="1" y2="23" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </section>
+
+
+        <!-- ════ FINAL CTA ════ -->
+        <section class="lp-cta-section">
+            <div class="lp-cta-inner">
+                <div class="lp-cta-orb"></div>
+                <h2 class="lp-cta-title">AI Ses Agent'ınızı<br>Şimdi Oluşturun</h2>
+                <p class="lp-cta-sub">Demo agent'ı deneyin veya kendi agent'ınızı oluşturmak için ücretsiz kayıt
+                    olun.
+                    Kredi kartı gerekmez.</p>
+                <div class="lp-cta-btns">
+                    <a href="/demo" class="lp-btn-primary">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                        </svg>
+                        Demo'yu Dene &mdash; Ücretsiz
+                    </a>
+                    <a href="/login?tab=register" class="lp-btn-ghost">Kayıt Ol <svg width="14" height="14" fill="none"
+                            stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg></a>
+                </div>
+                <p class="lp-cta-hint">Zaten hesabın var mı? <a href="/login">Giriş yap →</a></p>
+            </div>
+        </section>
+
+        <!-- Dashboard shortcut (logged-in) -->
+        <div id="dashboardShortcut" style="display:none;position:fixed;bottom:24px;right:24px;z-index:200">
+            <a href="/dashboard"
+                style="display:inline-flex;align-items:center;gap:9px;background:var(--teal);color:#fff;padding:12px 20px;border-radius:14px;font-weight:700;font-size:0.88rem;text-decoration:none;box-shadow:0 8px 32px rgba(45,212,191,.4);">
+                <i data-lucide="layout-dashboard" style="width:17px;height:17px"></i>
+                Dashboard'a Git
+            </a>
         </div>
 
-        <section class="section" id="agents">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="section-title-icon violet"><i data-lucide="bot"
-                            style="width:17px;height:17px"></i></span>
-                    AI Voice Agents
-                </h2>
-                <a href="/login?tab=register" class="btn-sm" id="navCreateBtn">
-                    <i data-lucide="plus" style="width:14px;height:14px"></i> Agent Oluştur
-                </a>
-            </div>
-            <div class="agents-grid" id="agentsGrid"></div>
-        </section>
-
-        <section class="section" id="properties">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="section-title-icon sky"><i data-lucide="building-2"
-                            style="width:17px;height:17px"></i></span>
-                    Demo Properties
-                </h2>
-            </div>
-            <div class="properties-grid" id="propertiesGrid"></div>
-        </section>
-
-        <section class="section" id="reservations">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="section-title-icon teal"><i data-lucide="calendar-check"
-                            style="width:17px;height:17px"></i></span>
-                    Live Reservations
-                </h2>
-            </div>
-            <div class="reservations-container">
-                <div class="res-header">
-                    <h3>Recent Activity</h3>
-                    <span class="live-badge"><span class="live-dot"></span> Live</span>
-                </div>
-                <div class="res-list" id="resList">
-                    <div class="res-empty">No reservations yet. Call an agent to create one.</div>
-                </div>
-            </div>
-        </section>
-
     </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2026 <a href="https://corealist.com"
-                style="color:var(--text-muted);text-decoration:none">Corealist</a> — VoiceAgent Platform. Powered by
-            OpenAI Realtime API &amp; Twilio.</p>
+    <footer role="contentinfo" class="lp-footer">
+        <div class="lp-footer-inner">
+            <div class="lp-footer-brand">
+                <div class="logo-mark" style="width:32px;height:32px;border-radius:9px">
+                    <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+                        <path d="M22 10.5A8 8 0 1 0 22 21.5" stroke="white" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="16" cy="16" r="2.5" fill="white" />
+                        <path d="M20 12.8A4.5 4.5 0 1 0 20 19.2" stroke="rgba(255,255,255,0.6)" stroke-width="1.8"
+                            stroke-linecap="round" />
+                    </svg>
+                </div>
+                <span style="font-weight:700;font-size:0.95rem">Corealist</span>
+            </div>
+            <p class="lp-footer-copy">&copy; 2026 Corealist — VoiceAgent Platform. Powered by OpenAI Realtime API &amp;
+                Twilio.</p>
+            <div class="lp-footer-links">
+                <a href="/demo">Demo</a>
+                <a href="/login">Giriş</a>
+                <a href="/login?tab=register">Kayıt</a>
+            </div>
+        </div>
     </footer>
+
+    <style>
+        /* ════ LANDING PAGE STYLES ════ */
+        main {
+            padding-top: 0;
+        }
+
+        /* ── Hero ── */
+        .lp-hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 48px;
+            padding: 100px 64px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lp-hero-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .lp-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.55;
+        }
+
+        .lp-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, .22) 0%, transparent 70%);
+            top: -150px;
+            left: -150px;
+            animation: orbFloat 14s ease-in-out infinite alternate;
+        }
+
+        .lp-orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(45, 212, 191, .18) 0%, transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            animation: orbFloat 18s ease-in-out infinite alternate-reverse;
+        }
+
+        .lp-orb-3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(56, 189, 248, .14) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: orbFloat 22s ease-in-out infinite alternate;
+        }
+
+        @keyframes orbFloat {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
+
+            to {
+                transform: translate(30px, 20px) scale(1.06);
+            }
+        }
+
+        .lp-grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        [data-theme="light"] .lp-grid-overlay {
+            background-image:
+                linear-gradient(rgba(0, 0, 0, .04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, .04) 1px, transparent 1px);
+        }
+
+        .lp-hero-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .lp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--teal);
+            background: var(--teal-dim);
+            border: 1px solid var(--teal-border);
+            padding: 7px 16px;
+            border-radius: 99px;
+            margin-bottom: 24px;
+        }
+
+        .lp-h1 {
+            font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 1.05;
+            margin: 0 0 20px;
+        }
+
+        .lp-gradient {
+            background: linear-gradient(135deg, var(--violet) 0%, var(--teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lp-lead {
+            font-size: 1.08rem;
+            color: var(--text-sub);
+            line-height: 1.72;
+            max-width: 480px;
+            margin: 0 0 36px;
+        }
+
+        .lp-ctas {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+
+        .lp-btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            background: var(--teal);
+            color: #fff;
+            padding: 13px 26px;
+            border-radius: 13px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            box-shadow: 0 6px 28px rgba(45, 212, 191, .35);
+            transition: all 0.22s;
+        }
+
+        .lp-btn-primary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 36px rgba(45, 212, 191, .45);
+        }
+
+        .lp-btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 13px 26px;
+            border-radius: 13px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.22s;
+        }
+
+        .lp-btn-secondary:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .lp-btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--text-sub);
+            padding: 13px 22px;
+            border-radius: 13px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .lp-btn-ghost:hover {
+            color: var(--text);
+            border-color: var(--border-hover);
+        }
+
+        .lp-hero-stats {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .lp-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .lp-stat-num {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: var(--text);
+        }
+
+        .lp-stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .lp-stat-div {
+            width: 1px;
+            height: 36px;
+            background: var(--border);
+        }
+
+        /* ── Phone Call Screen ── */
+        .lp-call-screen {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: previewFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes previewFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .lp-phone-shell {
+            width: 300px;
+            background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 44px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow:
+                0 40px 100px rgba(0, 0, 0, .6),
+                0 0 0 1px rgba(255, 255, 255, .04),
+                inset 0 1px 0 rgba(255, 255, 255, .1);
+            overflow: hidden;
+            padding: 0 0 16px;
+        }
+
+        [data-theme="light"] .lp-phone-shell {
+            background: linear-gradient(160deg, #1e2a4a 0%, #16213e 60%, #0d2137 100%);
+        }
+
+        /* Status bar */
+        .lp-phone-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 22px 8px;
+            color: rgba(255, 255, 255, .85);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .lp-phone-icons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            color: rgba(255, 255, 255, .85);
+        }
+
+        /* Call info */
+        .lp-call-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 20px 0;
+            text-align: center;
+        }
+
+        .lp-call-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, .5);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+
+        .lp-call-from {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.03em;
+        }
+
+        .lp-call-agent-name {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, .5);
+            margin-top: 2px;
+            margin-bottom: 12px;
+        }
+
+        /* Pulsing ring */
+        .lp-call-ring {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4px auto 12px;
+        }
+
+        .lp-ring-pulse {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(45, 212, 191, .4);
+            animation: callRing 2.4s ease-out infinite;
+        }
+
+        .lp-ring-1 {
+            width: 90px;
+            height: 90px;
+            animation-delay: 0s;
+        }
+
+        .lp-ring-2 {
+            width: 70px;
+            height: 70px;
+            animation-delay: .4s;
+            border-color: rgba(45, 212, 191, .5);
+        }
+
+        .lp-ring-3 {
+            width: 50px;
+            height: 50px;
+            animation-delay: .8s;
+            border-color: rgba(45, 212, 191, .7);
+        }
+
+        @keyframes callRing {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .lp-call-avatar-big {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(45, 212, 191, .3), rgba(139, 92, 246, .3));
+            border: 2px solid rgba(45, 212, 191, .6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(45, 212, 191, .9);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Live transcript strip */
+        .lp-transcript {
+            margin: 0 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(255, 255, 255, .04);
+            border-radius: 14px;
+            padding: 10px 12px;
+            min-height: 120px;
+            border: 1px solid rgba(255, 255, 255, .07);
+        }
+
+        .lp-tr-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            transition: opacity 0.5s ease;
+        }
+
+        .lp-tr-agent {
+            justify-content: flex-start;
+        }
+
+        .lp-tr-user {
+            justify-content: flex-end;
+        }
+
+        .lp-tr-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .lp-tr-text {
+            font-size: 0.74rem;
+            color: rgba(255, 255, 255, .8);
+            line-height: 1.5;
+            max-width: 88%;
+        }
+
+        /* Audio waveform */
+        .lp-audio-wave {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 28px;
+            margin: 10px 20px 4px;
+        }
+
+        .lp-audio-wave span {
+            width: 3px;
+            border-radius: 3px;
+            background: linear-gradient(to top, var(--teal), rgba(45, 212, 191, .3));
+            animation: audioBar 1s ease-in-out infinite;
+        }
+
+        .lp-audio-wave span:nth-child(1) {
+            height: 8px;
+            animation-delay: 0s;
+        }
+
+        .lp-audio-wave span:nth-child(2) {
+            height: 16px;
+            animation-delay: .08s;
+        }
+
+        .lp-audio-wave span:nth-child(3) {
+            height: 22px;
+            animation-delay: .15s;
+        }
+
+        .lp-audio-wave span:nth-child(4) {
+            height: 14px;
+            animation-delay: .22s;
+        }
+
+        .lp-audio-wave span:nth-child(5) {
+            height: 28px;
+            animation-delay: .30s;
+        }
+
+        .lp-audio-wave span:nth-child(6) {
+            height: 20px;
+            animation-delay: .38s;
+        }
+
+        .lp-audio-wave span:nth-child(7) {
+            height: 26px;
+            animation-delay: .45s;
+        }
+
+        .lp-audio-wave span:nth-child(8) {
+            height: 18px;
+            animation-delay: .52s;
+        }
+
+        .lp-audio-wave span:nth-child(9) {
+            height: 12px;
+            animation-delay: .60s;
+        }
+
+        .lp-audio-wave span:nth-child(10) {
+            height: 22px;
+            animation-delay: .68s;
+        }
+
+        .lp-audio-wave span:nth-child(11) {
+            height: 8px;
+            animation-delay: .76s;
+        }
+
+        .lp-audio-wave span:nth-child(12) {
+            height: 16px;
+            animation-delay: .84s;
+        }
+
+        .lp-audio-wave span:nth-child(13) {
+            height: 10px;
+            animation-delay: .92s;
+        }
+
+        @keyframes audioBar {
+
+            0%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            50% {
+                transform: scaleY(1.7);
+            }
+        }
+
+        /* Duration */
+        .lp-duration {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, .5);
+            margin: 2px 0 8px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .lp-dur-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: blink 1.2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .3;
+            }
+        }
+
+        /* Action buttons */
+        .lp-phone-actions {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 4px 20px 0;
+        }
+
+        .lp-phone-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .08);
+            justify-content: center;
+            cursor: default;
+            color: rgba(255, 255, 255, .75);
+        }
+
+        .lp-phone-btn span {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, .5);
+        }
+
+        .lp-phone-btn-end {
+            background: #ef4444 !important;
+            color: #fff !important;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, .5);
+        }
+
+        .lp-phone-btn-end span {
+            color: rgba(255, 255, 255, .8) !important;
+        }
+
+        /* Home bar */
+        .lp-home-bar {
+            width: 100px;
+            height: 5px;
+            background: rgba(255, 255, 255, .2);
+            border-radius: 99px;
+            margin: 14px auto 0;
+        }
+
+        /* ── Shared Section ── */
+        .lp-section {
+            padding: 100px 64px;
+            position: relative;
+        }
+
+        .lp-section-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .lp-section-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--violet);
+            background: var(--violet-dim);
+            border: 1px solid rgba(139, 92, 246, .25);
+            padding: 5px 14px;
+            border-radius: 99px;
+            margin-bottom: 18px;
+        }
+
+        .lp-section-title {
+            font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.15;
+            margin: 0 0 14px;
+        }
+
+        .lp-section-sub {
+            font-size: 1.02rem;
+            color: var(--text-sub);
+            max-width: 560px;
+            margin: 0 auto 52px;
+            line-height: 1.68;
+        }
+
+        /* ── Steps ── */
+        .lp-steps {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            justify-content: center;
+        }
+
+        .lp-step {
+            flex: 1;
+            max-width: 300px;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .lp-step-num {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .lp-step-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            transition: transform 0.2s;
+        }
+
+        .lp-step:hover .lp-step-icon {
+            transform: scale(1.08);
+        }
+
+        .lp-step h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0 0 10px;
+        }
+
+        .lp-step p {
+            font-size: 0.86rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .lp-step-arrow {
+            color: var(--border);
+            padding: 0 4px;
+            margin-top: 38px;
+            flex-shrink: 0;
+        }
+
+        /* ── Features ── */
+        .lp-features-section {
+            background: var(--bg-elevated);
+        }
+
+        .lp-feat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: left;
+        }
+
+        .lp-feat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lp-feat-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, .05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .lp-feat-card:hover::after {
+            opacity: 1;
+        }
+
+        .lp-feat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .lp-feat-big {
+            grid-column: span 1;
+            background: linear-gradient(135deg, rgba(139, 92, 246, .06) 0%, var(--bg-card) 60%);
+            border-color: rgba(139, 92, 246, .2);
+        }
+
+        .lp-feat-tag {
+            font-size: 0.67rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--violet);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .lp-feat-icon {
+            margin-bottom: 14px;
+        }
+
+        .lp-feat-card h3 {
+            font-size: 0.98rem;
+            font-weight: 700;
+            margin: 0 0 8px;
+        }
+
+        .lp-feat-card p {
+            font-size: 0.83rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .lp-feat-pills {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .lp-feat-pills span {
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 99px;
+            background: var(--violet-dim);
+            color: var(--violet);
+            border: 1px solid rgba(139, 92, 246, .2);
+        }
+
+        /* ── Use Case ── */
+        .lp-uc-inner {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 72px !important;
+            text-align: left !important;
+            align-items: center;
+        }
+
+        .lp-uc-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lp-uc-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .lp-uc-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: var(--text-sub);
+            line-height: 1.55;
+        }
+
+        .lp-uc-check {
+            color: var(--teal);
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── Phone UI ── */
+        .lp-uc-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lp-phone {
+            width: 220px;
+            height: 400px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .4);
+            position: relative;
+        }
+
+        .lp-phone-notch {
+            width: 80px;
+            height: 20px;
+            background: var(--bg-elevated);
+            border-radius: 0 0 14px 14px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .lp-phone-screen {
+            height: calc(100% - 20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lp-call-ui {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            width: 100%;
+        }
+
+        .lp-call-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--violet-dim), var(--teal-dim));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--teal);
+            border: 2px solid var(--teal-border);
+        }
+
+        .lp-call-name {
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+
+        .lp-call-status {
+            font-size: 0.7rem;
+            color: var(--teal);
+        }
+
+        .lp-wave {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            height: 30px;
+        }
+
+        .lp-wave span {
+            width: 3px;
+            border-radius: 3px;
+            background: var(--teal);
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        .lp-wave span:nth-child(1) {
+            height: 8px;
+            animation-delay: 0s;
+        }
+
+        .lp-wave span:nth-child(2) {
+            height: 16px;
+            animation-delay: .1s;
+        }
+
+        .lp-wave span:nth-child(3) {
+            height: 24px;
+            animation-delay: .2s;
+        }
+
+        .lp-wave span:nth-child(4) {
+            height: 18px;
+            animation-delay: .3s;
+        }
+
+        .lp-wave span:nth-child(5) {
+            height: 10px;
+            animation-delay: .4s;
+        }
+
+        .lp-wave span:nth-child(6) {
+            height: 20px;
+            animation-delay: .5s;
+        }
+
+        .lp-wave span:nth-child(7) {
+            height: 14px;
+            animation-delay: .6s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            50% {
+                transform: scaleY(1.6);
+            }
+        }
+
+        .lp-call-timer {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .lp-call-btns {
+            display: flex;
+            gap: 16px;
+        }
+
+        .lp-call-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lp-call-btn-red {
+            background: #ef4444;
+            color: #fff;
+        }
+
+
+        /* ── Final CTA ── */
+        .lp-cta-section {
+            padding: 120px 64px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lp-cta-orb {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, .15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            filter: blur(80px);
+        }
+
+        .lp-cta-title {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1.15;
+            margin: 0 0 16px;
+            position: relative;
+        }
+
+        .lp-cta-sub {
+            font-size: 1rem;
+            color: var(--text-sub);
+            max-width: 500px;
+            margin: 0 auto 36px;
+            line-height: 1.68;
+            position: relative;
+        }
+
+        .lp-cta-btns {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .lp-cta-hint {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        .lp-cta-hint a {
+            color: var(--violet);
+            text-decoration: none;
+        }
+
+        /* ── Footer ── */
+        .lp-footer {
+            border-top: 1px solid var(--border);
+            padding: 28px 64px;
+        }
+
+        .lp-footer-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .lp-footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lp-footer-copy {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .lp-footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .lp-footer-links a {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .lp-footer-links a:hover {
+            color: var(--text);
+        }
+
+        /* ── Media Queries ── */
+        @media (max-width: 960px) {
+            .lp-hero {
+                grid-template-columns: 1fr;
+                padding: 100px 40px 60px;
+                min-height: auto;
+            }
+
+            .lp-preview {
+                max-width: 100%;
+            }
+
+            .lp-section {
+                padding: 72px 40px;
+            }
+
+            .lp-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .lp-step-arrow {
+                transform: rotate(90deg);
+                margin: 0;
+            }
+
+            .lp-feat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .lp-uc-inner {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .lp-hero {
+                padding: 90px 24px 48px;
+            }
+
+            .lp-section {
+                padding: 60px 24px;
+            }
+
+            .lp-feat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lp-cta-section {
+                padding: 80px 24px;
+            }
+
+            .lp-footer {
+                padding: 28px 24px;
+            }
+
+            .lp-footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+        }
+    </style>
 
     <script>
         // ── Theme ──
         function getStoredTheme() { return localStorage.getItem('va_theme') || localStorage.getItem('theme') || 'dark'; }
-
         function applyTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('va_theme', theme);
-            localStorage.setItem('theme', theme);
+            localStorage.setItem('va_theme', theme); localStorage.setItem('theme', theme);
             requestAnimationFrame(() => {
                 const el = document.getElementById('themeIcon');
                 if (el) el.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             });
         }
-
-        function toggleTheme() {
-            applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-        }
-
+        function toggleTheme() { applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
         applyTheme(getStoredTheme());
-        document.addEventListener('DOMContentLoaded', () => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+
+        // ── Mobile menu ──
+        function toggleMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.toggle('open');
+            document.getElementById('mobileDrawer').classList.toggle('open');
+        }
+        function closeMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.remove('open');
+            document.getElementById('mobileDrawer').classList.remove('open');
+        }
+        document.addEventListener('click', e => {
+            const btn = document.getElementById('hamburgerBtn');
+            const drawer = document.getElementById('mobileDrawer');
+            if (drawer && drawer.classList.contains('open') && !drawer.contains(e.target) && !btn.contains(e.target)) closeMobileMenu();
+        });
 
         // ── Auth state ──
         const vaToken = localStorage.getItem('va_token');
         if (vaToken) {
             document.getElementById('navGuest').style.display = 'none';
             document.getElementById('navUser').style.display = 'flex';
-            const createBtn = document.getElementById('navCreateBtn');
-            if (createBtn) { createBtn.href = '/wizard'; createBtn.textContent = '+ Yeni Agent'; }
-            // Hide guest CTA banner when logged in
-            const banner = document.getElementById('guestBanner');
-            if (banner) banner.style.display = 'none';
-        }
-
-        // ── Helpers ──
-        function formatPhone(phone) {
-            if (!phone) return '';
-            const d = phone.replace(/\D/g, '');
-            if (d.length === 11 && d.startsWith('1'))
-                return `+1 (${d.slice(1, 4)}) ${d.slice(4, 7)}-${d.slice(7)}`;
-            return phone;
-        }
-
-        // ── Load Agents (auth-aware, read-only on landing) ──
-        async function loadAgents() {
-            try {
-                const headers = vaToken ? { 'Authorization': 'Bearer ' + vaToken } : {};
-                const res = await fetch('/api/agents', { headers });
-                if (!res.ok) {
-                    // Not authenticated — show placeholder
-                    document.getElementById('statAgents').textContent = '—';
-                    document.getElementById('statPhones').textContent = '—';
-                    document.getElementById('agentsGrid').innerHTML = `
-                        <div style="grid-column:1/-1;padding:48px 24px;text-align:center;color:var(--text-muted);">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3;margin:0 auto 12px;display:block"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                            <div>Agent'larınızı görmek için <a href="/login" style="color:var(--violet)">giriş yapın</a>.</div>
-                        </div>`;
-                    return;
-                }
-                const agents = await res.json();
-                const withPhones = agents.filter(a => a.phoneNumber).length;
-                document.getElementById('statAgents').textContent = agents.length;
-                document.getElementById('statPhones').textContent = withPhones;
-
-                let html = agents.map(a => {
-                    const isDefault = a.id === 'agent_default';
-                    return `
-                    <div class="agent-card">
-                        <div class="agent-card-header">
-                            <div class="agent-avatar ${isDefault ? 'amber' : 'violet'}">
-                                <i data-lucide="${isDefault ? 'star' : 'bot'}" style="width:22px;height:22px"></i>
-                            </div>
-                            <div class="agent-info">
-                                <div class="agent-name">
-                                    ${a.name}
-                                    ${isDefault ? '<span class="tag tag-default">Default</span>' : ''}
-                                    <span class="tag tag-active"><span class="live-dot" style="width:5px;height:5px"></span> Active</span>
-                                </div>
-                                <div class="agent-desc">${a.description || 'No description'}</div>
-                            </div>
-                        </div>
-                        <div class="agent-details">
-                            <div class="agent-detail-item"><i data-lucide="mic" style="width:14px;height:14px"></i> ${a.voice || 'coral'}</div>
-                            <div class="agent-detail-item"><i data-lucide="globe" style="width:14px;height:14px"></i> ${a.language || 'en-US'}</div>
-                            <div class="agent-detail-item"><i data-lucide="wrench" style="width:14px;height:14px"></i> ${(a.tools || []).length} tools</div>
-                        </div>
-                        <div class="agent-phone ${a.phoneNumber ? '' : 'empty'}">
-                            <i data-lucide="${a.phoneNumber ? 'smartphone' : 'phone-off'}" style="width:16px;height:16px"></i>
-                            ${a.phoneNumber ? formatPhone(a.phoneNumber) : 'No phone number assigned'}
-                        </div>
-                        <div class="agent-actions">
-                            ${a.phoneNumber ? `<a href="tel:${a.phoneNumber}" class="action-btn action-call"><i data-lucide="phone-call" style="width:15px;height:15px"></i> Call</a>` : '<span style="flex:1"></span>'}
-                        </div>
-                    </div>`;
-                }).join('');
-
-                if (vaToken) {
-                    html += `<a href="/wizard" class="create-card">
-                        <div class="create-icon"><i data-lucide="plus" style="width:26px;height:26px"></i></div>
-                        <h3>Yeni Agent Oluştur</h3>
-                        <p>AI ses asistanı yapılandır ve başlat</p>
-                    </a>`;
-                }
-
-                document.getElementById('agentsGrid').innerHTML = html;
-                lucide.createIcons();
-            } catch (e) { console.error(e); }
-        }
-
-        // ── Load Properties ──
-        async function loadProperties() {
-            try {
-                const res = await fetch('/api/properties');
-                const data = await res.json();
-                document.getElementById('propertiesGrid').innerHTML = data.map(p => `
-                    <div class="property-card">
-                        <div class="property-visual">
-                            <i data-lucide="building" style="width:48px;height:48px" class="property-svg-icon"></i>
-                            <span class="property-type-badge ${p.type === 'sale' ? 'badge-sale' : 'badge-rent'}">${p.type === 'sale' ? 'For Sale' : 'For Rent'}</span>
-                        </div>
-                        <div class="property-body">
-                            <div class="property-title">${p.title}</div>
-                            <div class="property-location"><i data-lucide="map-pin" style="width:13px;height:13px"></i> ${p.location}</div>
-                            <div class="property-specs">
-                                <span class="spec-item"><i data-lucide="bed-double" style="width:14px;height:14px"></i> ${p.rooms}</span>
-                                <span class="spec-item"><i data-lucide="ruler" style="width:14px;height:14px"></i> ${p.area} sq ft</span>
-                                <span class="spec-item"><i data-lucide="layers" style="width:14px;height:14px"></i> ${p.floor || '—'}</span>
-                            </div>
-                            <div class="property-price">${p.type === 'sale' ? '$' + p.price.toLocaleString('en-US') : '$' + p.price.toLocaleString('en-US') + '/mo'}</div>
-                        </div>
-                    </div>
-                `).join('');
-                lucide.createIcons();
-            } catch (e) { console.error(e); }
-        }
-
-        // ── Load Reservations (auth required) ──
-        async function loadReservations() {
-            const list = document.getElementById('resList');
-            if (!vaToken) {
-                document.getElementById('statReservations').textContent = '—';
-                list.innerHTML = '<div class="res-empty">Rezervasyonları görmek için <a href="/login" style="color:var(--violet)">giriş yapın</a>.</div>';
-                return;
+            const dGuest = document.getElementById('drawerGuest');
+            const dUser = document.getElementById('drawerUser');
+            if (dGuest) dGuest.style.display = 'none';
+            if (dUser) dUser.style.display = 'flex';
+            const shortcut = document.getElementById('dashboardShortcut');
+            if (shortcut) shortcut.style.display = 'block';
+            // Hide signup CTAs — user is already in
+            const ctas = document.getElementById('lpCtas');
+            if (ctas) {
+                ctas.innerHTML = '<a href="/dashboard" class="lp-btn-primary"><i data-lucide="layout-dashboard" style="width:17px;height:17px"></i> Dashboard\'a Git</a><a href="/wizard" class="lp-btn-secondary"><i data-lucide="plus" style="width:16px;height:16px"></i> Yeni Agent</a>';
             }
-            try {
-                const res = await fetch('/api/reservations', { headers: { 'Authorization': 'Bearer ' + vaToken } });
-                if (!res.ok) { list.innerHTML = '<div class="res-empty">Oturum süresi dolmuş.</div>'; return; }
-                const data = await res.json();
-                document.getElementById('statReservations').textContent = data.length;
-                if (!data.length) {
-                    list.innerHTML = '<div class="res-empty">Henüz rezervasyon yok. Bir agent\'i arayın.</div>';
-                    return;
-                }
-                list.innerHTML = data.slice().reverse().map(r => {
-                    const isViewing = r.type === 'viewing';
-                    const date = new Date(r.created_at);
-                    const timeStr = date.toLocaleString('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-                    return `
-                    <div class="res-item">
-                        <div class="res-icon ${isViewing ? 'viewing' : 'reservation'}">
-                            <i data-lucide="${isViewing ? 'eye' : 'clipboard-check'}" style="width:17px;height:17px"></i>
-                        </div>
-                        <div class="res-info">
-                            <div class="res-name">${r.customer_name}</div>
-                            <div class="res-detail">${r.property_title} — ${r.date} ${r.time || ''}</div>
-                        </div>
-                        <div class="res-time">${timeStr}</div>
-                    </div>`;
-                }).join('');
-                lucide.createIcons();
-            } catch (e) { console.error(e); }
         }
 
-        // ── Init ──
-        loadAgents();
-        loadProperties();
-        loadReservations();
-        setInterval(loadReservations, 10000);
-        setInterval(loadAgents, 15000);
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            // ── Call timer animation ──
+            let secs = 0;
+            setInterval(() => {
+                secs++;
+                const el = document.getElementById('callTimer');
+                if (el) el.textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+            }, 1000);
+
+            // ── Preview chat animation ──
+            setTimeout(() => {
+                const typing = document.getElementById('previewTyping');
+                const reply = document.getElementById('previewReply');
+                const yes = document.getElementById('previewYes');
+                const book = document.getElementById('previewBook');
+                if (!typing) return;
+                setTimeout(() => {
+                    if (typing) typing.style.display = 'none';
+                    if (reply) reply.style.display = 'block';
+                }, 2200);
+                setTimeout(() => { if (yes) yes.style.display = 'block'; }, 3600);
+                setTimeout(() => { if (book) book.style.display = 'block'; }, 5000);
+            }, 1500);
+        });
     </script>
 </body>
 

@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Demo — VoiceAgent AI | Corealist</title>
+    <meta name="description"
+        content="Try the Sophia AI real estate voice agent live. See demo properties, watch live reservations come in, and learn how to use the platform in minutes.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://corealist.com/demo">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js" defer></script>
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --transition-theme: 0.35s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #09090b;
+            --bg-surface: #111114;
+            --bg-card: #16161a;
+            --bg-card-hover: #1c1c21;
+            --bg-elevated: #1e1e24;
+            --bg-input: #16161a;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --border-focus: #7c3aed;
+            --text: #fafafa;
+            --text-sub: #a1a1aa;
+            --text-muted: #52525b;
+            --violet: #8b5cf6;
+            --violet-hover: #7c3aed;
+            --violet-dim: rgba(139, 92, 246, .10);
+            --violet-glow: rgba(139, 92, 246, .06);
+            --teal: #2dd4bf;
+            --teal-dim: rgba(45, 212, 191, .10);
+            --teal-border: rgba(45, 212, 191, .25);
+            --rose: #fb7185;
+            --rose-dim: rgba(251, 113, 133, .08);
+            --rose-border: rgba(251, 113, 133, .18);
+            --amber: #fbbf24;
+            --amber-dim: rgba(251, 191, 36, .08);
+            --amber-border: rgba(251, 191, 36, .18);
+            --sky: #38bdf8;
+            --sky-dim: rgba(56, 189, 248, .08);
+            --nav-bg: rgba(9, 9, 11, .88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, .4), 0 0 0 1px rgba(255, 255, 255, .03) inset;
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, .4);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #fafafa;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f9f9fb;
+            --bg-elevated: #f4f4f5;
+            --bg-input: #f4f4f5;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --border-focus: #7c3aed;
+            --text: #18181b;
+            --text-sub: #71717a;
+            --text-muted: #a1a1aa;
+            --violet: #7c3aed;
+            --violet-hover: #6d28d9;
+            --violet-dim: rgba(124, 58, 237, .07);
+            --violet-glow: rgba(124, 58, 237, .04);
+            --teal: #0d9488;
+            --teal-dim: rgba(13, 148, 136, .06);
+            --teal-border: rgba(13, 148, 136, .25);
+            --rose: #e11d48;
+            --rose-dim: rgba(225, 29, 72, .05);
+            --rose-border: rgba(225, 29, 72, .15);
+            --amber: #d97706;
+            --amber-dim: rgba(217, 119, 6, .06);
+            --amber-border: rgba(217, 119, 6, .18);
+            --sky: #0284c7;
+            --sky-dim: rgba(2, 132, 199, .06);
+            --nav-bg: rgba(255, 255, 255, .88);
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, .06);
+            --shadow-hover: 0 6px 20px rgba(0, 0, 0, .08);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-body);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background var(--transition-theme), color var(--transition-theme);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px) saturate(1.4);
+            -webkit-backdrop-filter: blur(16px) saturate(1.4);
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0 40px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--violet);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-nav-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.84rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-nav-ghost:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+        }
+
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--violet);
+            color: #fff;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.84rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-cta:hover {
+            background: var(--violet-hover);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, .3);
+        }
+
+        .theme-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-hover);
+            color: var(--violet);
+            background: var(--violet-dim);
+        }
+
+        /* ── HERO ── */
+        .demo-hero {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 100px 40px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 48px;
+        }
+
+        .demo-hero-text {
+            flex: 1;
+        }
+
+        .demo-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--violet);
+            background: var(--violet-dim);
+            border: 1px solid rgba(139, 92, 246, .2);
+            padding: 5px 12px;
+            border-radius: 99px;
+            margin-bottom: 18px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--teal);
+            border-radius: 50%;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .4;
+                transform: scale(.85);
+            }
+        }
+
+        .demo-hero-text h1 {
+            font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.15;
+            margin-bottom: 14px;
+        }
+
+        .accent {
+            color: var(--violet);
+        }
+
+        .accent-teal {
+            color: var(--teal);
+        }
+
+        .demo-hero-text p {
+            font-size: 1rem;
+            color: var(--text-sub);
+            max-width: 500px;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-lg {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            background: var(--violet);
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 24px rgba(139, 92, 246, .35);
+        }
+
+        .btn-primary-lg:hover {
+            background: var(--violet-hover);
+            box-shadow: 0 6px 32px rgba(139, 92, 246, .45);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-lg {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border);
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-lg:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+        }
+
+        /* Agent card hero */
+        .demo-hero-agent {
+            flex-shrink: 0;
+            width: 320px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-hero-agent::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(139, 92, 246, .15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .agent-avatar-lg {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #7c3aed, #2dd4bf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, .3);
+        }
+
+        .agent-hero-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .agent-hero-role {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .agent-capabilities {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .cap-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        .cap-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+
+        .cap-icon.violet {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .cap-icon.teal {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .cap-icon.sky {
+            background: var(--sky-dim);
+            color: var(--sky);
+        }
+
+        .cap-icon.amber {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .agent-demo-phone {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .agent-demo-phone-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .agent-demo-phone-num {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--teal);
+        }
+
+        .btn-call-demo {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--teal-dim);
+            color: var(--teal);
+            border: 1px solid var(--teal-border);
+            padding: 8px 14px;
+            border-radius: 9px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-call-demo:hover {
+            background: rgba(45, 212, 191, .18);
+        }
+
+        .no-phone-msg {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ── SECTION ── */
+        .section {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 52px 40px 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title-icon.violet {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .section-title-icon.teal {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .section-title-icon.sky {
+            background: var(--sky-dim);
+            color: var(--sky);
+        }
+
+        .section-title-icon.amber {
+            background: var(--amber-dim);
+            color: var(--amber);
+        }
+
+        .section-sub {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ── TUTORIAL ── */
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .tut-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s;
+            box-shadow: var(--shadow-card);
+        }
+
+        .tut-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .tut-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--card-accent, rgba(139, 92, 246, .04)) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .tut-step-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .tut-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tut-card p {
+            font-size: 0.82rem;
+            color: var(--text-sub);
+            line-height: 1.65;
+        }
+
+        .tut-cmd {
+            margin-top: 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.78rem;
+            font-family: monospace;
+            color: var(--teal);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* ── PROPERTIES GRID ── */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .property-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.25s;
+            box-shadow: var(--shadow-card);
+        }
+
+        .property-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .property-visual {
+            height: 140px;
+            background: var(--bg-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .property-visual-gradient {
+            position: absolute;
+            inset: 0;
+            background: var(--prop-gradient, linear-gradient(135deg, rgba(139, 92, 246, .12), rgba(45, 212, 191, .08)));
+        }
+
+        .property-visual-icon {
+            color: var(--text-muted);
+            opacity: 0.25;
+            position: relative;
+        }
+
+        .property-type-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .badge-sale {
+            background: var(--violet);
+            color: #fff;
+        }
+
+        .badge-rent {
+            background: var(--teal);
+            color: #fff;
+        }
+
+        .property-body {
+            padding: 18px 20px 20px;
+        }
+
+        .property-title {
+            font-size: 0.93rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .property-location {
+            font-size: 0.77rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .property-specs {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .property-price {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--violet);
+            letter-spacing: -0.02em;
+        }
+
+        /* ── RESERVATIONS ── */
+        .reservations-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .res-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .res-header h3 {
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--teal);
+        }
+
+        .res-list {
+            padding: 8px 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .res-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 10px;
+            border-radius: 10px;
+            transition: background 0.15s;
+        }
+
+        .res-item:hover {
+            background: var(--bg-elevated);
+        }
+
+        .res-item+.res-item {
+            border-top: 1px solid var(--border);
+        }
+
+        .res-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .res-icon.viewing {
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .res-icon.reservation {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .res-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .res-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .res-detail {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .res-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .res-empty {
+            text-align: center;
+            padding: 52px 20px;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .res-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .res-list::-webkit-scrollbar-thumb {
+            background: var(--border-hover);
+            border-radius: 2px;
+        }
+
+        /* ── HOW IT WORKS ── */
+        .how-it-works-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .how-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.25s;
+        }
+
+        .how-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .how-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .how-title-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .how-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .how-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .how-step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 7px;
+            background: var(--violet);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .how-step-text {
+            font-size: 0.82rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+        }
+
+        .how-step-text strong {
+            color: var(--text);
+        }
+
+        .convo-example {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .convo-msg {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .convo-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            line-height: 1.55;
+        }
+
+        .msg-agent {
+            align-self: flex-start;
+            background: var(--violet-dim);
+            border: 1px solid rgba(139, 92, 246, .18);
+            color: var(--text);
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+        }
+
+        .msg-label {
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .msg-label.agent {
+            color: var(--violet);
+        }
+
+        .msg-label.user {
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        /* ── CTA BAND ── */
+        .cta-band {
+            max-width: 1140px;
+            margin: 52px auto 0;
+            padding: 0 40px;
+        }
+
+        .cta-band-inner {
+            background: linear-gradient(135deg, rgba(139, 92, 246, .14) 0%, rgba(45, 212, 191, .09) 60%, rgba(56, 189, 248, .06) 100%);
+            border: 1px solid rgba(139, 92, 246, .25);
+            border-radius: 20px;
+            padding: 40px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-band-inner::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(139, 92, 246, .18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-band-text h2 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -.025em;
+            margin-bottom: 8px;
+        }
+
+        .cta-band-text p {
+            font-size: 0.88rem;
+            color: var(--text-sub);
+            max-width: 400px;
+            line-height: 1.65;
+        }
+
+        .cta-band-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 40px;
+            text-align: center;
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 64px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .demo-hero {
+                flex-direction: column;
+                padding: 88px 24px 24px;
+            }
+
+            .demo-hero-agent {
+                width: 100%;
+            }
+
+            .how-it-works-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 16px;
+            }
+
+            .section {
+                padding: 36px 16px 0;
+            }
+
+            .tutorial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-band {
+                padding: 0 16px;
+            }
+
+            .cta-band-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 28px 24px;
+            }
+
+            .cta-band-btns {
+                align-items: stretch;
+                width: 100%;
+            }
+
+            footer {
+                padding: 28px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="nav-left">
+            <a href="/" class="logo">
+                <div class="logo-mark">
+                    <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 10.5A8 8 0 1 0 22 21.5" stroke="white" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="16" cy="16" r="2.5" fill="white" />
+                        <path d="M20 12.8A4.5 4.5 0 1 0 20 19.2" stroke="rgba(255,255,255,0.6)" stroke-width="1.8"
+                            stroke-linecap="round" />
+                    </svg>
+                </div>
+                <span class="logo-text">Corealist</span>
+            </a>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
+                <i data-lucide="moon" style="width:18px;height:18px" id="themeIcon"></i>
+            </button>
+            <a href="/" class="btn-nav-ghost">← Ana Sayfa</a>
+            <a href="/login?tab=register" class="btn-cta">
+                <i data-lucide="user-plus" style="width:15px;height:15px"></i> Ücretsiz Başla
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- ── HERO ── -->
+        <div class="demo-hero">
+            <div class="demo-hero-text">
+                <div class="demo-label">
+                    <span class="live-dot"></span> CANLI DEMO
+                </div>
+                <h1>AI Ses Agentını<br><span class="accent">Şimdi Deneyin</span></h1>
+                <p>Sophia, gerçek zamanlı mülk arama, randevu planlama ve rezervasyon oluşturabilen bir AI ses ajanıdır.
+                    Aşağıda nasıl çalıştığını keşfedin — giriş gerekmez.</p>
+                <div class="hero-cta-group">
+                    <a href="#how-to-call" class="btn-primary-lg">
+                        <i data-lucide="phone-call" style="width:18px;height:18px"></i> Nasıl Aranır?
+                    </a>
+                    <a href="#tutorial" class="btn-outline-lg">
+                        <i data-lucide="book-open" style="width:18px;height:18px"></i> Kılavuzu Gör
+                    </a>
+                </div>
+            </div>
+
+            <!-- Agent showcase card -->
+            <div class="demo-hero-agent">
+                <div class="agent-avatar-lg">
+                    <i data-lucide="bot" style="width:30px;height:30px"></i>
+                </div>
+                <div class="agent-hero-name">Sophia — PrestigeAI</div>
+                <div class="agent-hero-role">AI Real Estate Voice Assistant · Default Demo Agent</div>
+
+                <div class="agent-capabilities">
+                    <div class="cap-row">
+                        <div class="cap-icon violet"><i data-lucide="search" style="width:14px;height:14px"></i></div>
+                        Mülk arama ve filtreleme
+                    </div>
+                    <div class="cap-row">
+                        <div class="cap-icon teal"><i data-lucide="calendar-check" style="width:14px;height:14px"></i>
+                        </div>
+                        Randevu planlama
+                    </div>
+                    <div class="cap-row">
+                        <div class="cap-icon sky"><i data-lucide="clipboard-check" style="width:14px;height:14px"></i>
+                        </div>
+                        Rezervasyon oluşturma
+                    </div>
+                    <div class="cap-row">
+                        <div class="cap-icon amber"><i data-lucide="info" style="width:14px;height:14px"></i></div>
+                        Mülk detayları sağlama
+                    </div>
+                </div>
+
+                <div class="agent-demo-phone" id="agentPhoneCard">
+                    <div>
+                        <div class="agent-demo-phone-label">Demo Numarası</div>
+                        <div class="agent-demo-phone-num" id="demoPhoneNum">Yükleniyor…</div>
+                    </div>
+                    <a href="#" id="demoCallBtn" class="btn-call-demo">
+                        <i data-lucide="phone" style="width:14px;height:14px"></i> Ara
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── STEP-BY-STEP TUTORIAL ── -->
+        <section class="section" id="tutorial">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="section-title-icon violet"><i data-lucide="book-open"
+                                style="width:18px;height:18px"></i></span>
+                        Kullanım Kılavuzu
+                    </h2>
+                    <div class="section-sub">AI ses agentını adım adım nasıl kullanacağınızı öğrenin</div>
+                </div>
+            </div>
+            <div class="tutorial-grid">
+                <div class="tut-card" style="--card-accent: rgba(139,92,246,.06)">
+                    <div class="tut-step-num" style="background:var(--violet-dim);color:var(--violet)">1</div>
+                    <h3>Demo Numarayı Arayın</h3>
+                    <p>Aşağıdaki demo telefon numarasını arayarak Sophia ile konuşmaya başlayın. Sophia sizi sıcak bir
+                        karşılama ile karşılayacaktır.</p>
+                    <div class="tut-cmd" id="tutPhoneDisplay">Numara yükleniyor…</div>
+                </div>
+                <div class="tut-card" style="--card-accent: rgba(45,212,191,.05)">
+                    <div class="tut-step-num" style="background:var(--teal-dim);color:var(--teal)">2</div>
+                    <h3>Mülk Arayın</h3>
+                    <p>Sophia'ya ne aradığınızı söyleyin. Konum, fiyat, oda sayısı veya satılık/kiralık gibi kriterlerle
+                        arama yapabilirsiniz.</p>
+                    <div class="tut-cmd">"Manhattan'da 3 odalı mülkleri göster"
+                        "Beverly Hills'te satılık villa var mı?"
+                        "2 milyon altında ne var?"</div>
+                </div>
+                <div class="tut-card" style="--card-accent: rgba(56,189,248,.05)">
+                    <div class="tut-step-num" style="background:var(--sky-dim);color:var(--sky)">3</div>
+                    <h3>Randevu Alın</h3>
+                    <p>İlgilendiğiniz mülk için görüntüleme randevusu ayırın. Sophia sizden ad, telefon ve tarih
+                        bilgisini isteyecektir.</p>
+                    <div class="tut-cmd">"P001 için pazar günü randevu almak istiyorum"
+                        "Skyline Penthouse'u görmek istiyorum"</div>
+                </div>
+                <div class="tut-card" style="--card-accent: rgba(251,191,36,.05)">
+                    <div class="tut-step-num" style="background:var(--amber-dim);color:var(--amber)">4</div>
+                    <h3>Rezervasyon Yapın</h3>
+                    <p>Satın alma veya kiralama için resmi rezervasyon oluşturun. Aşağıdaki Live Reservations bölümünde
+                        anında görünecektir.</p>
+                    <div class="tut-cmd">"P003 için rezervasyon yapmak istiyorum"
+                        "Bu mülkü rezerve etmek istiyorum, adım John"</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── HOW IT WORKS ── -->
+        <section class="section" id="how-to-call">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="section-title-icon teal"><i data-lucide="zap"
+                                style="width:18px;height:18px"></i></span>
+                        Nasıl Çalışır?
+                    </h2>
+                    <div class="section-sub">Agent'ın aramalarını nasıl karşıladığını görmek için</div>
+                </div>
+            </div>
+            <div class="how-it-works-grid">
+                <div class="how-card">
+                    <div class="how-title">
+                        <div class="how-title-icon" style="background:var(--violet-dim);color:var(--violet)"><i
+                                data-lucide="list-checks" style="width:16px;height:16px"></i></div>
+                        Adım Adım Süreç
+                    </div>
+                    <div class="how-steps">
+                        <div class="how-step">
+                            <div class="how-step-num">1</div>
+                            <div class="how-step-text">Müşteri agent'ına atanan numarayı arar; sistem çağrıyı anında karşılar.</div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num">2</div>
+                            <div class="how-step-text">Agent, müşteriyi system prompt'unda tanımladığın kişilikle karşılar ve konuşmayı gerçek zamanlı olarak anlar.</div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num">3</div>
+                            <div class="how-step-text">Müşteri bir şey talep ettiğinde agent veritabanını sorgular, randevu oluşturur ya da gerekli işlemi tamamlar.</div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num">4</div>
+                            <div class="how-step-text">Tüm aktivite anında dashboard'ına yansır — arama geçmişi, randevular ve rezervasyonlar tek yerden görünür.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="how-card">
+                    <div class="how-title">
+                        <div class="how-title-icon" style="background:var(--teal-dim);color:var(--teal)"><i
+                                data-lucide="message-square" style="width:16px;height:16px"></i></div>
+                        Örnek Görüşme
+                    </div>
+                    <div class="convo-example">
+                        <div class="convo-msg">
+                            <div>
+                                <div class="msg-label agent">SOPHIA</div>
+                                <div class="convo-bubble msg-agent">Merhaba! Ben Sophia, PrestigeAI'ın sesli asistanı. Hayalinizdeki mülkü bulmak için nasıl yardımcı olabilirim?</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:flex-end">
+                                <div class="msg-label user">SİZ</div>
+                                <div class="convo-bubble msg-user">Manhattan'da 3 odalı mülk arıyorum, bütçem 3 milyon dolar.</div>
+                            </div>
+                            <div>
+                                <div class="msg-label agent">SOPHIA</div>
+                                <div class="convo-bubble msg-agent">Bütçenize uygun 1 mülk buldum — 12. kattaki Waterfront Dairesi, 3+1 oda, 2,2 milyon dolar. Detayları paylaşayım mı, yoksa görüntüleme randevusu ister misiniz?</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:flex-end">
+                                <div class="msg-label user">SİZ</div>
+                                <div class="convo-bubble msg-user">Evet, cuma günü görüntüleme randevusu almak istiyorum.</div>
+                            </div>
+                            <div>
+                                <div class="msg-label agent">SOPHIA</div>
+                                <div class="convo-bubble msg-agent">Tabii! Randevu için adınızı ve telefon numaranızı öğrenebilir miyim?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── DEMO PROPERTIES ── -->
+        <section class="section" id="properties">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="section-title-icon sky"><i data-lucide="building-2"
+                                style="width:18px;height:18px"></i></span>
+                        Demo Mülkler
+                    </h2>
+                    <div class="section-sub">Sophia'nın veritabanındaki 6 demo mülk — aramayla sorgulayabilirsiniz</div>
+                </div>
+            </div>
+            <div class="properties-grid" id="propertiesGrid">
+                <div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text-muted)">Yükleniyor…</div>
+            </div>
+        </section>
+
+        <!-- ── LIVE RESERVATIONS ── -->
+        <section class="section" id="reservations">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <span class="section-title-icon teal"><i data-lucide="calendar-check"
+                                style="width:18px;height:18px"></i></span>
+                        Live Reservations
+                    </h2>
+                    <div class="section-sub">Demo numarasından yapılan tüm rezervasyonlar burada canlı görünür</div>
+                </div>
+                <span class="live-badge"><span class="live-dot"></span> Canlı — 10sn'de güncellenir</span>
+            </div>
+            <div class="reservations-container">
+                <div class="res-header">
+                    <h3>Recent Activity</h3>
+                    <span class="live-badge"><span class="live-dot"></span> Live</span>
+                </div>
+                <div class="res-list" id="resList">
+                    <div class="res-empty">Henüz rezervasyon yok. Demo numarayı arayarak bir rezervasyon oluşturun!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── CTA BAND ── -->
+        <div class="cta-band">
+            <div class="cta-band-inner">
+                <div class="cta-band-text">
+                    <h2>🚀 Kendi Agentınızı Oluşturun</h2>
+                    <p>Beğendiniz mi? Kendi iş alanınız için özelleştirilmiş bir AI ses agentı oluşturmak sadece birkaç
+                        dakika sürer. Kayıt ücretsiz.</p>
+                </div>
+                <div class="cta-band-btns">
+                    <a href="/login?tab=register" class="btn-primary-lg">
+                        <i data-lucide="zap" style="width:18px;height:18px"></i> Ücretsiz Başla
+                    </a>
+                    <a href="/login"
+                        style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:var(--text-sub);text-decoration:none;justify-content:flex-end">
+                        Zaten hesabın var mı? Giriş yap →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <p>© 2026 <a href="https://corealist.com" style="color:var(--text-muted);text-decoration:none">Corealist</a> —
+            VoiceAgent Platform. Powered by OpenAI Realtime API &amp; Twilio.</p>
+    </footer>
+
+    <script>
+        // ── Theme ──
+        function getStoredTheme() { return localStorage.getItem('va_theme') || localStorage.getItem('theme') || 'dark'; }
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('va_theme', theme);
+            localStorage.setItem('theme', theme);
+            requestAnimationFrame(() => {
+                const el = document.getElementById('themeIcon');
+                if (el) el.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        }
+        function toggleTheme() {
+            applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        }
+        applyTheme(getStoredTheme());
+        document.addEventListener('DOMContentLoaded', () => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+
+        // ── Load Default Agent phone ──
+        async function loadDemoAgent() {
+            try {
+                const res = await fetch('/api/agents');
+                if (!res.ok) return;
+                const agents = await res.json();
+                const def = agents.find(a => a.id === 'agent_default') || agents[0];
+                if (!def) return;
+
+                const phoneLine = document.getElementById('demoPhoneNum');
+                const callBtn = document.getElementById('demoCallBtn');
+                const tutPhone = document.getElementById('tutPhoneDisplay');
+
+                if (def.phoneNumber) {
+                    const fmt = formatPhone(def.phoneNumber);
+                    if (phoneLine) phoneLine.textContent = fmt;
+                    if (callBtn) { callBtn.href = 'tel:' + def.phoneNumber; }
+                    if (tutPhone) tutPhone.textContent = fmt;
+                } else {
+                    if (phoneLine) phoneLine.textContent = 'Henüz numara atanmadı';
+                    if (callBtn) { callBtn.href = '#'; callBtn.style.opacity = '.4'; callBtn.style.pointerEvents = 'none'; }
+                    if (tutPhone) tutPhone.textContent = 'Demo numarası henüz aktif değil — yönetici tarafından Twilio üzerinden atanabilir.';
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function formatPhone(phone) {
+            if (!phone) return '';
+            const d = phone.replace(/\D/g, '');
+            if (d.length === 11 && d.startsWith('1'))
+                return `+1 (${d.slice(1, 4)}) ${d.slice(4, 7)}-${d.slice(7)}`;
+            return phone;
+        }
+
+        const propGradients = [
+            'linear-gradient(135deg, rgba(139,92,246,.14), rgba(56,189,248,.08))',
+            'linear-gradient(135deg, rgba(45,212,191,.14), rgba(139,92,246,.08))',
+            'linear-gradient(135deg, rgba(56,189,248,.14), rgba(45,212,191,.08))',
+            'linear-gradient(135deg, rgba(251,191,36,.12), rgba(139,92,246,.08))',
+            'linear-gradient(135deg, rgba(251,113,133,.10), rgba(251,191,36,.08))',
+            'linear-gradient(135deg, rgba(139,92,246,.12), rgba(45,212,191,.10))',
+        ];
+
+        // ── Load Properties ──
+        async function loadProperties() {
+            try {
+                const res = await fetch('/api/properties');
+                const data = await res.json();
+                document.getElementById('propertiesGrid').innerHTML = data.map((p, i) => `
+                    <div class="property-card">
+                        <div class="property-visual">
+                            <div class="property-visual-gradient" style="background:${propGradients[i % propGradients.length]}"></div>
+                            <i data-lucide="building" style="width:52px;height:52px" class="property-visual-icon"></i>
+                            <span class="property-type-badge ${p.type === 'sale' ? 'badge-sale' : 'badge-rent'}">${p.type === 'sale' ? 'For Sale' : 'For Rent'}</span>
+                        </div>
+                        <div class="property-body">
+                            <div class="property-title">${p.title}</div>
+                            <div class="property-location"><i data-lucide="map-pin" style="width:13px;height:13px"></i> ${p.location}</div>
+                            <div class="property-specs">
+                                <span class="spec-item"><i data-lucide="bed-double" style="width:13px;height:13px"></i> ${p.rooms}</span>
+                                <span class="spec-item"><i data-lucide="ruler" style="width:13px;height:13px"></i> ${p.area} sq ft</span>
+                                <span class="spec-item"><i data-lucide="layers" style="width:13px;height:13px"></i> ${p.floor || '—'}</span>
+                            </div>
+                            <div class="property-price">${p.type === 'sale' ? '$' + p.price.toLocaleString('en-US') : '$' + p.price.toLocaleString('en-US') + '/mo'}</div>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            } catch (e) { console.error(e); }
+        }
+
+        // ── Load Demo Reservations (public endpoint) ──
+        async function loadReservations() {
+            const list = document.getElementById('resList');
+            try {
+                const res = await fetch('/api/demo/reservations');
+                const data = await res.json();
+                if (!data.length) {
+                    list.innerHTML = '<div class="res-empty">Henüz rezervasyon yok. Demo numarayı arayarak bir rezervasyon oluşturun! 📞</div>';
+                    return;
+                }
+                list.innerHTML = data.slice().reverse().map(r => {
+                    const isViewing = r.type === 'viewing';
+                    const date = new Date(r.created_at);
+                    const timeStr = date.toLocaleString('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+                    return `
+                    <div class="res-item">
+                        <div class="res-icon ${isViewing ? 'viewing' : 'reservation'}">
+                            <i data-lucide="${isViewing ? 'eye' : 'clipboard-check'}" style="width:17px;height:17px"></i>
+                        </div>
+                        <div class="res-info">
+                            <div class="res-name">${r.customer_name}</div>
+                            <div class="res-detail">${r.property_title} — ${r.date || ''} ${r.time || ''}</div>
+                        </div>
+                        <div class="res-time">${timeStr}</div>
+                    </div>`;
+                }).join('');
+                lucide.createIcons();
+            } catch (e) { console.error(e); }
+        }
+
+        // ── Init ──
+        loadDemoAgent();
+        loadProperties();
+        loadReservations();
+        setInterval(loadReservations, 10000);
+    </script>
+</body>
+
+</html>

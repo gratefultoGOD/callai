@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics · Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #09090b;
+            --surface: #111113;
+            --surface2: #1a1a1f;
+            --border: #27272a;
+            --border2: #3f3f46;
+            --text: #fafafa;
+            --muted: #71717a;
+            --accent: #6366f1;
+            --accent2: #818cf8;
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --purple: #a855f7;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -.02em;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #16a34a22, #22c55e22);
+            border: 1px solid #22c55e44;
+            color: var(--green);
+            font-size: .72rem;
+            font-weight: 600;
+            padding: .2rem .6rem;
+            border-radius: 9999px;
+            letter-spacing: .04em;
+        }
+
+        .refresh-btn {
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            color: var(--text);
+            padding: .45rem .9rem;
+            border-radius: 8px;
+            font-size: .83rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            transition: background .15s, border-color .15s;
+        }
+
+        .refresh-btn:hover {
+            background: #27272a;
+            border-color: var(--accent);
+        }
+
+        /* ── Main ── */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ── Section heading ── */
+        .section-title {
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        /* ── Stats grid ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border2);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--card-color, var(--accent));
+            opacity: .7;
+        }
+
+        .stat-label {
+            font-size: .75rem;
+            color: var(--muted);
+            font-weight: 500;
+            margin-bottom: .5rem;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -.03em;
+            line-height: 1;
+        }
+
+        .stat-sub {
+            font-size: .72rem;
+            color: var(--muted);
+            margin-top: .35rem;
+        }
+
+        /* ── Charts grid ── */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        @media (max-width: 900px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .charts-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        @media (max-width: 1100px) {
+            .charts-grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .charts-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .card-title {
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .chart-wrap {
+            position: relative;
+            height: 220px;
+        }
+
+        .chart-wrap.tall {
+            height: 280px;
+        }
+
+        /* ── Table ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .82rem;
+        }
+
+        th {
+            text-align: left;
+            padding: .55rem .75rem;
+            color: var(--muted);
+            font-weight: 500;
+            font-size: .72rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: .6rem .75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--surface2);
+        }
+
+        .path-tag {
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            padding: .15rem .5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: .78rem;
+        }
+
+        .bar-inline {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
+        .bar-bg {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--purple));
+            border-radius: 99px;
+        }
+
+        /* ── Recent log ── */
+        .log-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-item {
+            display: flex;
+            gap: .6rem;
+            align-items: flex-start;
+            padding: .5rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .78rem;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: var(--muted);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .log-path {
+            font-family: monospace;
+            color: var(--accent2);
+        }
+
+        .log-status {
+            padding: .1rem .4rem;
+            border-radius: 4px;
+            font-size: .7rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .status-2xx {
+            background: #22c55e22;
+            color: var(--green);
+        }
+
+        .status-3xx {
+            background: #eab30822;
+            color: var(--yellow);
+        }
+
+        .status-4xx {
+            background: #ef444422;
+            color: var(--red);
+        }
+
+        .log-ms {
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        /* ── Loading ── */
+        .loading {
+            text-align: center;
+            color: var(--muted);
+            padding: 3rem;
+            font-size: .88rem;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            margin-bottom: .5rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Skeleton ── */
+        .skeleton {
+            background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 6px;
+            height: 2rem;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .6;
+            }
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border2);
+            border-radius: 3px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo {
+                font-size: 0.95rem;
+            }
+
+            .badge {
+                display: none;
+            }
+
+            .refresh-btn {
+                padding: 0.35rem 0.65rem;
+                font-size: 0.78rem;
+            }
+
+            main {
+                padding: 1.25rem 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value {
+                font-size: 1.6rem;
+            }
+
+            .header-right {
+                gap: 0.5rem;
+            }
+
+            .refresh-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon">📊</div>
+            Analytics
+        </div>
+        <div class="header-right">
+            <span class="badge">● CANLI</span>
+            <button class="refresh-btn" onclick="loadAll()">↻ Yenile</button>
+            <button class="refresh-btn" onclick="location.href='/dashboard'">← Dashboard</button>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ── KPI Cards ── -->
+        <p class="section-title">Genel Bakış</p>
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card skeleton" style="height:90px;"></div>
+            <div class="stat-card skeleton" style="height:90px;"></div>
+            <div class="stat-card skeleton" style="height:90px;"></div>
+            <div class="stat-card skeleton" style="height:90px;"></div>
+            <div class="stat-card skeleton" style="height:90px;"></div>
+        </div>
+
+        <!-- ── Daily chart + Hourly ── -->
+        <div class="charts-grid">
+            <div class="card">
+                <div class="card-title">Son 30 Gün — Günlük Ziyaret</div>
+                <div class="chart-wrap tall"><canvas id="chartDay"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Bugün — Saatlik Dağılım</div>
+                <div class="chart-wrap tall"><canvas id="chartHour"></canvas></div>
+            </div>
+        </div>
+
+        <!-- ── Top Pages + Referer + UA ── -->
+        <div class="charts-grid-3">
+            <div class="card">
+                <div class="card-title">🔝 En Çok Ziyaret Edilen Sayfalar</div>
+                <div class="table-wrap" id="tbl-paths">
+                    <div class="loading">
+                        <div class="spinner"></div><br>Yükleniyor…
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🔗 Kaynak (Referer)</div>
+                <div class="table-wrap" id="tbl-referer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🌐 Tarayıcı / Platform</div>
+                <div class="table-wrap" id="tbl-ua">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Recent hits ── -->
+        <div class="card">
+            <div class="card-title">⚡ Son Ziyaretler (100)</div>
+            <ul class="log-list" id="recent-log">
+                <li class="loading">
+                    <div class="spinner"></div>
+                </li>
+            </ul>
+        </div>
+
+    </main>
+
+    <script>
+        /* ── Auth token ── */
+        const TOKEN = localStorage.getItem('va_token');
+        if (!TOKEN) { location.href = '/login'; }
+        const authHeaders = { 'Authorization': 'Bearer ' + TOKEN };
+
+        /* ── Helpers ── */
+        const $ = id => document.getElementById(id);
+
+        function fmt(n) {
+            if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+            if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K';
+            return String(n);
+        }
+
+        function parseUA(ua) {
+            if (!ua) return 'Bilinmiyor';
+            if (/Mobile|Android/i.test(ua)) {
+                if (/iPhone|iPad/i.test(ua)) return '🍎 iOS';
+                return '🤖 Android';
+            }
+            if (/Chrome/i.test(ua) && !/Edge|OPR/i.test(ua)) return '🌐 Chrome';
+            if (/Firefox/i.test(ua)) return '🦊 Firefox';
+            if (/Safari/i.test(ua)) return '🧭 Safari';
+            if (/Edge/i.test(ua)) return '🔵 Edge';
+            if (/curl|python|node|axios|fetch/i.test(ua)) return '🤖 Bot/Script';
+            return '❓ Diğer';
+        }
+
+        function timeAgo(iso) {
+            const d = new Date(iso + 'Z');
+            const s = Math.floor((Date.now() - d) / 1000);
+            if (s < 60) return s + 's önce';
+            if (s < 3600) return Math.floor(s / 60) + 'dk önce';
+            if (s < 86400) return Math.floor(s / 3600) + 'sa önce';
+            return d.toLocaleDateString('tr-TR');
+        }
+
+        /* ── Chart factory ── */
+        Chart.defaults.color = '#71717a';
+        Chart.defaults.borderColor = '#27272a';
+
+        function lineChart(id, labels, data, color = '#6366f1') {
+            const ctx = document.getElementById(id).getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 220);
+            grad.addColorStop(0, color + '55');
+            grad.addColorStop(1, color + '00');
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        data,
+                        borderColor: color,
+                        backgroundColor: grad,
+                        borderWidth: 2,
+                        tension: .4,
+                        fill: true,
+                        pointRadius: 3,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: color,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, grid: { color: '#27272a' } }
+                    }
+                }
+            });
+        }
+
+        function barChart(id, labels, data, color = '#818cf8') {
+            const ctx = document.getElementById(id).getContext('2d');
+            return new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        data,
+                        backgroundColor: color + '99',
+                        borderColor: color,
+                        borderWidth: 1.5,
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, grid: { color: '#27272a' } }
+                    }
+                }
+            });
+        }
+
+        /* ── API calls ── */
+        async function get(url) {
+            const r = await fetch(url, { headers: authHeaders });
+            if (!r.ok) throw new Error(r.status);
+            return r.json();
+        }
+
+        let dayChart, hourChart;
+
+        async function loadAll() {
+            try {
+                const [summary, byDay, byHour, byPath, byRef, byUA, recent] = await Promise.all([
+                    get('/api/analytics/summary'),
+                    get('/api/analytics/by-day'),
+                    get('/api/analytics/by-hour'),
+                    get('/api/analytics/by-path'),
+                    get('/api/analytics/by-referer'),
+                    get('/api/analytics/by-ua'),
+                    get('/api/analytics/recent'),
+                ]);
+
+                renderSummary(summary);
+                renderDayChart(byDay);
+                renderHourChart(byHour);
+                renderPathTable(byPath);
+                renderRefererTable(byRef);
+                renderUATable(byUA);
+                renderRecent(recent);
+            } catch (e) {
+                console.error(e);
+                if (e.message === '401') location.href = '/login';
+                if (e.message === '403') document.body.innerHTML = '<div style="text-align:center;padding:4rem;color:#ef4444"><h2>🚫 Erişim Reddedildi</h2><p style="margin-top:.5rem;color:#71717a">Bu sayfaya erişim yetkiniz yok.</p></div>';
+            }
+        }
+
+        /* ── Render functions ── */
+        function renderSummary({ total, today, last7Days, uniqueIPs, avgResponse }) {
+            $('stats-grid').innerHTML = `
+    <div class="stat-card" style="--card-color:#6366f1">
+      <div class="stat-label">📈 Toplam Ziyaret</div>
+      <div class="stat-value">${fmt(total)}</div>
+      <div class="stat-sub">Tüm zamanlar</div>
+    </div>
+    <div class="stat-card" style="--card-color:#22c55e">
+      <div class="stat-label">☀️ Bugün</div>
+      <div class="stat-value">${fmt(today)}</div>
+      <div class="stat-sub">Bugünkü ziyaretler</div>
+    </div>
+    <div class="stat-card" style="--card-color:#3b82f6">
+      <div class="stat-label">📅 Son 7 Gün</div>
+      <div class="stat-value">${fmt(last7Days)}</div>
+      <div class="stat-sub">Haftalık ortalama: ${fmt(Math.round(last7Days / 7))}/gün</div>
+    </div>
+    <div class="stat-card" style="--card-color:#a855f7">
+      <div class="stat-label">👤 Tekil IP (7g)</div>
+      <div class="stat-value">${fmt(uniqueIPs)}</div>
+      <div class="stat-sub">Benzersiz ziyaretçiler</div>
+    </div>
+    <div class="stat-card" style="--card-color:#eab308">
+      <div class="stat-label">⚡ Ort. Yanıt (7g)</div>
+      <div class="stat-value">${avgResponse}<span style="font-size:1rem;font-weight:400;color:var(--muted)">ms</span></div>
+      <div class="stat-sub">${avgResponse < 100 ? '🟢 Çok hızlı' : avgResponse < 300 ? '🟡 İyi' : '🔴 Yavaş'}</div>
+    </div>
+  `;
+        }
+
+        function renderDayChart(data) {
+            const labels = data.map(d => {
+                const dt = new Date(d.day);
+                return dt.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+            });
+            const vals = data.map(d => d.count);
+            if (dayChart) dayChart.destroy();
+            dayChart = lineChart('chartDay', labels, vals);
+        }
+
+        function renderHourChart(data) {
+            const allHours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
+            const map = Object.fromEntries(data.map(d => [d.hour, d.count]));
+            const vals = allHours.map(h => map[h] || 0);
+            if (hourChart) hourChart.destroy();
+            hourChart = barChart('chartHour', allHours.map(h => h + ':00'), vals, '#818cf8');
+        }
+
+        function renderPathTable(data) {
+            const max = data[0]?.count || 1;
+            $('tbl-paths').innerHTML = data.length === 0
+                ? '<p class="loading" style="padding:1rem">Henüz veri yok</p>'
+                : `<table>
+        <thead><tr><th>Sayfa</th><th>Ziyaret</th></tr></thead>
+        <tbody>${data.map(r => `
+          <tr>
+            <td><span class="path-tag">${r.path}</span></td>
+            <td>
+              <div class="bar-inline">
+                <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(r.count / max * 100)}%"></div></div>
+                <span style="min-width:36px;text-align:right">${fmt(r.count)}</span>
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+        }
+
+        function renderRefererTable(data) {
+            const max = data[0]?.count || 1;
+            $('tbl-referer').innerHTML = data.length === 0
+                ? '<p class="loading" style="padding:1rem">Henüz veri yok<br><small style="color:var(--muted)">Doğrudan trafikte referer olmaz</small></p>'
+                : `<table>
+        <thead><tr><th>Kaynak</th><th>Ziyaret</th></tr></thead>
+        <tbody>${data.map(r => `
+          <tr>
+            <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.referer}">${r.referer || 'Doğrudan'}</td>
+            <td>
+              <div class="bar-inline">
+                <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(r.count / max * 100)}%;background:linear-gradient(90deg,#22c55e,#16a34a)"></div></div>
+                <span style="min-width:36px;text-align:right">${fmt(r.count)}</span>
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+        }
+
+        function renderUATable(data) {
+            // Group by parsed UA name
+            const grouped = {};
+            data.forEach(r => {
+                const key = parseUA(r.user_agent);
+                grouped[key] = (grouped[key] || 0) + r.count;
+            });
+            const sorted = Object.entries(grouped).sort((a, b) => b[1] - a[1]);
+            const max = sorted[0]?.[1] || 1;
+
+            $('tbl-ua').innerHTML = sorted.length === 0
+                ? '<p class="loading" style="padding:1rem">Henüz veri yok</p>'
+                : `<table>
+        <thead><tr><th>Platform</th><th>Ziyaret</th></tr></thead>
+        <tbody>${sorted.map(([name, count]) => `
+          <tr>
+            <td>${name}</td>
+            <td>
+              <div class="bar-inline">
+                <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(count / max * 100)}%;background:linear-gradient(90deg,#a855f7,#7c3aed)"></div></div>
+                <span style="min-width:36px;text-align:right">${fmt(count)}</span>
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+        }
+
+        function renderRecent(data) {
+            $('recent-log').innerHTML = data.length === 0
+                ? '<li class="loading">Henüz kayıt yok</li>'
+                : data.map(r => {
+                    const sc = r.status_code;
+                    const cls = sc < 300 ? 'status-2xx' : sc < 400 ? 'status-3xx' : 'status-4xx';
+                    return `<li class="log-item">
+          <span class="log-time">${timeAgo(r.created_at)}</span>
+          <span class="log-status ${cls}">${sc}</span>
+          <span class="log-path">${r.path}</span>
+          <span class="log-ms">${r.response_time != null ? r.response_time + 'ms' : ''}</span>
+          <span style="color:var(--muted);font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${parseUA(r.user_agent)}</span>
+        </li>`;
+                }).join('');
+        }
+
+        /* ── Init ── */
+        loadAll();
+        // Auto-refresh every 60 seconds
+        setInterval(loadAll, 60_000);
+    </script>
+</body>
+
+</html>

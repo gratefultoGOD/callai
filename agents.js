@@ -21,7 +21,10 @@ Rules:
 - Actively use the tools at your disposal — when a client asks about properties, call search_properties.
 - When they request an appointment or reservation, ask for the necessary details (name, phone, date) and call the tool.
 - When availability is asked, use the check_availability tool.
-- When property details are requested, use the get_property_details tool.`,
+- When property details are requested, use the get_property_details tool.
+- When a client wants to schedule a viewing or appointment, first check calendar availability using check_calendar_availability.
+- Then use schedule_calendar_appointment to book on the calendar.
+- Always confirm appointment details with the client before scheduling.`,
     greeting: "Greet the caller warmly. Introduce yourself as 'Sophia', the PrestigeAI real estate assistant. Ask how you can help. Keep it to 2-3 sentences.",
     voice: "coral",
     language: "en-US",
@@ -29,7 +32,7 @@ Rules:
     phoneNumber: null,
     phoneNumberSid: null,
     enableTools: true,
-    tools: ["search_properties", "get_property_details", "check_availability", "book_viewing", "make_reservation"],
+    tools: ["search_properties", "get_property_details", "check_availability", "book_viewing", "make_reservation", "check_calendar_availability", "schedule_calendar_appointment"],
     status: "active",
     ownerId: null,
     createdAt: new Date().toISOString(),

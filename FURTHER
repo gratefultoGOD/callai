@@ -1,11 +1,32 @@
-arayüzü ingilizce yap
-login sayfasında taşmaları önle
-websiteyi responsive yap
-Zillow ve realtor api entegrasyonu
+===============[BACKEND]============================
+Kapsamı genişlet. Güzellik salonları,Dişçiler, doktorlar, randevu ile iş yapan tüm kuruluşlar için
+kapsam genişlediği için kurulum aşamasında önce meslek sorulsun sonra o meslek ile alakalı agent templateleri önerilsin
 daha gelişmiş functionlar ve dashboard (yeni özellikler !)
-google calendar dashboard'a entegrasyonu
-örnek telefon numarasını websiteye ekle ve rate limit koy, ingilizce yap, daha anlaşılabilir test arayüzü yap
-daha hızlı ve kolay kurulum, telefon numarası önerme algoritması, RAG sistemi
+google calendar dashboarda entegrasyonu
+sesli asistana kurumsal aidiyet özelliği getir
+RAG sistemi
+arayan numaralar, arama kayıtları, transkriptler, konuşulanlar, konuşma süreleri dashboard olmalı
+Zillow ve realtor api entegrasyonu
+alt yapıyı daha güvenli bir teknolojiye taşı (vanilla html güvenli değil. ama SEO işini de gözden kaçırma)
+Ödeme altyapısı (polar.sh)
+
+==============[FRONTEND]============================
+arayüzü ingilizce yap
+çok uluslu dil ve kullanıcı desteği
+ana sayfayı doğru bilgilerle doldur
+amaç birden fazla asistan oluşturmak değil
 google SEO optimizasyonu
 Pricing stratejisi
-Ödeme altyapısı
+pricing planına göre wp bussiness ve sms destekleri
+twilio hesabını upgrade et
+websiteyi görsel açıdan zenginleştir
+daha hızlı ve kolay kurulum, telefon numarası önerme algoritması, telefon numarası alımını, arama kısmında tüm telefonlar çıkmıyor, twilioda daha çok var.
+örnek telefon numarasını websiteye ekle ve rate limit koy, ingilizce yap, daha anlaşılabilir test arayüzü yap
+
+
+
+
+============[+]============
+website analytics, metrics (geliştirilebilir)
+websiteyi responsive yap
+logo ekle
